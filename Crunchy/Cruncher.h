@@ -24,7 +24,8 @@ typedef enum ItemType : NSUInteger {
 - (NSString *)getTitleAtIndexPath:(NSIndexPath *)index;
 - (NSString *)detailTextForArray:(NSArray *)array atIndexPath:(NSIndexPath *)index;
 - (NSString *)permalinkFromDictionary:(NSMutableDictionary *)dict atIndexPath:(NSIndexPath *)index;
-- (ItemType)getTypeAtIndexPath:(NSIndexPath *)index;
+- (NSString *)permalinkatIndexPath:(NSIndexPath *)index;
+- (NSString *)getTypeAtIndexPath:(NSIndexPath *)index;
 - (BOOL) linkAtIndex: (NSIndexPath*) index;
 - (NSString *)getKeyAtIndexPath:(NSInteger)index;
 - (int)getSizeAtIndex:(NSInteger)index;
@@ -38,6 +39,9 @@ typedef enum ItemType : NSUInteger {
 - (NSArray *)getContentAtIndexPath:(NSIndexPath *)index;
 - (BOOL) isAcquired;
 - (NSString *) getAcquiredInfo;
-- (void) setItemType: (NSString *) aType;
 
+- (void) setItemType: (NSString *) aType;
+- (NSString *) getImage: (BOOL) small;
+- (NSString *) getOverview;
+- (NSString *) getTitle;
 @end

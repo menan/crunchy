@@ -138,12 +138,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gdo-Jf-vpS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1459" y="405"/>
+            <point key="canvasLocation" x="1399" y="-87"/>
         </scene>
         <!--Detail View Controller - Detail-->
         <scene sceneID="24">
             <objects>
-                <viewController title="Detail" id="21" customClass="DetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detail" title="Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="21" customClass="DetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="37S-ym-9hR"/>
                         <viewControllerLayoutGuide type="bottom" id="LR6-rw-5jz"/>
@@ -301,7 +301,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Leh-Ds-RqF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1459" y="-533"/>
+            <point key="canvasLocation" x="1399" y="-679"/>
         </scene>
     </scenes>
     <resources>

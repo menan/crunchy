@@ -12,7 +12,6 @@
 #import "UIImageView+WebCache.h"
 #import "OverviewViewController.h"
 #import "ImageViewController.h"
-#import "NSString+HTML.h"
 
 @interface DetailViewController ()
 
@@ -46,7 +45,6 @@
         NSLog(@"title:%@",name);
         self.title = name;
         self.titleLabel.text = name;
-        self.descriptionLabel.text = [self flattenHTML:[self.detailItem objectForKey:@"overview"]];
         
         
         NSString* permUrl = [[self.detailItem objectForKey:@"permalink"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -67,29 +65,24 @@
     [tableView reloadData];
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
+    
+    NSString* image_url = [crunch getImage:false];
+    
+    NSURL *url = [NSURL URLWithString:image_url];
+    NSLog(@"image url :%@",image_url);
+    UIImage *img = [UIImage imageNamed:@"aimage.png"];
+    [self.imageView setImageWithURL:url placeholderImage:img];
+    
+    self.title = [crunch getTitle];
+    
     NSLog(@"Items: %d",[crunch getSectionsCount]);
 }
 
-- (NSString *)flattenHTML:(NSString *)html {
-    return html;
-//    if (html != (id)[NSNull null])
-//        return [html stringByConvertingHTMLToPlainText];
-//    else
-//        return @"";
-    
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
-//    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
-    
-    NSURL *url = [NSURL URLWithString: [self.detailItem objectForKey:@"image_large"]];
-    NSLog(@"image:%@",[self.detailItem objectForKey:@"image_large"]);
-    UIImage *img = [UIImage imageNamed:@"aimage.png"];
-    [self.imageView setImageWithURL:url placeholderImage:img];
     
 }
 
@@ -103,7 +96,7 @@
 {
     if ([[segue identifier] isEqualToString:@"overview"]) {
         OverviewViewController *overview = segue.destinationViewController;
-        NSString *overviewTxt = [self flattenHTML:[self.detailItem objectForKey:@"overview"]];
+        NSString *overviewTxt = [crunch getOverview];
 //        NSLog(@"overview = %@",overviewTxt);
         [overview sendOverviewText:overviewTxt];
     }
@@ -150,61 +143,20 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [aTableView deselectRowAtIndexPath:indexPath animated:YES];
-//    NSLog(@"type_string:%@,row:%d",[self getValue:@"type"],indexPath.row);
     
-    DetailViewController *detail = [[DetailViewController alloc] init];
-    
-    
-//
-//    if (indexPath.section > 1){
-//        [self viewOverview:self];
-//        NSLog(@"loading overview");
-//    }
-//    else if ([[self permalinkAtIndexPath:item:indexPath] length] > 0 || ([[self getValue:@"type"] isEqualToString: @"product"] && indexPath.row == 0 && indexPath.section == 0)){
-//        
-//        if ([[self getValue:@"type"] isEqualToString: @"product"] && indexPath.row == 0 && indexPath.section == 0)
-//            detail.permalink = [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json", [[item valueForKey:@"company"] valueForKey:@"permalink"]];
-//        else
-//            detail.permalink = [self permalinkAtIndexPath:item:indexPath];
-//        
-//        if ([[self getKeyAtIndex:item :indexPath.section] isEqualToString: @"products"]){
-//            detail.[self getValue:@"type"] = @"product";
-//        }
-//        else if ([[self getKeyAtIndex:item :indexPath.section] isEqualToString: @"relationships"] && [[self getValue:@"type"] isEqualToString:@"company"]){
-//            detail.[self getValue:@"type"] = @"person";
-//        }
-//        else if ([[self getKeyAtIndex:item :indexPath.section] isEqualToString: @"relationships"] && [[self getValue:@"type"] isEqualToString:@"person"]){
-//            detail.[self getValue:@"type"] = @"company";
-//        }
-//        else
-//            detail.[self getValue:@"type"] = @"company";
-//        
-//        
-    
-//        [self.navigationController pushViewController:detail animated:YES];
-    
+    if (indexPath.section > 0) {
         
+//        DetailViewController *detail = [[DetailViewController alloc] init];
+        DetailViewController *detail=[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
+        NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
+        [object setObject:[crunch permalinkatIndexPath:indexPath] forKey:@"permalink"];
+        [object setObject:[crunch getTypeAtIndexPath:indexPath] forKey:@"type"];
         
-//        NSLog(@"permalink:%@",detail.permalink);
-    
+        [detail setDetailItem:object];
+        [self.navigationController pushViewController:detail animated:YES];
         
-        //[data removeAllObjects];
-        //name.text = @"";
-        //self.title = @"";
-        //lblDescription.text = @"";
-        //[imageButton setImage:[UIImage imageNamed:@"d1.png"] forState:UIControlStateNormal];
-        //[dataTable reloadData];
-        
-        //NSLog(@"Loading permalink:%@",permalinkPath);
-        //[self readJSON:permalinkPath];
-        
-        
-        
-//    }
-//    else 
-//        NSLog(@"Click not Accepted");
-    
+    }
     
     
 }

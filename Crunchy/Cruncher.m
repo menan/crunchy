@@ -7,6 +7,7 @@
 //
 
 #import "Cruncher.h"
+#import "NSString+HTML.h"
 
 @implementation Cruncher
 
@@ -123,6 +124,62 @@ NSMutableDictionary *item;
     }
     return returnVal;
 }
+
+- (NSString *) getSectionNameAtIndex: (int) index{
+    NSString *returnVal = @"";
+    int i = 0;
+    if (index == 0) {
+        returnVal = @"general_info";
+    }
+    else{
+        for (id key in [item allKeys]) {
+            if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
+                i++;
+                if (index == i){
+                    returnVal = key;
+                }
+            }
+        }
+    }
+    return returnVal;
+}
+
+- (NSString *) getImage: (BOOL) small {
+    NSDictionary *images = [item valueForKey:@"image"];
+//    NSLog(@"images: %@", images);
+    if ([images valueForKey:@"available_sizes"] != (id)[NSNull null]){
+        NSString* images_url = [NSString stringWithFormat:@"http://crunchbase.com/%@",[[[images valueForKey:@"available_sizes"] objectAtIndex:0] objectAtIndex:1]];
+        NSString* images_large_url = [NSString stringWithFormat:@"http://crunchbase.com/%@",[[[images valueForKey:@"available_sizes"] objectAtIndex:2] objectAtIndex:1]];
+        
+        if (small){
+            return images_url;
+        }
+        else{
+            return images_large_url;
+        }
+    }
+    else{
+        return @"";
+    }
+
+}
+
+- (NSString *) getOverview{
+    return [[item valueForKey:@"overview"] stringByConvertingHTMLToPlainText];
+}
+
+- (NSString *) getTitle{
+    NSString *title = @"";
+    if (type == Person){
+        title = [NSString stringWithFormat:@"%@ %@", [item valueForKey:@"first_name"], [item valueForKey:@"last_name"]];
+    }
+    else{
+        title = [item valueForKey:@"name"];
+
+    }
+    return title;
+}
+
 
 - (NSArray *)getContentAtIndexPath:(NSIndexPath *)index{
 //    NSLog(@"all keys: %@",);
@@ -411,40 +468,72 @@ NSMutableDictionary *item;
     }
 }
 
-- (ItemType)getTypeAtIndexPath:(NSIndexPath *)index{
-        int i = 0;
-        NSString* matched_key = [[NSString alloc] init];
-        for (id key in item) {
-            if (i == index.section-1){
-                matched_key = key;
-            }
-            i++;
+
+- (NSString *)permalinkatIndexPath:(NSIndexPath *)index{
+    
+    NSString *key = [self getSectionNameAtIndex:index.section];
+    
+    NSLog(@"matched key is %@", key);
+    
+    if ([key isEqualToString:@"competitions"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"competitor"] valueForKey:@"permalink"]];
+    }
+    else if ([key isEqualToString:@"relationships"]){
+        if (type == Person)
+            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"firm"] valueForKey:@"permalink"]];
+        else{
+            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/person/%@.json?",[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"permalink"]];
         }
-        
-        if ([matched_key isEqualToString:@"competitions"]){
-            return Company;
+    }
+    else if ([key isEqualToString:@"products"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/product/%@.json?",[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"permalink"]];
+    }
+    else if ([key isEqualToString:@"acquisitions"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
+    }
+    else if ([key isEqualToString:@"providerships"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"provider"] valueForKey:@"permalink"]];
+    }
+    else if ([key isEqualToString:@"investments"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?",[[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
+    }
+    else if ([key isEqualToString:@"company"]){
+        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?",[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
+    }
+    else
+        return @"";
+}
+
+- (NSString *)getTypeAtIndexPath:(NSIndexPath *)index {
+    
+    NSString *key = [self getSectionNameAtIndex:index.section];
+    
+    NSLog(@"matched key is %@", key);
+
+    if ([key isEqualToString:@"competitions"]){
+        return @"company";
+    }
+    else if ([key isEqualToString:@"relationships"]){
+        if (type == Person)
+            return @"company";
+        else{
+            return @"person";
         }
-        else if ([matched_key isEqualToString:@"relationships"]){
-            if ([[self getValue:@"type"] isEqualToString:@"person"])
-                return Company;
-            else{
-                return Person;
-            }
-        }
-        else if ([matched_key isEqualToString:@"products"]){
-            return Product;
-        }
-        else if ([matched_key isEqualToString:@"acquisitions"]){
-            return Company;
-        }
-        else if ([matched_key isEqualToString:@"providerships"]){
-            return Company;
-        }
-        else if ([matched_key isEqualToString:@"investments"]){
-            return Company;
-        }
-        else
-            return None;
+    }
+    else if ([key isEqualToString:@"products"]){
+        return @"product";
+    }
+    else if ([key isEqualToString:@"acquisitions"]){
+        return @"company";
+    }
+    else if ([key isEqualToString:@"providerships"]){
+        return @"company";
+    }
+    else if ([key isEqualToString:@"investments"]){
+        return @"company";
+    }
+    else
+        return @"";
     
 }
 
@@ -622,9 +711,8 @@ NSMutableDictionary *item;
     else{
         type = None;
     }
-    
-    
 }
+
 
 - (NSString *) prettifyFundingRound: (NSString *) round{
     if ([round isEqualToString:@"angel"] || [round isEqualToString:@"seed"] || [round isEqualToString:@"unattributed"] || [round isEqualToString:@"debt_round"])
