@@ -236,6 +236,13 @@
     
     
 }
+- (IBAction)aboutTapped:(id)sender {
+    
+    UIApplication *ourApplication = [UIApplication sharedApplication];
+    NSString *ourPath = @"twitter://user?screen_name=MenanV";
+    NSURL *ourURL = [NSURL URLWithString:ourPath];
+    [ourApplication openURL:ourURL];
+}
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

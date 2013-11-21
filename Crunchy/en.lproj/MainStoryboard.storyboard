@@ -75,10 +75,10 @@
                             <outlet property="delegate" destination="12" id="15"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Crunchie" id="36">
-                        <barButtonItem key="leftBarButtonItem" title="About" style="plain" id="92J-Ur-shn">
+                    <navigationItem key="navigationItem" title="Crunchy" id="36">
+                        <barButtonItem key="leftBarButtonItem" title="@MenanV" style="plain" id="92J-Ur-shn">
                             <connections>
-                                <segue destination="E3l-M8-v0f" kind="modal" modalTransitionStyle="coverVertical" id="mue-73-sgc"/>
+                                <action selector="aboutTapped:" destination="12" id="KYk-f2-aFu"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="HyX-OS-DMx">
@@ -102,92 +102,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="459" y="64"/>
-        </scene>
-        <!--About View Controller - Title-->
-        <scene sceneID="Eai-A4-9ft">
-            <objects>
-                <viewController id="E3l-M8-v0f" customClass="AboutViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="MTr-Jc-urR"/>
-                        <viewControllerLayoutGuide type="bottom" id="FM1-ma-9jv"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="gkf-6V-t0M">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12O-nK-6E3">
-                                <rect key="frame" x="0.0" y="19" width="320" height="44"/>
-                                <color key="tintColor" red="0.28235294117647058" green="0.48627450980392156" blue="0.50588235294117645" alpha="1" colorSpace="calibratedRGB"/>
-                                <items>
-                                    <navigationItem title="About" id="vqU-uC-m1N">
-                                        <barButtonItem key="leftBarButtonItem" title="Cool" id="mgp-Mu-otc">
-                                            <connections>
-                                                <action selector="coolClicked:" destination="E3l-M8-v0f" id="dIb-AH-kv5"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Htm-rC-iNM">
-                                <rect key="frame" x="20" y="162" width="285" height="259"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="285" id="OuB-4c-MtA"/>
-                                    <constraint firstAttribute="height" constant="259" id="X3l-HS-gwD"/>
-                                </constraints>
-                                <string key="text">This is the unofficial mobile version of CrunchBase.com(the free database of technology companies, people, and investors that anyone can edit). Rate this app if you find it useful :) Also Tweet me if you find any issues or for any feature requests, I will try to fix or implement them in the future updates. In the meantime check out my other app on http://menan.me/roadsight.              Thanks.</string>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                            </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="2.0" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="6BC-wa-WM9">
-                                <rect key="frame" x="144" y="523" width="42" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="5sA-IM-J6W"/>
-                                    <constraint firstAttribute="height" constant="21" id="ytb-rm-Q4E"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="11"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mou-ae-fBn">
-                                <rect key="frame" x="67" y="462" width="204" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="5yx-VQ-Und"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
-                                <size key="titleShadowOffset" width="1" height="1"/>
-                                <state key="normal" title="Menan Vadivel(@MenanV)">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="twitterHandleClicked:" destination="E3l-M8-v0f" eventType="touchUpInside" id="5fJ-yI-2ce"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Mou-ae-fBn" secondAttribute="bottom" constant="84" id="BZ7-mo-EGA"/>
-                            <constraint firstAttribute="bottom" secondItem="Htm-rC-iNM" secondAttribute="bottom" constant="147" id="Dsi-qD-5Q2"/>
-                            <constraint firstItem="12O-nK-6E3" firstAttribute="top" secondItem="gkf-6V-t0M" secondAttribute="top" constant="20" id="IMa-vl-T5v"/>
-                            <constraint firstItem="Htm-rC-iNM" firstAttribute="leading" secondItem="gkf-6V-t0M" secondAttribute="leading" constant="20" symbolic="YES" id="KsU-2H-rQh"/>
-                            <constraint firstItem="12O-nK-6E3" firstAttribute="trailing" secondItem="gkf-6V-t0M" secondAttribute="trailing" id="OY0-0s-WIT"/>
-                            <constraint firstItem="Htm-rC-iNM" firstAttribute="top" secondItem="gkf-6V-t0M" secondAttribute="top" priority="829" constant="54" id="WRJ-1A-TCA"/>
-                            <constraint firstItem="Mou-ae-fBn" firstAttribute="leading" secondItem="gkf-6V-t0M" secondAttribute="leading" constant="67" id="mnG-pV-pSU"/>
-                            <constraint firstItem="6BC-wa-WM9" firstAttribute="leading" secondItem="gkf-6V-t0M" secondAttribute="leading" constant="144" id="ngU-Fp-Jut"/>
-                            <constraint firstAttribute="bottom" secondItem="6BC-wa-WM9" secondAttribute="bottom" constant="24" id="qBl-nH-gp6"/>
-                            <constraint firstItem="12O-nK-6E3" firstAttribute="leading" secondItem="gkf-6V-t0M" secondAttribute="leading" id="qlA-ey-2nk"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Title" id="1PD-Hb-sBV"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="a5W-A8-FJJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="897" y="563"/>
         </scene>
         <!--Overview View Controller - Overview-->
         <scene sceneID="Qwl-tT-InN">

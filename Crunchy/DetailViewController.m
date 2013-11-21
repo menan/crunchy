@@ -152,9 +152,11 @@
     [aTableView deselectRowAtIndexPath:indexPath animated:YES];
 //    NSLog(@"type_string:%@,row:%d",[self getValue:@"type"],indexPath.row);
     
-//    DetailViewController *detail = [[DetailViewController alloc] init];
+    DetailViewController *detail = [[DetailViewController alloc] init];
+    
+    
 //
-//    if (indexPath.section == 1){
+//    if (indexPath.section > 1){
 //        [self viewOverview:self];
 //        NSLog(@"loading overview");
 //    }
