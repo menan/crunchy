@@ -150,12 +150,12 @@
         DetailViewController *detail=[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
+        [self.navigationController pushViewController:detail animated:YES];
+        
         [object setObject:[crunch permalinkatIndexPath:indexPath] forKey:@"permalink"];
         [object setObject:[crunch getTypeAtIndexPath:indexPath] forKey:@"type"];
         
         [detail setDetailItem:object];
-        [self.navigationController pushViewController:detail animated:YES];
-        
     }
     
     

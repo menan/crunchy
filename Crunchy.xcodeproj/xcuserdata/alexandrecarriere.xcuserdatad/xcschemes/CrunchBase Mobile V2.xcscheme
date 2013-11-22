@@ -20,6 +20,20 @@
                ReferencedContainer = "container:CrunchBase Mobile V2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "685FEC0716BA08E7007083CF"
+               BuildableName = "Crunchy.app"
+               BlueprintName = "Crunchy"
+               ReferencedContainer = "container:Crunchy.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -33,9 +47,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "685FEC0716BA08E7007083CF"
-            BuildableName = "CrunchBase Mobile V2.app"
-            BlueprintName = "CrunchBase Mobile V2"
-            ReferencedContainer = "container:CrunchBase Mobile V2.xcodeproj">
+            BuildableName = "Crunchy.app"
+            BlueprintName = "Crunchy"
+            ReferencedContainer = "container:Crunchy.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "685FEC0716BA08E7007083CF"
-            BuildableName = "CrunchBase Mobile V2.app"
-            BlueprintName = "CrunchBase Mobile V2"
-            ReferencedContainer = "container:CrunchBase Mobile V2.xcodeproj">
+            BuildableName = "Crunchy.app"
+            BlueprintName = "Crunchy"
+            ReferencedContainer = "container:Crunchy.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
