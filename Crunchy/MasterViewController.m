@@ -9,7 +9,7 @@
 #import "UIImageView+WebCache.h"
 #import "MasterViewController.h"
 #import "DetailViewController.h"
-#import "Connection.h"
+#import "AFJSONRequestOperation.h"
 
 @interface MasterViewController () {
     NSMutableArray *_objects;
@@ -224,10 +224,22 @@
     // You'll probably want to do this on another thread
     // SomeService is just a dummy class representing some
     // api that you are using to do the search
-    NSString* url = [[NSString stringWithFormat:@"http://api.crunchbase.com/v/1/search.js?query=%@&",uiSearchBar.text] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString* url = [[NSString stringWithFormat:@"http://api.crunchbase.com/v/1/search.js?query=%@&api_key=vb4f9vwfty979hbyp7ry3wwk",uiSearchBar.text] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    Connection *con = [[Connection alloc] init];
-    [con readJSON:url withSender:self];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"Read JSON: %@", JSON);
+        [self readObject:JSON];
+        
+    }
+    failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"error: %@", [error userInfo]);
+                                                                                        }];
+    [operation start];
+    
+//    Connection *con = [[Connection alloc] init];
+//    [con readJSON:url withSender:self];
     
     [searchBar resignFirstResponder];
     [loading startAnimating];

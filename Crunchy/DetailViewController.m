@@ -8,10 +8,10 @@
 
 #import "DetailViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Connection.h"
 #import "UIImageView+WebCache.h"
 #import "OverviewViewController.h"
 #import "ImageViewController.h"
+#import "AFJSONRequestOperation.h"
 
 @interface DetailViewController ()
 
@@ -47,11 +47,20 @@
         self.titleLabel.text = name;
         
         
-        NSString* permUrl = [[self.detailItem objectForKey:@"permalink"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString* permUrl = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[[self.detailItem objectForKey:@"permalink"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         item = [[NSMutableDictionary alloc] init];
         NSLog(@"comp url:%@",permUrl);
-        Connection *con = [[Connection alloc] init];
-        [con readJSON:permUrl withSender:self];
+//        Connection *con = [[Connection alloc] init];
+//        [con readJSON:permUrl withSender:self];
+        
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:permUrl]];
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            NSLog(@"Read JSON: %@", JSON);
+            [self readObject:JSON];
+            
+        } failure:nil];
+        [operation start];
         
     }
 }
