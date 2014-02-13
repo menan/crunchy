@@ -37,7 +37,6 @@
 		6894C79B1841B79100A3CD85 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 6894C7921841B79100A3CD85 /* UIImageView+AFNetworking.m */; };
 		6894C79D1841B92E00A3CD85 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894C79C1841B92E00A3CD85 /* CFNetwork.framework */; };
 		6894C79F1841B9AA00A3CD85 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894C79E1841B9AA00A3CD85 /* MobileCoreServices.framework */; };
-		6894C7A11841B9E100A3CD85 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894C7A01841B9E100A3CD85 /* Crashlytics.framework */; };
 		6894C7A51841BA6E00A3CD85 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6894C7A41841BA6E00A3CD85 /* Security.framework */; };
 		68C9A01C183D86F400BA2885 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68C9A01B183D86F400BA2885 /* Images.xcassets */; };
 		68E669AF16C58B76007529AD /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E6699B16C58B76007529AD /* MKAnnotationView+WebCache.m */; };
@@ -58,6 +57,7 @@
 		68E669CF16C76754007529AD /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E669CC16C76754007529AD /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		68E669D016C76754007529AD /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E669CE16C76754007529AD /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E810235C17B410C400C80FBE /* Cruncher.m in Sources */ = {isa = PBXBuildFile; fileRef = E810235B17B410C400C80FBE /* Cruncher.m */; };
+		E81E3BF918AD6C5900449AA8 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,7 +108,6 @@
 		6894C7921841B79100A3CD85 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		6894C79C1841B92E00A3CD85 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		6894C79E1841B9AA00A3CD85 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		6894C7A01841B9E100A3CD85 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../../Tinrit/Crashlytics.framework; sourceTree = "<group>"; };
 		6894C7A21841BA3800A3CD85 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		6894C7A41841BA6E00A3CD85 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		68C9A01B183D86F400BA2885 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -147,6 +146,7 @@
 		68E669CE16C76754007529AD /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
 		E810235A17B410C400C80FBE /* Cruncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cruncher.h; sourceTree = "<group>"; };
 		E810235B17B410C400C80FBE /* Cruncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cruncher.m; sourceTree = "<group>"; };
+		E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,12 +155,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6894C7A51841BA6E00A3CD85 /* Security.framework in Frameworks */,
-				6894C7A11841B9E100A3CD85 /* Crashlytics.framework in Frameworks */,
 				6894C79F1841B9AA00A3CD85 /* MobileCoreServices.framework in Frameworks */,
 				6894C79D1841B92E00A3CD85 /* CFNetwork.framework in Frameworks */,
 				68E669BC16C58CD7007529AD /* MapKit.framework in Frameworks */,
 				68E669BA16C58CAE007529AD /* ImageIO.framework in Frameworks */,
 				685FEC3216BA0DE5007083CF /* libz.1.2.5.dylib in Frameworks */,
+				E81E3BF918AD6C5900449AA8 /* Crashlytics.framework in Frameworks */,
 				685FEC0C16BA08E7007083CF /* UIKit.framework in Frameworks */,
 				685FEC0E16BA08E7007083CF /* Foundation.framework in Frameworks */,
 				685FEC1016BA08E7007083CF /* CoreGraphics.framework in Frameworks */,
@@ -173,8 +173,6 @@
 		685FEBFF16BA08E7007083CF = {
 			isa = PBXGroup;
 			children = (
-				68E669BB16C58CD7007529AD /* MapKit.framework */,
-				68E669B916C58CAE007529AD /* ImageIO.framework */,
 				685FEC1116BA08E7007083CF /* Crunchy */,
 				685FEC0A16BA08E7007083CF /* Frameworks */,
 				685FEC0916BA08E7007083CF /* Products */,
@@ -192,9 +190,11 @@
 		685FEC0A16BA08E7007083CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */,
+				68E669BB16C58CD7007529AD /* MapKit.framework */,
+				68E669B916C58CAE007529AD /* ImageIO.framework */,
 				6894C7A41841BA6E00A3CD85 /* Security.framework */,
 				6894C7A21841BA3800A3CD85 /* CoreImage.framework */,
-				6894C7A01841B9E100A3CD85 /* Crashlytics.framework */,
 				6894C79E1841B9AA00A3CD85 /* MobileCoreServices.framework */,
 				6894C79C1841B92E00A3CD85 /* CFNetwork.framework */,
 				685FEC3316BA0DEF007083CF /* libxml2.2.dylib */,
@@ -336,6 +336,7 @@
 				685FEC0416BA08E7007083CF /* Sources */,
 				685FEC0516BA08E7007083CF /* Frameworks */,
 				685FEC0616BA08E7007083CF /* Resources */,
+				E81E3BF718AD6BE400449AA8 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -406,6 +407,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E81E3BF718AD6BE400449AA8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 928e4de34d419b70f5613e6c88fc7e1d35555057";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		685FEC0416BA08E7007083CF /* Sources */ = {
@@ -532,6 +549,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/menan/Dropbox/buinnes/Tinrit,
+					/Users/alexandrecarriere/Projects/crunchy,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Crunchy/Crunchy-Prefix.pch";
@@ -553,6 +571,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/menan/Dropbox/buinnes/Tinrit,
+					/Users/alexandrecarriere/Projects/crunchy,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Crunchy/Crunchy-Prefix.pch";

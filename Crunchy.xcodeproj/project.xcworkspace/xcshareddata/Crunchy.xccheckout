@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E3538A21-BFEF-4DD3-BE9B-FB89061C1082</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Crunchy</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>16370520-E70B-44EC-B674-1F855B9AA88C</key>
+		<string>https://github.com/menan/crunchy.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Crunchy.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>16370520-E70B-44EC-B674-1F855B9AA88C</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/menan/crunchy.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>16370520-E70B-44EC-B674-1F855B9AA88C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>16370520-E70B-44EC-B674-1F855B9AA88C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>crunchy</string>
+		</dict>
+	</array>
+</dict>
+</plist>

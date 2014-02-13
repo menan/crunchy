@@ -65,12 +65,13 @@ NSMutableDictionary *item;
             }
         }
         else{
-            NSLog(@"we're gonna keep key: %@",key);
+//            NSLog(@"we're gonna keep key: %@",key);
         }
     }
 //    NSLog(@"items length: %d", item.count);
     return self;
 }
+
 
 - (int) getSectionsCount{
     int i = 0;
@@ -98,7 +99,7 @@ NSMutableDictionary *item;
             }
         }
     }
-    NSLog(@"size at %d is %d", section, size);
+//    NSLog(@"size at %d is %d", section, size);
     
     if (size > MAX_DATA) {
         size = MAX_DATA;
@@ -193,7 +194,7 @@ NSMutableDictionary *item;
         for (id key in [[item objectForKey:@"general_info"] allKeys]) {
             if (index.row == i){
                 id value = [[item objectForKey:@"general_info"] valueForKey:key];
-                NSLog(@"key: %@", key);
+//                NSLog(@"key: %@", key);
                 return_array = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%@",value], key, nil];
             }
             i++;
@@ -207,11 +208,18 @@ NSMutableDictionary *item;
                     if ([key isEqualToString:@"relationships"]) {
                         NSString* name;
                         if (type == Person){
-                            name = [[[[item valueForKey:key] objectAtIndex:index.row]valueForKey:@"firm"] valueForKey:@"name"];
+                            name = [[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"firm"] valueForKey:@"name"]; //it would be a company name if its a person profile
                         }
                         else{
                             name = [NSString stringWithFormat:@"%@ %@",[[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"first_name"],[[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"last_name"]];
+                             //it would be a person name if its a person profile
                         }
+                        
+                        BOOL isPast = [[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"is_past"] boolValue];
+                        if (isPast) {
+                            name = [NSString stringWithFormat:@"%@(Past)", name];
+                        }
+//                        NSLog(@"is Past: %@:%@",name, isPast);
                         
                         NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
                         
@@ -428,7 +436,7 @@ NSMutableDictionary *item;
         NSString* matched_key = [[NSString alloc] init];
         NSMutableDictionary *object = [[NSMutableDictionary alloc] init];
         for (id key in dict) {
-            NSLog(@"permalinkForDictionary: each key is: %@",key);
+//            NSLog(@"permalinkForDictionary: each key is: %@",key);
             if (i == index.section-1 ){
                 object = [[dict valueForKey:key] objectAtIndex:index.row];
             }
@@ -473,7 +481,7 @@ NSMutableDictionary *item;
     
     NSString *key = [self getSectionNameAtIndex:index.section];
     
-    NSLog(@"matched key is %@", key);
+//    NSLog(@"matched key is %@", key);
     
     if ([key isEqualToString:@"competitions"]){
         return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"competitor"] valueForKey:@"permalink"]];
@@ -784,6 +792,12 @@ NSMutableDictionary *item;
     else{
         return @"Not Acquired";
     }
+}
+
+- (NSURL *) crunchyURLFromString:(NSString *) url{
+    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@"Browsing %@",cleanURL);
+    return [NSURL URLWithString:cleanURL];
 }
 
 @end

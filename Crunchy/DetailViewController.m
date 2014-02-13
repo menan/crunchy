@@ -32,7 +32,7 @@
         _detailItem = newDetailItem;
         
         // Update the view.
-        [self configureView];
+//        [self configureView];
     }
 }
 
@@ -46,17 +46,12 @@
         self.title = name;
         self.titleLabel.text = name;
         
-        
-        NSString* permUrl = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[[self.detailItem objectForKey:@"permalink"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        crunch = [[Cruncher alloc] init];
         item = [[NSMutableDictionary alloc] init];
-        NSLog(@"comp url:%@",permUrl);
-//        Connection *con = [[Connection alloc] init];
-//        [con readJSON:permUrl withSender:self];
         
-        
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:permUrl]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[crunch crunchyURLFromString:[self.detailItem objectForKey:@"permalink"]]];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-            NSLog(@"Read JSON: %@", JSON);
+//            NSLog(@"Read JSON: %@", JSON);
             [self readObject:JSON];
             
         } failure:nil];
@@ -68,14 +63,14 @@
 - (void) readObject: (NSDictionary *) object{
     item = [object copy];
     
-    crunch = [[Cruncher alloc] initWithDictionary:item];
+    crunch = [crunch initWithDictionary:item];
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",[item count]);
     [tableView reloadData];
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
     
-    NSString* image_url = [crunch getImage:false];
+    NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
     NSLog(@"image url :%@",image_url);
@@ -90,9 +85,15 @@
 
 - (void)viewDidLoad
 {
+    self.tableView.separatorInset = UIEdgeInsetsZero;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+}
+-(void)viewDidAppear:(BOOL)animated{
+//    crunch = [crunch initWithDictionary:item];
+    [self configureView];
+    NSLog(@"just appeared %@",[crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -122,31 +123,14 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return [crunch getSectionAtIndex:section];
-
-//    if ([item count] > 0){
-//        if(section == 0)
-//            return @"General Info";
-//        else if(section == 1)
-//            return @"Overview";
-//        else{
-//            return [crunch titlizeString:[crunch getKeyAtIndexPath:section]];
-//        }
-//    }
-//    else
-//        return @"";
 }
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [crunch getSectionsCount];
-//    if ([crunch getSectionsCount] > 0)
-//        return [crunch getSectionsCount] +1;
-//    else
-//        return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //NSLog(@"size at section:%d",[crunch getSizeAtSection:section]);
     return [crunch getSizeAtSection:section];
 }
 
@@ -156,7 +140,7 @@
     if (indexPath.section > 0) {
         
 //        DetailViewController *detail = [[DetailViewController alloc] init];
-        DetailViewController *detail=[self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
+        DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
         [self.navigationController pushViewController:detail animated:YES];

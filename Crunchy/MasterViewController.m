@@ -32,6 +32,7 @@
 	self.tableView.rowHeight = 50;
 //    self.tableView.separatorColor = [UIColor colorWithRed:0.8156862745098 green:0.8 blue:0.78823529411765 alpha:1];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
     //rgb(104, 177, 195);
 //    [self.navigationController.navigationBar setTintColor: [UIColor colorWithRed:.282 green:0.486 blue:0.506 alpha:1]];
 
@@ -229,12 +230,20 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"Read JSON: %@", JSON);
+//        NSLog(@"Read JSON: %@", JSON);
         [self readObject:JSON];
         
     }
     failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         NSLog(@"error: %@", [error userInfo]);
+        [loading stopAnimating];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
+                                                        message:@"Unable to connect to the server."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
                                                                                         }];
     [operation start];
     

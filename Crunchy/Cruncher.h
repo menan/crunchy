@@ -44,4 +44,6 @@ typedef enum ItemType : NSUInteger {
 - (NSString *) getImage: (BOOL) small;
 - (NSString *) getOverview;
 - (NSString *) getTitle;
+
+- (NSURL *) crunchyURLFromString:(NSString *) url;
 @end
