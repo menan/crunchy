@@ -12,6 +12,7 @@
 #import "OverviewViewController.h"
 #import "ImageViewController.h"
 #import "AFJSONRequestOperation.h"
+#import "WebViewController.h"
 
 @interface DetailViewController ()
 
@@ -93,7 +94,7 @@
         crunch = [crunch initWithDictionary:item];
         [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     }
-    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
+//    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -119,6 +120,14 @@
         [imageview setImageURL:imageURL];
         
     }
+    else if ([[segue identifier] isEqualToString:@"web"]){
+        
+        WebViewController* view = segue.destinationViewController;
+        
+        NSIndexPath *index = [tableView indexPathForSelectedRow];
+        NSString *fullURL = [[crunch getContentAtIndexPath:index] objectAtIndex:1];
+        view.url  = fullURL;
+    }
 }
 
 
@@ -136,11 +145,22 @@
 }
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [aTableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section > 0) {
+    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
+    
+    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"general Info"]) {
         
-//        DetailViewController *detail = [[DetailViewController alloc] init];
+    }
+    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"offices"]){
+        
+    }
+    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]){
+        [self performSegueWithIdentifier:@"web" sender:self];
+    }
+    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"external links"]){
+        [self performSegueWithIdentifier:@"web" sender:self];
+    }
+    else{
         DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
@@ -151,6 +171,7 @@
         
         [detail setDetailItem:object];
     }
+    [aTableView deselectRowAtIndexPath:indexPath animated:YES];
     
     
 }

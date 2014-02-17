@@ -110,7 +110,7 @@ NSMutableDictionary *item;
 - (NSString *) getSectionAtIndex: (int) index{
     NSString *returnVal = @"";
     int i = 0;
-    if (index == 0) {
+    if (index == 0 && [self getSizeAtSection:index] > 0) {
         returnVal = @"General Info";
     }
     else{
@@ -118,7 +118,7 @@ NSMutableDictionary *item;
             if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
                 i++;
                 if (index == i){
-                    returnVal = [self titlizeString:key];
+                    returnVal = [key stringByReplacingOccurrencesOfString:@"_" withString:@" "];
                 }
             }
         }
@@ -238,7 +238,7 @@ NSMutableDictionary *item;
                     else if ([key isEqualToString:@"external_links"]) {
                         NSString* url = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"external_url"];
                         NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
-                        return_array = [NSArray arrayWithObjects:url, title, nil];
+                        return_array = [NSArray arrayWithObjects:title, url, nil];
                     }
                     else if ([key isEqualToString:@"providerships"]) {
                         NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
@@ -741,7 +741,7 @@ NSMutableDictionary *item;
     else{
         
         int amount = [amt intValue];
-        NSLog(@"int value of the amount is %d", amount);
+//        NSLog(@"int value of the amount is %d", amount);
         if (amount/1000000000 >= 1) {
             return [NSString stringWithFormat:@"$%.1fM", amount/1000000000.0];
         }

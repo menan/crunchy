@@ -21,5 +21,5 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
-- (void) readObject: (NSDictionary *) object;
+- (void) readObject;
 @end

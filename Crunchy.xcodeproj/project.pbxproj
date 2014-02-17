@@ -58,6 +58,7 @@
 		68E669D016C76754007529AD /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E669CE16C76754007529AD /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E810235C17B410C400C80FBE /* Cruncher.m in Sources */ = {isa = PBXBuildFile; fileRef = E810235B17B410C400C80FBE /* Cruncher.m */; };
 		E81E3BF918AD6C5900449AA8 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */; };
+		E89397F618B2B09100474141 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89397F518B2B09100474141 /* WebViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -147,6 +148,8 @@
 		E810235A17B410C400C80FBE /* Cruncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cruncher.h; sourceTree = "<group>"; };
 		E810235B17B410C400C80FBE /* Cruncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cruncher.m; sourceTree = "<group>"; };
 		E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		E89397F418B2B09100474141 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		E89397F518B2B09100474141 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +233,8 @@
 				68E669BD16C64763007529AD /* AboutViewController.h */,
 				68E669BE16C64763007529AD /* AboutViewController.m */,
 				68C9A01B183D86F400BA2885 /* Images.xcassets */,
+				E89397F418B2B09100474141 /* WebViewController.h */,
+				E89397F518B2B09100474141 /* WebViewController.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6894C7941841B79100A3CD85 /* AFHTTPRequestOperation.m in Sources */,
+				E89397F618B2B09100474141 /* WebViewController.m in Sources */,
 				685FEC1816BA08E7007083CF /* main.m in Sources */,
 				6894C7951841B79100A3CD85 /* AFImageRequestOperation.m in Sources */,
 				685FEC1C16BA08E7007083CF /* AppDelegate.m in Sources */,
