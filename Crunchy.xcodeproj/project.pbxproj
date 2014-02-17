@@ -59,6 +59,8 @@
 		E810235C17B410C400C80FBE /* Cruncher.m in Sources */ = {isa = PBXBuildFile; fileRef = E810235B17B410C400C80FBE /* Cruncher.m */; };
 		E81E3BF918AD6C5900449AA8 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */; };
 		E89397F618B2B09100474141 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89397F518B2B09100474141 /* WebViewController.m */; };
+		E89397F918B2C33C00474141 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89397F818B2C33C00474141 /* MapViewController.m */; };
+		E89397FB18B2C3D800474141 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E89397FA18B2C3D800474141 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +152,9 @@
 		E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		E89397F418B2B09100474141 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		E89397F518B2B09100474141 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		E89397F718B2C33C00474141 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		E89397F818B2C33C00474141 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		E89397FA18B2C3D800474141 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,10 +162,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E89397FB18B2C3D800474141 /* CoreLocation.framework in Frameworks */,
+				68E669BC16C58CD7007529AD /* MapKit.framework in Frameworks */,
 				6894C7A51841BA6E00A3CD85 /* Security.framework in Frameworks */,
 				6894C79F1841B9AA00A3CD85 /* MobileCoreServices.framework in Frameworks */,
 				6894C79D1841B92E00A3CD85 /* CFNetwork.framework in Frameworks */,
-				68E669BC16C58CD7007529AD /* MapKit.framework in Frameworks */,
 				68E669BA16C58CAE007529AD /* ImageIO.framework in Frameworks */,
 				685FEC3216BA0DE5007083CF /* libz.1.2.5.dylib in Frameworks */,
 				E81E3BF918AD6C5900449AA8 /* Crashlytics.framework in Frameworks */,
@@ -193,6 +199,7 @@
 		685FEC0A16BA08E7007083CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E89397FA18B2C3D800474141 /* CoreLocation.framework */,
 				E81E3BF818AD6C5900449AA8 /* Crashlytics.framework */,
 				68E669BB16C58CD7007529AD /* MapKit.framework */,
 				68E669B916C58CAE007529AD /* ImageIO.framework */,
@@ -235,6 +242,8 @@
 				68C9A01B183D86F400BA2885 /* Images.xcassets */,
 				E89397F418B2B09100474141 /* WebViewController.h */,
 				E89397F518B2B09100474141 /* WebViewController.m */,
+				E89397F718B2C33C00474141 /* MapViewController.h */,
+				E89397F818B2C33C00474141 /* MapViewController.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -448,6 +457,7 @@
 				68E669AF16C58B76007529AD /* MKAnnotationView+WebCache.m in Sources */,
 				6894C7961841B79100A3CD85 /* AFJSONRequestOperation.m in Sources */,
 				68E669B016C58B76007529AD /* SDImageCache.m in Sources */,
+				E89397F918B2C33C00474141 /* MapViewController.m in Sources */,
 				68E669B116C58B76007529AD /* SDWebImageCompat.m in Sources */,
 				68E669B216C58B76007529AD /* SDWebImageDecoder.m in Sources */,
 				68E669B316C58B76007529AD /* SDWebImageDownloader.m in Sources */,

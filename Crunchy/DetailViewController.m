@@ -13,6 +13,7 @@
 #import "ImageViewController.h"
 #import "AFJSONRequestOperation.h"
 #import "WebViewController.h"
+#import "MapViewController.h"
 
 @interface DetailViewController ()
 
@@ -128,6 +129,14 @@
         NSString *fullURL = [[crunch getContentAtIndexPath:index] objectAtIndex:1];
         view.url  = fullURL;
     }
+    else if ([[segue identifier] isEqualToString:@"map"]){
+        
+        MapViewController* view = segue.destinationViewController;
+        
+        NSIndexPath *index = [tableView indexPathForSelectedRow];
+        NSString *fullURL = [[crunch getContentAtIndexPath:index] objectAtIndex:0];
+        view.address  = fullURL;
+    }
 }
 
 
@@ -152,6 +161,7 @@
         
     }
     else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"offices"]){
+        [self performSegueWithIdentifier:@"map" sender:self];
         
     }
     else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]){
