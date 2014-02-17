@@ -32,7 +32,7 @@
         _detailItem = newDetailItem;
         
         // Update the view.
-//        [self configureView];
+        [self configureView];
     }
 }
 
@@ -42,17 +42,17 @@
 
     if (self.detailItem) {
         NSString *name = [self.detailItem objectForKey:@"name"];
-        NSLog(@"title:%@",name);
+//        NSLog(@"title:%@",name);
         self.title = name;
         self.titleLabel.text = name;
         
-        crunch = [[Cruncher alloc] init];
         item = [[NSMutableDictionary alloc] init];
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:[crunch crunchyURLFromString:[self.detailItem objectForKey:@"permalink"]]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[self crunchyURLFromString:[self.detailItem objectForKey:@"permalink"]]];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
 //            NSLog(@"Read JSON: %@", JSON);
-            [self readObject:JSON];
+            item = [JSON copy];
+            [self readObject];
             
         } failure:nil];
         [operation start];
@@ -60,10 +60,8 @@
     }
 }
 
-- (void) readObject: (NSDictionary *) object{
-    item = [object copy];
-    
-    crunch = [crunch initWithDictionary:item];
+- (void) readObject{
+    crunch = [[Cruncher alloc] initWithDictionary:item];
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",[item count]);
     [tableView reloadData];
@@ -73,16 +71,16 @@
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
-    NSLog(@"image url :%@",image_url);
+//    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
     [self.imageView setImageWithURL:url placeholderImage:img];
     
     self.title = [crunch getTitle];
     
-    NSLog(@"Items: %d",[crunch getSectionsCount]);
+//    NSLog(@"Sections: %d",[crunch getSectionsCount]);
 }
 
-
+//
 - (void)viewDidLoad
 {
     self.tableView.separatorInset = UIEdgeInsetsZero;
@@ -91,9 +89,11 @@
     
 }
 -(void)viewDidAppear:(BOOL)animated{
-//    crunch = [crunch initWithDictionary:item];
-    [self configureView];
-    NSLog(@"just appeared %@",[crunch getTitle]);
+    if ([item count] > 0) {
+        crunch = [crunch initWithDictionary:item];
+        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+    }
+    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,6 +104,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSLog(@"segue id: %@",[segue identifier]);
     if ([[segue identifier] isEqualToString:@"overview"]) {
         OverviewViewController *overview = segue.destinationViewController;
         NSString *overviewTxt = [crunch getOverview];
@@ -181,4 +182,9 @@
     return cell;
 }
 
+- (NSURL *) crunchyURLFromString:(NSString *) url{
+    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@"Browsing %@",cleanURL);
+    return [NSURL URLWithString:cleanURL];
+}
 @end

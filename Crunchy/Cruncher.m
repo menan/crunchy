@@ -794,10 +794,5 @@ NSMutableDictionary *item;
     }
 }
 
-- (NSURL *) crunchyURLFromString:(NSString *) url{
-    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSLog(@"Browsing %@",cleanURL);
-    return [NSURL URLWithString:cleanURL];
-}
 
 @end
