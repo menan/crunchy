@@ -24,8 +24,8 @@
     return self;
 }
 - (void) loadURL:(NSString *) urlStr{
-    NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    NSURL *aUrl = [NSURL URLWithString:urlStr];
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:aUrl];
     [webview loadRequest:requestObj];
     NSLog(@"loading URL:%@",urlStr);
 }
@@ -40,6 +40,34 @@
 {
     NSLog(@"Error : %@",error);
 }
+
+- (IBAction)showSheet:(id)sender{
+    UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles: @"Open in Safari", nil];
+    popup.tag = 1;
+    [popup showInView:[UIApplication sharedApplication].keyWindow];
+}
+
+- (IBAction)reloadPage:(id)sender{
+    [self loadURL:url];
+}
+- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch (popup.tag) {
+        case 1: {
+            switch (buttonIndex) {
+                case 0:
+                    [[UIApplication sharedApplication] openURL:self.webview.request.URL];
+                    break;
+                default:
+                    break;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     NSLog(@"starting to load");
 }

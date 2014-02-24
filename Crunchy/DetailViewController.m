@@ -14,12 +14,14 @@
 #import "AFJSONRequestOperation.h"
 #import "WebViewController.h"
 #import "MapViewController.h"
+#import "FundingsViewController.h"
 
 @interface DetailViewController ()
 
 @property (strong, nonatomic) Cruncher *crunch;
 
 #define MAX_DATA 100
+#define PASTLABEL_TAG 1
 - (void)configureView;
 @end
 
@@ -116,7 +118,7 @@
     else if ([[segue identifier] isEqualToString:@"imageview"]){
         
         ImageViewController *imageview = segue.destinationViewController;
-        NSString *imageURL = [self.detailItem objectForKey:@"image_large"];
+        NSString *imageURL = [crunch getImage:NO];;
         NSLog(@"image large url = %@",imageURL);
         [imageview setImageURL:imageURL];
         
@@ -126,7 +128,13 @@
         WebViewController* view = segue.destinationViewController;
         
         NSIndexPath *index = [tableView indexPathForSelectedRow];
-        NSString *fullURL = [[crunch getContentAtIndexPath:index] objectAtIndex:1];
+        
+        NSMutableDictionary *content = [crunch getContentAtIndexPath:index];
+        
+        NSString *fullURL = [content objectForKey:@"detail"];
+        if ([[content objectForKey:@"detail"] isEqualToString:@"url"]) {
+            fullURL = [content objectForKey:@"text"];
+        }
         view.url  = fullURL;
     }
     else if ([[segue identifier] isEqualToString:@"map"]){
@@ -134,8 +142,15 @@
         MapViewController* view = segue.destinationViewController;
         
         NSIndexPath *index = [tableView indexPathForSelectedRow];
-        NSString *fullURL = [[crunch getContentAtIndexPath:index] objectAtIndex:0];
+        NSString *fullURL = [[crunch getContentAtIndexPath:index] objectForKey:@"text"];
         view.address  = fullURL;
+        view.company  = self.title;
+    }
+    else if([[segue identifier] isEqualToString:@"fundingview"]){
+        FundingsViewController * funding = segue.destinationViewController;
+        
+        NSIndexPath *index = [tableView indexPathForSelectedRow];
+        funding.objects = [[[item objectForKey:@"funding_rounds"] objectAtIndex:index.row] objectForKey:@"investments"];
     }
 }
 
@@ -156,8 +171,18 @@
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
+    NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     
-    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"general Info"]) {
+    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"General Info"]) {
+        if ([[content objectForKey:@"detail"] isEqualToString:@"twitter"]) {
+            NSLog(@"twitter tapped tho %@",[content objectForKey:@"text"]);
+            [self openTwitter:[content objectForKey:@"text"]];
+        }
+        else if ([[content objectForKey:@"detail"] isEqualToString:@"url"]){
+            [self performSegueWithIdentifier:@"web" sender:self];
+        }
+    }
+    else if([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"degrees"] || [[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funds"]){
         
     }
     else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"offices"]){
@@ -169,6 +194,12 @@
     }
     else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"external links"]){
         [self performSegueWithIdentifier:@"web" sender:self];
+    }
+    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"web presences"]){
+        [self performSegueWithIdentifier:@"web" sender:self];
+    }
+    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funding rounds"]){
+        [self performSegueWithIdentifier:@"fundingview" sender:self];
     }
     else{
         DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
@@ -188,34 +219,82 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:@"MyIdentifier"];
+    UILabel *pastLabel;
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        BOOL isPast = [[content objectForKey:@"past"] boolValue];
+        
+        if (isPast) {
+            
+            pastLabel = [[UILabel alloc] initWithFrame:CGRectMake(280.0, 5.0, 40.0, 15.0)];
+            pastLabel.tag = PASTLABEL_TAG;
+            pastLabel.font = [UIFont boldSystemFontOfSize:13.0];
+            pastLabel.textAlignment = NSTextAlignmentCenter;
+            pastLabel.textColor = [UIColor blackColor];
+            pastLabel.backgroundColor = [UIColor groupTableViewBackgroundColor];
+            pastLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+            pastLabel.text = @"PAST";
+            [cell.contentView addSubview:pastLabel];
+        }
+    } else {
+        pastLabel = (UILabel *)[cell.contentView viewWithTag:PASTLABEL_TAG];
     }
-    if (indexPath.section > 0)
+//    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
+    
+    if (indexPath.section > 0 && ![[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"degrees"]&& ![[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"twitter"] || [[content objectForKey:@"detail"] isEqualToString:@"url"])){
+        cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
+    }
     else
         cell.accessoryType =  UITableViewCellAccessoryNone;
     
-    // Set up the cell...
     
-//    cell.textLabel.font = [UIFont systemFontOfSize:13.0];
-//    cell.detailTextLabel.font = [UIFont systemFontOfSize:15.0];
+    
+    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]) {
+        cell.textLabel.font = [UIFont systemFontOfSize:14.0];
+        cell.textLabel.numberOfLines = 2;
+    }
     cell.textLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.textColor = [UIColor grayColor];
-//    cell.textLabel.numberOfLines = 2;
-    NSArray *content = [NSArray arrayWithArray: [crunch getContentAtIndexPath:indexPath]];
 
     
-    cell.textLabel.text = [content objectAtIndex:0];
-    cell.detailTextLabel.text = [content objectAtIndex:1];
+    cell.textLabel.text = [content objectForKey:@"text"];
+    cell.detailTextLabel.text = [content objectForKey:@"detail"];
     return cell;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]) {
+        return 60.0;
+    }
+    else{
+        return 45;
+    }
+}
+
 
 - (NSURL *) crunchyURLFromString:(NSString *) url{
     NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSLog(@"Browsing %@",cleanURL);
     return [NSURL URLWithString:cleanURL];
+}
+- (BOOL) validateUrl: (NSString *) candidate {
+    NSString *urlRegEx =
+    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    return [urlTest evaluateWithObject:candidate];
+}
+
+- (void)openTwitter:(NSString *)screen {
+    
+    UIApplication *ourApplication = [UIApplication sharedApplication];
+    NSString *ourPath = [NSString stringWithFormat:@"twitter://user?screen_name=%@",screen];
+    NSURL *ourURL = [NSURL URLWithString:ourPath];
+    [ourApplication openURL:ourURL];
 }
 @end
