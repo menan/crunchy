@@ -67,7 +67,7 @@
 - (void) readObject{
     crunch = [[Cruncher alloc] initWithDictionary:item];
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-    NSLog(@"data reloaded to detail length is : %d",[item count]);
+    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
@@ -77,7 +77,7 @@
     NSURL *url = [NSURL URLWithString:image_url];
 //    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
-    [self.imageView setImageWithURL:url placeholderImage:img];
+    [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
     self.title = [crunch getTitle];
     
@@ -93,10 +93,10 @@
     
 }
 -(void)viewDidAppear:(BOOL)animated{
-    if ([item count] > 0) {
-        crunch = [crunch initWithDictionary:item];
-        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-    }
+//    if ([item count] > 0) {
+//        crunch = [crunch initWithDictionary:item];
+//        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+//    }
 //    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
@@ -156,7 +156,7 @@
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return [crunch getSectionAtIndex:section];
+    return [crunch getSectionAtIndex:(int)section];
 }
 
 
@@ -170,10 +170,10 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
+    NSLog(@"title: %@",[crunch getSectionAtIndex:(int)indexPath.section]);
     NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     
-    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"General Info"]) {
+    if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"General Info"]) {
         if ([[content objectForKey:@"detail"] isEqualToString:@"twitter"]) {
             NSLog(@"twitter tapped tho %@",[content objectForKey:@"text"]);
             [self openTwitter:[content objectForKey:@"text"]];
@@ -182,23 +182,23 @@
             [self performSegueWithIdentifier:@"web" sender:self];
         }
     }
-    else if([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"degrees"] || [[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funds"]){
+    else if([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"degrees"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funds"]){
         
     }
-    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"offices"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"offices"]){
         [self performSegueWithIdentifier:@"map" sender:self];
         
     }
-    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"milestones"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"external links"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"external links"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"web presences"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"web presences"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-    else if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funding rounds"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funding rounds"]){
         [self performSegueWithIdentifier:@"fundingview" sender:self];
     }
     else{
@@ -244,7 +244,10 @@
     }
 //    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
-    if (indexPath.section > 0 && ![[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"degrees"]&& ![[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"funds"]){
+    NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
+    NSLog(@"section: %@",sectionString);
+    
+    if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"twitter"] || [[content objectForKey:@"detail"] isEqualToString:@"url"])){
@@ -255,7 +258,7 @@
     
     
     
-    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]) {
+    if ([sectionString isEqualToString:@"milestones"]) {
         cell.textLabel.font = [UIFont systemFontOfSize:14.0];
         cell.textLabel.numberOfLines = 2;
     }
@@ -269,7 +272,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([[crunch getSectionAtIndex:indexPath.section] isEqualToString:@"milestones"]) {
+    if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"milestones"]) {
         return 60.0;
     }
     else{

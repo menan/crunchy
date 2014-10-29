@@ -92,7 +92,7 @@ NSMutableDictionary *item;
 //    NSLog(@"section at %d", section);
     int size = 0;
     if (section == 0) {
-        size = [[item objectForKey:@"general_info"] count];
+        size = (int) [[item objectForKey:@"general_info"] count];
     }
     else{
         int i = 0;
@@ -100,7 +100,7 @@ NSMutableDictionary *item;
             if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
                 i++;
                 if (section == i){
-                    size = [[item objectForKey:key] count];
+                    size = (int) [[item objectForKey:key] count];
                 }
             }
         }
@@ -153,10 +153,10 @@ NSMutableDictionary *item;
 
 - (NSString *) getImage: (BOOL) small {
     NSDictionary *images = [item valueForKey:@"image"];
-//    NSLog(@"images: %@", images);
     if ([images valueForKey:@"available_sizes"] != (id)[NSNull null]){
-        NSString* images_url = [NSString stringWithFormat:@"http://crunchbase.com/%@",[[[images valueForKey:@"available_sizes"] objectAtIndex:0] objectAtIndex:1]];
-        NSString* images_large_url = [NSString stringWithFormat:@"http://crunchbase.com/%@",[[[images valueForKey:@"available_sizes"] objectAtIndex:2] objectAtIndex:1]];
+        NSString* images_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:0] objectAtIndex:1];
+        NSString* images_large_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:2] objectAtIndex:1];
+        NSLog(@"images: %@", images_url);
         
         if (small){
             return images_url;
@@ -410,7 +410,7 @@ NSMutableDictionary *item;
 
 - (NSString *)getTypeAtIndexPath:(NSIndexPath *)index {
     
-    NSString *key = [self getSectionNameAtIndex:index.section];
+    NSString *key = [self getSectionNameAtIndex:(int) index.section];
     
     NSLog(@"matched key is %@", key);
 
@@ -473,7 +473,7 @@ NSMutableDictionary *item;
 //        NSLog(@"looping thru key:%@",key);
         if (i == index - 1 && [[item valueForKey:key] isKindOfClass:[NSArray class]]){
             NSLog(@"item value is: %@",[item valueForKey:key]);
-            size = [[item valueForKey:key] count];
+            size = (int) [[item valueForKey:key] count];
 //            NSLog(@"found size:%d at index:%d",size,i);
         }
         i++;
@@ -568,7 +568,7 @@ NSMutableDictionary *item;
 
 
 - (BOOL) isAcquired{
-    NSLog(@"%hhd",[self isNull:@"acquisition"]);
+//    NSLog(@"%hhd",[self isNull:@"acquisition"]);
     return ![self isNull:@"acquisition"];
 }
 - (NSString *) prettifyAmount: (NSDecimalNumber *) amt{
