@@ -37,7 +37,12 @@
 
 - (void)viewDidLoad
 {
-    [self.imageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {[self.loading stopAnimating];}];
+    
+    
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:imageURL] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [self.loading stopAnimating];
+    }];
+    
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }

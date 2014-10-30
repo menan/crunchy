@@ -10,29 +10,29 @@
 	<string>Crunchy</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>16370520-E70B-44EC-B674-1F855B9AA88C</key>
+		<key>C77BBF914ABD2F84EA636CFF3F7F7489B677B6DE</key>
 		<string>https://github.com/menan/crunchy.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Crunchy.xcodeproj/project.xcworkspace</string>
+	<string>Crunchy.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>16370520-E70B-44EC-B674-1F855B9AA88C</key>
+		<key>C77BBF914ABD2F84EA636CFF3F7F7489B677B6DE</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/menan/crunchy.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>16370520-E70B-44EC-B674-1F855B9AA88C</string>
+	<string>C77BBF914ABD2F84EA636CFF3F7F7489B677B6DE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>16370520-E70B-44EC-B674-1F855B9AA88C</string>
+			<string>C77BBF914ABD2F84EA636CFF3F7F7489B677B6DE</string>
 			<key>IDESourceControlWCCName</key>
 			<string>crunchy</string>
 		</dict>

@@ -16,6 +16,14 @@ ItemType type = Company;
 
 NSMutableDictionary *item;
 
++ (NSString *) userKey{
+    return @"vb4f9vwfty979hbyp7ry3wwk"; // @"00aba8c514f4e90b191bafe88ce9fceb";
+}
+
++ (NSString *) crunchBaseURL{
+    return @"http://api.crunchbase.com/v/1";
+}
+
 - (id) initWithDictionary: (NSMutableDictionary *) dict{
     item = [[NSMutableDictionary alloc] initWithDictionary:dict];
 
@@ -132,7 +140,7 @@ NSMutableDictionary *item;
     return returnVal;
 }
 
-- (NSString *) getSectionNameAtIndex: (int) index{
+- (NSString *) getSectionNameAtIndex: (NSInteger) index{
     NSString *returnVal = @"";
     int i = 0;
     if (index == 0) {
@@ -230,7 +238,11 @@ NSMutableDictionary *item;
                     }
                     else if ([key isEqualToString:@"offices"]) {
                         NSString* name = [NSString stringWithFormat:@"%@, %@",[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"city"],[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"country_code"]];
-                        NSString* desc = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"];
+                        NSString* desc = @"";
+                        if (![[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"] isEqual:(id)[NSNull null]]){
+                            desc = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"];
+                        }
+                        
                         [returnObject setObject:name forKey:@"text"];
                         [returnObject setObject:desc forKey:@"detail"];
                     }
@@ -339,30 +351,33 @@ NSMutableDictionary *item;
             i++;
         }
         
+        NSString *url = [Cruncher crunchBaseURL];
+        
+        
         if ([matched_key isEqualToString:@"competitions"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json", [[object valueForKey:@"competitor"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json", url, [[object valueForKey:@"competitor"] valueForKey:@"permalink"]];
         }
         else if ([matched_key isEqualToString:@"relationships"]){
             if ([[self getValue:@"type"] isEqualToString:@"person"])
-                return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json", [[object valueForKey:@"firm"] valueForKey:@"permalink"]];
+                return [NSString stringWithFormat:@"%@/company/%@.json",url, [[object valueForKey:@"firm"] valueForKey:@"permalink"]];
             else{
-                return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/person/%@.json",[[object valueForKey:@"person"] valueForKey:@"permalink"]];
+                return [NSString stringWithFormat:@"%@/person/%@.json",url, [[object valueForKey:@"person"] valueForKey:@"permalink"]];
             }
         }
         else if ([matched_key isEqualToString:@"products"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/product/%@.json",[object valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/product/%@.json",url, [object valueForKey:@"permalink"]];
         }
         else if ([matched_key isEqualToString:@"acquisitions"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json", [[object valueForKey:@"company"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json", url, [[object valueForKey:@"company"] valueForKey:@"permalink"]];
         }
         else if ([matched_key isEqualToString:@"providerships"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json", [[object valueForKey:@"provider"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json",url,  [[object valueForKey:@"provider"] valueForKey:@"permalink"]];
         }
         else if ([matched_key isEqualToString:@"investments"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json",[[[object valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json",url, [[[object valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
         }
         else if ([matched_key isEqualToString:@"company"]){
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json",[[object valueForKey:@"company"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json",url, [[object valueForKey:@"company"] valueForKey:@"permalink"]];
         }
         else
             return @"";
@@ -377,32 +392,33 @@ NSMutableDictionary *item;
     
     NSString *key = [self getSectionNameAtIndex:index.section];
     
-//    NSLog(@"matched key is %@", key);
+    //    NSLog(@"matched key is %@", key);
+    NSString *url = [Cruncher crunchBaseURL];
     
     if ([key isEqualToString:@"competitions"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"competitor"] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/company/%@.json?",url, [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"competitor"] valueForKey:@"permalink"]];
     }
     else if ([key isEqualToString:@"relationships"]){
         if (type == Person)
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"firm"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/company/%@.json?",url, [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"firm"] valueForKey:@"permalink"]];
         else{
-            return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/person/%@.json?",[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"permalink"]];
+            return [NSString stringWithFormat:@"%@/person/%@.json?",url,[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"permalink"]];
         }
     }
     else if ([key isEqualToString:@"products"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/product/%@.json?",[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/product/%@.json?",url,[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"permalink"]];
     }
     else if ([key isEqualToString:@"acquisitions"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/company/%@.json?",url, [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
     }
     else if ([key isEqualToString:@"providerships"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?", [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"provider"] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/company/%@.json?",url, [[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"provider"] valueForKey:@"permalink"]];
     }
     else if ([key isEqualToString:@"investments"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?",[[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/company/%@.json?",url,[[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
     }
     else if ([key isEqualToString:@"company"]){
-        return [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/company/%@.json?",[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
+        return [NSString stringWithFormat:@"%@/company/%@.json?",url,[[[[item objectForKey:key] objectAtIndex:index.row] valueForKey:@"company"] valueForKey:@"permalink"]];
     }
     else
         return @"";

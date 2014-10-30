@@ -66,6 +66,7 @@
 
 - (void) readObject{
     crunch = [[Cruncher alloc] initWithDictionary:item];
+    
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
@@ -88,16 +89,20 @@
 - (void)viewDidLoad
 {
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
 }
--(void)viewDidAppear:(BOOL)animated{
-//    if ([item count] > 0) {
-//        crunch = [crunch initWithDictionary:item];
-//        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-//    }
-//    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
+
+- (void) viewWillAppear:(BOOL)animated{
+    
+    if ([item count] > 0) {
+        crunch = [crunch initWithDictionary:item];
+        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+        [tableView reloadData];
+    }
+    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -245,7 +250,7 @@
 //    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
-    NSLog(@"section: %@",sectionString);
+    NSLog(@"section: %@, content: %@",sectionString, content);
     
     if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
@@ -282,7 +287,7 @@
 
 
 - (NSURL *) crunchyURLFromString:(NSString *) url{
-    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=%@",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [Cruncher userKey]];
     NSLog(@"Browsing %@",cleanURL);
     return [NSURL URLWithString:cleanURL];
 }

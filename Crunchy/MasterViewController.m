@@ -179,14 +179,14 @@
             [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"overview"]] forKey:@"overview"];
             [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"namespace"]] forKey:@"namespace"];
             [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"namespace"]] forKey:@"type"];
-            [item setObject:[NSString stringWithFormat:@"http://api.crunchbase.com/v/1/%@/%@.json?",[result valueForKey:@"namespace"], [result valueForKey:@"permalink"]] forKey:@"permalink"];
+            [item setObject:[NSString stringWithFormat:@"%@/%@/%@.json?",[Cruncher crunchBaseURL], [result valueForKey:@"namespace"], [result valueForKey:@"permalink"]] forKey:@"permalink"];
             [_objects addObject:[item copy]];
             
         }
     }
     
     [self.tableView reloadData];
-    NSLog(@"returned object: %d",_objects.count);
+    NSLog(@"returned object: %lu",(unsigned long)_objects.count);
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -198,7 +198,7 @@
     // You'll probably want to do this on another thread
     // SomeService is just a dummy class representing some
     // api that you are using to do the search
-    NSString* url = [[NSString stringWithFormat:@"http://api.crunchbase.com/v/1/search.js?query=%@&api_key=vb4f9vwfty979hbyp7ry3wwk",uiSearchBar.text] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString* url = [[NSString stringWithFormat:@"%@/search.js?query=%@&api_key=%@", [Cruncher crunchBaseURL], uiSearchBar.text, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -244,7 +244,7 @@
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         NSDate *object = _objects[indexPath.row];
-        NSLog(@"selected index path:%d",indexPath.row);
+        NSLog(@"selected index path:%ld",(long)indexPath.row);
         [[segue destinationViewController] setDetailItem:object];
     }
 }
