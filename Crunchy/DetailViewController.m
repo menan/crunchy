@@ -65,7 +65,7 @@
 }
 
 - (void) readObject{
-    crunch = [[Cruncher alloc] initWithDictionary:item];
+    crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
     
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
@@ -250,7 +250,7 @@
 //    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
-    NSLog(@"section: %@, content: %@",sectionString, content);
+//    NSLog(@"section: %@, content: %@",sectionString, content);
     
     if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
@@ -287,7 +287,7 @@
 
 
 - (NSURL *) crunchyURLFromString:(NSString *) url{
-    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=%@",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [Cruncher userKey]];
+    NSString *cleanURL = [NSString stringWithFormat:@"%@user_key=%@",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [Cruncher userKey]];
     NSLog(@"Browsing %@",cleanURL);
     return [NSURL URLWithString:cleanURL];
 }

@@ -78,7 +78,7 @@
         [cell.contentView addSubview:imgView];
         
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.tableView.rowHeight + 25, 0, 250, 30)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.tableView.rowHeight + 25, 10, cell.bounds.size.width - 100, 30)];
         label.textColor = [UIColor blackColor];
         label.font = [UIFont fontWithName:@"Arial" size:15];
         label.font =  [UIFont boldSystemFontOfSize:15];
@@ -88,15 +88,6 @@
         label.backgroundColor = nil;
         label.opaque = NO;
         [cell.contentView addSubview:label];
-        
-        UILabel *labelOne = [[UILabel alloc] initWithFrame:CGRectMake(self.tableView.rowHeight + 25, 20, 250, 30)];
-        labelOne.textColor = [UIColor grayColor];
-        labelOne.font = [UIFont fontWithName:@"Arial" size:12];
-        labelOne.numberOfLines = 2;
-        labelOne.tag = 12;
-        labelOne.backgroundColor = nil;
-        labelOne.opaque = NO;
-        [cell.contentView addSubview:labelOne];
         
     }
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -111,10 +102,11 @@
     [imgView sd_setImageWithURL:url placeholderImage:nil];
 
     UILabel *labelTitle = (UILabel *)[cell.contentView viewWithTag:11];
-    UILabel *labelDesc = (UILabel *)[cell.contentView viewWithTag:12];
+    labelTitle.text = _objects[storyIndex][@"name"];
     
-    labelTitle.text = [[_objects objectAtIndex: storyIndex] objectForKey: @"name"];
-    labelDesc.text = [[_objects objectAtIndex: storyIndex] objectForKey: @"type"];
+    cell.indentationWidth = 0;
+    cell.indentationLevel = 0;
+    
     
     // Configure the cell.
     return cell;
@@ -189,6 +181,52 @@
     NSLog(@"returned object: %lu",(unsigned long)_objects.count);
 }
 
+
+- (void) parseData: (NSDictionary *) data{
+    
+    [loading stopAnimating];
+    self.tableView.allowsSelection = YES;
+    item = [[NSMutableDictionary alloc] init];
+    _objects = [[NSMutableArray alloc] init];
+    
+    NSArray *results = data[@"data"][@"items"];
+    int numberOfResults = [data[@"data"][@"paging"][@"total_items"] intValue];
+    
+    if (numberOfResults == 0){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zero Results"
+                                                        message:@"There are matches found, double check your keyword."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        NSLog(@"Zero results returned");
+    }
+    else{
+        // Loop through each entry in the dictionary...
+        for (NSDictionary *result in results)
+        {
+            
+            NSString *path = result[@"path"];
+            NSString *image_url = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
+            NSString *image_url_raw = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw",path];
+            NSString *name = result[@"name"];
+            NSString *type = result[@"type"];
+            
+            
+            [item setObject:image_url forKey:@"image"];
+            [item setObject:image_url_raw forKey:@"image_large"];
+            [item setObject:name forKey:@"name"];
+            [item setObject:type forKey:@"type"];
+            [item setObject:[NSString stringWithFormat:@"%@/%@?",[Cruncher crunchBaseURL], path] forKey:@"permalink"];
+            
+            [_objects addObject:[item copy]];
+        }
+    }
+    [self.tableView reloadData];
+    
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     [searchBar becomeFirstResponder];
@@ -198,13 +236,13 @@
     // You'll probably want to do this on another thread
     // SomeService is just a dummy class representing some
     // api that you are using to do the search
-    NSString* url = [[NSString stringWithFormat:@"%@/search.js?query=%@&api_key=%@", [Cruncher crunchBaseURL], uiSearchBar.text, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString* url = [[NSString stringWithFormat:@"%@/organizations?query=%@&user_key=%@", [Cruncher crunchBaseURL], uiSearchBar.text, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-//        NSLog(@"Read JSON: %@", JSON);
-        [self readObject:JSON];
+        NSLog(@"Read JSON: %@", JSON);
+        [self parseData:JSON];
         
     }
     failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {

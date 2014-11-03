@@ -17,11 +17,11 @@ ItemType type = Company;
 NSMutableDictionary *item;
 
 + (NSString *) userKey{
-    return @"vb4f9vwfty979hbyp7ry3wwk"; // @"00aba8c514f4e90b191bafe88ce9fceb";
+    return @"00aba8c514f4e90b191bafe88ce9fceb";
 }
 
 + (NSString *) crunchBaseURL{
-    return @"http://api.crunchbase.com/v/1";
+    return @"http://api.crunchbase.com/v/2";
 }
 
 - (id) initWithDictionary: (NSMutableDictionary *) dict{
@@ -29,23 +29,25 @@ NSMutableDictionary *item;
 
     NSMutableDictionary* gi = [[NSMutableDictionary alloc] init];
     
+    
+    
     if (![self isNull:@"homepage_url"])
-        [gi setValue:[item valueForKey:@"homepage_url"] forKey:@"url"];
+        [gi setValue:item[@"properties"][@"homepage_url"] forKey:@"url"];
     
     if (![self isNull:@"category_code"])
-        [gi setValue:[self titlizeString:[item valueForKey:@"category_code"]] forKey:@"category"];
+        [gi setValue:[self titlizeString:item[@"properties"][@"category_code"]] forKey:@"category"];
     
-    if (![self isNull:@"founded_year"])
-        [gi setValue:[item valueForKey:@"founded_year"] forKey:@"founded"];
+    if (![self isNull:@"founded_on_year"])
+        [gi setValue:item[@"properties"][@"founded_on_year"] forKey:@"founded"];
     
-    if (![self isNull:@"deadpooled_year"])
-        [gi setValue:[item valueForKey:@"deadpooled_year"] forKey:@"deadpooled"];
+    if (![self isNull:@"closed_on_year"])
+        [gi setValue:item[@"properties"][@"closed_on_year"] forKey:@"deadpooled"];
     
     if (![self isNull:@"number_of_employees"])
-        [gi setValue:[item valueForKey:@"number_of_employees"] forKey:@"employees"];
+        [gi setValue:item[@"properties"][@"number_of_employees"] forKey:@"employees"];
     
     if (![self isNull:@"twitter_username"])
-        [gi setValue:[item valueForKey:@"twitter_username"] forKey:@"twitter"];
+        [gi setValue:item[@"properties"][@"twitter_username"] forKey:@"twitter"];
     
     
     
@@ -82,7 +84,7 @@ NSMutableDictionary *item;
 //            NSLog(@"we're gonna keep key: %@",key);
         }
     }
-//    NSLog(@"items length: %d", item.count);
+    NSLog(@"items length: %@", gi);
     return self;
 }
 
@@ -539,7 +541,9 @@ NSMutableDictionary *item;
 - (BOOL) isNull:(NSString *) key{
     if ([item objectForKey:key] == (id)[NSNull null]) //([item objectForKey:key] == nil || [[item objectForKey:key] isEqualToString:@"<null>"])
         return true;
-    else if ([[NSString stringWithFormat:@"%@",[item objectForKey:key]] isEqualToString:@""])
+    else if ([[NSString stringWithFormat:@"%@",item[@"properties"][key]] isEqualToString:@""])
+        return true;
+    else if ([[NSString stringWithFormat:@"%@",item[@"properties"][key]] isEqualToString:@"<null>"])
         return true;
     else
         return false;
@@ -554,13 +558,13 @@ NSMutableDictionary *item;
 - (void) setItemType: (NSString *) aType{
     NSLog(@"type is %@",aType);
     
-    if ([aType isEqualToString:@"company"]) {
+    if ([aType isEqualToString:@"Organization"]) {
         type = Company;
     }
-    else if ([aType isEqualToString:@"person"]){
+    else if ([aType isEqualToString:@"Person"]){
         type = Person;
     }
-    else if ([aType isEqualToString:@"product"]){
+    else if ([aType isEqualToString:@"Product"]){
         type = Product;
     }
     else if ([aType isEqualToString:@"service-provider"]){
