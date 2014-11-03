@@ -15,6 +15,9 @@ ItemType type = Company;
 #define MAX_DATA 50
 
 NSMutableDictionary *item;
+NSMutableDictionary *relationships;
+NSMutableArray *sections;
+NSMutableArray *infoSections;
 
 + (NSString *) userKey{
     return @"00aba8c514f4e90b191bafe88ce9fceb";
@@ -26,28 +29,51 @@ NSMutableDictionary *item;
 
 - (id) initWithDictionary: (NSMutableDictionary *) dict{
     item = [[NSMutableDictionary alloc] initWithDictionary:dict];
-
+    relationships = [[NSMutableDictionary alloc] initWithDictionary:dict[@"relationships"]];
+    
     NSMutableDictionary* gi = [[NSMutableDictionary alloc] init];
+    sections = [[NSMutableArray alloc] init];
+    infoSections = [[NSMutableArray alloc] init];
     
     
     
-    if (![self isNull:@"homepage_url"])
+    if (![self isNull:@"homepage_url"]){
+        
         [gi setValue:item[@"properties"][@"homepage_url"] forKey:@"url"];
+        [infoSections addObject:@"url"];
+    }
     
-    if (![self isNull:@"category_code"])
-        [gi setValue:[self titlizeString:item[@"properties"][@"category_code"]] forKey:@"category"];
+    if (![self isNull:@"founded_on"]){
+        
+        [gi setValue:item[@"properties"][@"founded_on"] forKey:@"founded on"];
+        [infoSections addObject:@"founded on"];
+    }
     
-    if (![self isNull:@"founded_on_year"])
-        [gi setValue:item[@"properties"][@"founded_on_year"] forKey:@"founded"];
+    if (![self isNull:@"closed_on_year"]){
+        
+        [gi setValue:item[@"properties"][@"closed_on_year"] forKey:@"closed on"];
+        [infoSections addObject:@"closed on"];
+    }
     
-    if (![self isNull:@"closed_on_year"])
-        [gi setValue:item[@"properties"][@"closed_on_year"] forKey:@"deadpooled"];
+    if (![self isNull:@"number_of_employees"]){
+        
+        [gi setValue:item[@"properties"][@"number_of_employees"] forKey:@"number of employees"];
+        [infoSections addObject:@"number of employees"];
+    }
     
-    if (![self isNull:@"number_of_employees"])
-        [gi setValue:item[@"properties"][@"number_of_employees"] forKey:@"employees"];
+    if (![self isNull:@"total_funding_usd"]){
+        [gi setValue:[self prettifyAmount:item[@"properties"][@"total_funding_usd"]] forKey:@"total raised"];
+        [infoSections addObject:@"total raised"];
+    }
+    if (![self isNull:@"number_of_investments"]){
+        int investments = [item[@"properties"][@"number_of_investments"] intValue];
+        if (investments > 0) {
+            [gi setValue:item[@"properties"][@"number_of_investments"] forKey:@"number of investments"];
+            [infoSections addObject:@"number of investments"];
+        }
+    }
     
-    if (![self isNull:@"twitter_username"])
-        [gi setValue:item[@"properties"][@"twitter_username"] forKey:@"twitter"];
+    
     
     
     
@@ -55,7 +81,12 @@ NSMutableDictionary *item;
     
 //    NSMutableDictionary *miles = [item objectForKey:@"milestones"];
     
-    [item removeObjectForKey:@"milestones"];
+    [relationships removeObjectForKey:@"milestones"];
+    [relationships removeObjectForKey:@"images"];
+    [relationships removeObjectForKey:@"primary_image"];
+    
+    [sections addObject:@"general_info"];
+    [sections addObjectsFromArray:[relationships allKeys]];
     
 //    [item setObject:miles forKey:@"milestones"];
     
@@ -84,38 +115,23 @@ NSMutableDictionary *item;
 //            NSLog(@"we're gonna keep key: %@",key);
         }
     }
-    NSLog(@"items length: %@", gi);
+//    NSLog(@"items length: %@", gi);
     return self;
 }
 
 
 - (int) getSectionsCount{
-    int i = 0;
-    for (id key in [item allKeys]) {
-        if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
-            i++;
-        }
-    }
-    return i + 1;
+    return (int) [sections count];
 }
 - (int) getSizeAtSection:(NSInteger) section{
-//    NSLog(@"section at %d", section);
+    //    NSLog(@"section at %d", section);
     int size = 0;
     if (section == 0) {
-        size = (int) [[item objectForKey:@"general_info"] count];
+        size = (int) [[item objectForKey:sections[section]] count];
     }
     else{
-        int i = 0;
-        for (id key in [item allKeys]) {
-            if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
-                i++;
-                if (section == i){
-                    size = (int) [[item objectForKey:key] count];
-                }
-            }
-        }
+        size = (int) [relationships[sections[section]][@"items"] count];
     }
-//    NSLog(@"size at %d is %d", section, size);
     
     if (size > MAX_DATA) {
         size = MAX_DATA;
@@ -125,202 +141,145 @@ NSMutableDictionary *item;
 
 - (NSString *) getSectionAtIndex: (int) index{
     NSString *returnVal = @"";
-    int i = 0;
     if (index == 0 && [self getSizeAtSection:index] > 0) {
         returnVal = @"General Info";
     }
     else{
-        for (id key in [item allKeys]) {
-            if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
-                i++;
-                if (index == i){
-                    returnVal = [key stringByReplacingOccurrencesOfString:@"_" withString:@" "];
-                }
-            }
-        }
+        returnVal = [sections[index] stringByReplacingOccurrencesOfString:@"_" withString:@" "];
     }
     return returnVal;
 }
 
 - (NSString *) getSectionNameAtIndex: (NSInteger) index{
-    NSString *returnVal = @"";
-    int i = 0;
-    if (index == 0) {
-        returnVal = @"general_info";
-    }
-    else{
-        for (id key in [item allKeys]) {
-            if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
-                i++;
-                if (index == i){
-                    returnVal = key;
-                }
-            }
-        }
-    }
-    return returnVal;
+    return sections[index];
 }
 
+
+
 - (NSString *) getImage: (BOOL) small {
-    NSDictionary *images = [item valueForKey:@"image"];
-    if ([images valueForKey:@"available_sizes"] != (id)[NSNull null]){
-        NSString* images_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:0] objectAtIndex:1];
-        NSString* images_large_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:2] objectAtIndex:1];
-        NSLog(@"images: %@", images_url);
-        
-        if (small){
-            return images_url;
-        }
-        else{
-            return images_large_url;
-        }
+    NSDictionary *images = item[@"relationships"][@"primary_image"];
+    NSString *typeString = [item[@"type"] lowercaseString];
+    NSString *imageURLLarge = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/%@/primary-image/raw",typeString,item[@"properties"][@"permalink"]];
+    
+    if ([images[@"items"] count] > 0){
+        NSString* images_path = images[@"items"][0][@"path"];
+        NSString* images_url = [NSString stringWithFormat:@"http://images.crunchbase.com/%@",images_path];
+        return images_url;
     }
     else{
-        return @"";
+        return imageURLLarge;
     }
 
 }
 
 - (NSString *) getOverview{
-    return [[item valueForKey:@"overview"] stringByConvertingHTMLToPlainText];
+    return [item[@"properties"][@"description"] stringByConvertingHTMLToPlainText];
 }
+
+
 
 - (NSString *) getTitle{
     NSString *title = @"";
     if (type == Person){
-        title = [NSString stringWithFormat:@"%@ %@", [item valueForKey:@"first_name"], [item valueForKey:@"last_name"]];
+        title = [NSString stringWithFormat:@"%@ %@", item[@"first_name"], item[@"last_name"]];
     }
     else{
-        title = [item valueForKey:@"name"];
+        title = item[@"properties"][@"name"];
 
     }
     return title;
 }
 
 
+
 - (NSMutableDictionary *)getContentAtIndexPath:(NSIndexPath *)index{
-//    NSLog(@"all keys: %@",);
+    //    NSLog(@"all keys: %@",);
     
     NSMutableDictionary *returnObject = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"1",@"text", @"2", @"detail", nil];
     
-    
-    int i = 0;
     if (index.section == 0) {
-        
-        for (id key in [[item objectForKey:@"general_info"] allKeys]) {
-            if (index.row == i){
-                id value = [[item objectForKey:@"general_info"] valueForKey:key];
-                [returnObject setObject:[NSString stringWithFormat:@"%@",value] forKey:@"text"];
-                [returnObject setObject:key forKey:@"detail"];
-            }
-            i++;
-        }
+        id value = item[sections[index.section]][infoSections[index.row]];
+        [returnObject setObject:[NSString stringWithFormat:@"%@",value] forKey:@"text"];
+        [returnObject setObject:infoSections[index.row] forKey:@"detail"];
     }
     else{
-        for (id key in [item allKeys]) {
-            if ([[item objectForKey:key] isKindOfClass:[NSArray class]]){
-                i++;
-                if (index.section == i){
-                    if ([key isEqualToString:@"relationships"]) {
-                        NSString* name;
-                        if (type == Person){
-                            name = [[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"firm"] valueForKey:@"name"]; //it would be a company name if its a person profile
-                        }
-                        else{
-                            name = [NSString stringWithFormat:@"%@ %@",[[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"first_name"],[[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"person"] valueForKey:@"last_name"]];
-                             //it would be a person name if its a person profile
-                        }
-                        
-                        NSString* isPast = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"is_past"];
-                        
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
-                        [returnObject setObject:name forKey:@"text"];
-                        [returnObject setObject:title forKey:@"detail"];
-                        [returnObject setObject:isPast forKey:@"past"];
-                    }
-                    else if ([key isEqualToString:@"offices"]) {
-                        NSString* name = [NSString stringWithFormat:@"%@, %@",[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"city"],[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"country_code"]];
-                        NSString* desc = @"";
-                        if (![[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"] isEqual:(id)[NSNull null]]){
-                            desc = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"];
-                        }
-                        
-                        [returnObject setObject:name forKey:@"text"];
-                        [returnObject setObject:desc forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"products"]) {
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"name"];
-                        NSString* permalink = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"permalink"];
-                        [returnObject setObject:title forKey:@"text"];
-                        [returnObject setObject:permalink forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"external_links"]) {
-                        NSString* url = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"external_url"];
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
-                        [returnObject setObject:title forKey:@"text"];
-                        [returnObject setObject:url forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"providerships"]) {
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
-                        NSString* provider_name = [[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"provider"] valueForKey:@"name"];
-                        [returnObject setObject:provider_name forKey:@"text"];
-                        [returnObject setObject:title forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"milestones"]) {
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"description"];
-                        NSString* url = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"source_url"];
-                        [returnObject setObject:title forKey:@"text"];
-                        [returnObject setObject:url forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"competitions"]) {
-                        NSString* competitor = [[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"competitor"] valueForKey:@"name"];
-                        NSString* link = [[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"competitor"] valueForKey:@"permalink"];
-                        [returnObject setObject:competitor forKey:@"text"];
-                        [returnObject setObject:link forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"acquisitions"]) {
-                        NSString* company = [[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"company"] valueForKey:@"name"];
-                        NSString* amount = [self prettifyAmount:[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"price_amount"]];
-                        [returnObject setObject:company forKey:@"text"];
-                        [returnObject setObject:amount forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"funding_rounds"]) {
-                        NSString* type = [self prettifyFundingRound:[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"round_code"]];
-                        NSString* title = [NSString stringWithFormat:@"%@ in %@",[self prettifyAmount:[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"raised_amount"]], [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"funded_year"]];
-                        [returnObject setObject:title forKey:@"text"];
-                        [returnObject setObject:type forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"funds"]) {
-                        NSString* type = [[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"name"];
-                        NSString* title = [NSString stringWithFormat:@"%@ in %@",[self prettifyAmount:[[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"raised_amount"]], [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"funded_year"]];
-                        [returnObject setObject:type forKey:@"text"];
-                        [returnObject setObject:title forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"investments"]) {
-                        NSString* type = [self prettifyFundingRound:[[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"funding_round"] objectForKey:@"round_code"]];
-                        NSString* company = [[[[[item valueForKey:key] objectAtIndex:index.row] objectForKey:@"funding_round"] objectForKey:@"company"] valueForKey:@"name"];
-                        
-                        NSString* title = [NSString stringWithFormat:@"%@ as %@ in %@",[self prettifyAmount:[[[[item valueForKey:key] objectAtIndex:index.row]  objectForKey:@"funding_round"] valueForKey:@"raised_amount"]],type, [[[[item valueForKey:key] objectAtIndex:index.row]  objectForKey:@"funding_round"] valueForKey:@"funded_year"]];
-                        [returnObject setObject:company forKey:@"text"];
-                        [returnObject setObject:title forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"web_presences"]) {
-                        NSString* title = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"title"];
-                        NSString* url = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"external_url"];
-                        [returnObject setObject:title forKey:@"text"];
-                        [returnObject setObject:url forKey:@"detail"];
-                    }
-                    else if ([key isEqualToString:@"degrees"]) {
-                        NSString* title = [self getDegree:[[item valueForKey:key] objectAtIndex:index.row]];
-                        NSString* desc = [[[item valueForKey:key] objectAtIndex:index.row] valueForKey:@"institution"];
-                        [returnObject setObject:desc forKey:@"text"];
-                        [returnObject setObject:title forKey:@"detail"];
-                    }
-                }
+        NSDictionary *itemData = relationships[sections[index.section]][@"items"][index.row];
+        NSString *section = sections[index.section];
+        NSLog(@"section : %@",section);
+        if ([section isEqualToString:@"current_team"] || [section isEqualToString:@"past_team"]|| [section isEqualToString:@"board_members_and_advisors"]){
+            NSString *name = [NSString stringWithFormat:@"%@ %@", itemData[@"first_name"], itemData[@"last_name"]];
+            [returnObject setObject:name forKey:@"text"];
+            [returnObject setObject:itemData[@"title"] forKey:@"detail"];
+            NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/organization/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
+            
+            [returnObject setObject:image forKey:@"image"];
+        }
+        else if ([section isEqualToString:@"websites"] || [section isEqualToString:@"news"]){
+            
+            [returnObject setObject:itemData[@"title"] forKey:@"text"];
+            [returnObject setObject:itemData[@"url"] forKey:@"detail"];
+        }
+        else if ([section isEqualToString:@"offices"] || [section isEqualToString:@"headquarters"]){
+            
+            [returnObject setObject:[self flattenLocationFromObject:itemData]  forKey:@"text"];
+            [returnObject setObject:itemData[@"name"] forKey:@"detail"];
+        }
+        else if ([section isEqualToString:@"funding_rounds"]){
+            [returnObject setObject:[self fundingAmountFromObject:itemData[@"name"]] forKey:@"text"];
+            [returnObject setObject:[self fundingRoundFromObject:itemData[@"name"]] forKey:@"detail"];
+            
+        }
+        else if ([section isEqualToString:@"investments"]){
+            [returnObject setObject:itemData[@"invested_in"][@"name"] forKey:@"text"];
+            [returnObject setObject:@"" forKey:@"detail"];
+            
+        }
+        else{
+            [returnObject setObject:itemData[@"name"] forKey:@"text"];
+            [returnObject setObject:@"" forKey:@"detail"];
+            
+            if ([section isEqualToString:@"products"]) {
+                NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/organization/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
+                [returnObject setObject:image forKey:@"image"];
             }
+            
         }
     }
+    
     return returnObject;
+    
+}
+
+
+- (NSString *) flattenLocationFromObject:(NSDictionary *) object{
+    NSMutableString *location = [[NSMutableString alloc] init];
+    NSArray *locationKeys = @[@"street_1",@"street_2",@"city",@"region",@"country_code"];
+    
+    for (NSString *key in locationKeys) {
+        if (object[key] != (id)[NSNull null] && ![object[key] isEqualToString:@"<null>"] && ![object[key] isEqualToString:@""]){
+            [location appendString: [NSString stringWithFormat:@"%@ ", object[key]]];
+        }
+    }
+    
+    
+    return location;
+    
+    
+}
+
+- (NSString *) fundingAmountFromObject:(NSString *) roundText{
+    int index = (int) [roundText rangeOfString:@" in "].location;
+    
+    int start = 15;
+    NSDecimalNumber *funds = [NSDecimalNumber decimalNumberWithString:[roundText substringWithRange:NSMakeRange(start, index - start)]];
+    return [self prettifyAmount:funds];
+}
+
+- (NSString *) fundingRoundFromObject:(NSString *) roundText{
+    int index = (int) [roundText rangeOfString:@" in "].location;
+    
+    
+    return [roundText substringFromIndex:index];
 }
 
 - (NSString *) getDegree:(id) obj{
@@ -591,16 +550,15 @@ NSMutableDictionary *item;
 //    NSLog(@"%hhd",[self isNull:@"acquisition"]);
     return ![self isNull:@"acquisition"];
 }
-- (NSString *) prettifyAmount: (NSDecimalNumber *) amt{
+- (NSString *) prettifyAmount: (id) amt{
     if ([amt isKindOfClass:[NSNull class]]) {
         return @"Unspecified Amount";
     }
     else{
-        
-        int amount = [amt intValue];
-//        NSLog(@"int value of the amount is %d", amount);
+        float amount = [amt floatValue];
+
         if (amount/1000000000 >= 1) {
-            return [NSString stringWithFormat:@"$%.1fM", amount/1000000000.0];
+            return [NSString stringWithFormat:@"$%.1fB", amount/1000000000.0];
         }
         else if (amount/1000000 >= 1) {
             return [NSString stringWithFormat:@"$%.1fM", amount/1000000.0];
@@ -609,7 +567,7 @@ NSMutableDictionary *item;
             return [NSString stringWithFormat:@"$%.1fK", amount/1000.0];
         }
         else{
-            return [NSString stringWithFormat:@"%d", amount];
+            return [NSString stringWithFormat:@"$%.1f", amount];
         }
     }
 }

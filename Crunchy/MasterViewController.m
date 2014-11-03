@@ -241,7 +241,7 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"Read JSON: %@", JSON);
+//        NSLog(@"Read JSON: %@", JSON);
         [self parseData:JSON];
         
     }

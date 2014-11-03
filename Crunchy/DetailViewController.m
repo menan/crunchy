@@ -76,7 +76,7 @@
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
-//    NSLog(@"image url :%@",image_url);
+    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
     [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
@@ -98,7 +98,7 @@
 - (void) viewWillAppear:(BOOL)animated{
     
     if ([item count] > 0) {
-        crunch = [crunch initWithDictionary:item];
+        crunch = [crunch initWithDictionary:item[@"data"]];
         [crunch setItemType: [self.detailItem objectForKey:@"type"]];
         [tableView reloadData];
     }
@@ -232,6 +232,16 @@
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         BOOL isPast = [[content objectForKey:@"past"] boolValue];
         
+        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
+        imgView.tag = 10;
+        
+        
+        imgView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        [cell.contentView addSubview:imgView];
+        
+        
+        
         if (isPast) {
             
             pastLabel = [[UILabel alloc] initWithFrame:CGRectMake(280.0, 5.0, 40.0, 15.0)];
@@ -273,6 +283,17 @@
     
     cell.textLabel.text = [content objectForKey:@"text"];
     cell.detailTextLabel.text = [content objectForKey:@"detail"];
+    
+    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
+
+    if ([content objectForKey:@"image"]) {
+        NSLog(@"image was found at %@",[content objectForKey:@"image"]);
+        
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]]];
+    }
+    
+    NSLog(@"");
+    
     return cell;
 }
 
