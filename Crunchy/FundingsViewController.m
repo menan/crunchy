@@ -73,7 +73,7 @@
     return cell;
 }
 
-- (NSDictionary *) getValuesAtIndex:(int) index{
+- (NSDictionary *) getValuesAtIndex:(NSInteger) index{
     NSArray *keys = @[@"company", @"financial_org", @"person"];
     NSArray *keysStr = @[@"Company", @"Financial Organization", @"Person"];
     NSArray *keysType = @[@"company", @"financial-organization", @"person"];
@@ -106,12 +106,13 @@
     
     [self.navigationController pushViewController:detail animated:YES];
     
-    NSString *perm = [NSString stringWithFormat:@"http://api.crunchbase.com/v/1/%@/%@.json?",[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"],[[self getValuesAtIndex:indexPath.row] objectForKey:@"permalink"]];
+    NSString *perm = [NSString stringWithFormat:@"%@/%@/%@.json?",[Cruncher crunchBaseURL],[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"],[[self getValuesAtIndex:indexPath.row] objectForKey:@"permalink"]];
     
     [object setObject:perm forKey:@"permalink"];
     [object setObject:[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"] forKey:@"type"];
     
     [detail setDetailItem:object];
+    
     
     
     [aTableView deselectRowAtIndexPath:indexPath animated:YES];

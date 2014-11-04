@@ -65,7 +65,8 @@
 }
 
 - (void) readObject{
-    crunch = [[Cruncher alloc] initWithDictionary:item];
+    crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
+    
     [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
@@ -75,7 +76,7 @@
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
-//    NSLog(@"image url :%@",image_url);
+    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
     [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
@@ -88,16 +89,20 @@
 - (void)viewDidLoad
 {
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
 }
--(void)viewDidAppear:(BOOL)animated{
-//    if ([item count] > 0) {
-//        crunch = [crunch initWithDictionary:item];
-//        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-//    }
-//    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
+
+- (void) viewWillAppear:(BOOL)animated{
+    
+    if ([item count] > 0) {
+        crunch = [crunch initWithDictionary:item[@"data"]];
+        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+        [tableView reloadData];
+    }
+    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -227,6 +232,16 @@
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         BOOL isPast = [[content objectForKey:@"past"] boolValue];
         
+        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
+        imgView.tag = 10;
+        
+        
+        imgView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        [cell.contentView addSubview:imgView];
+        
+        
+        
         if (isPast) {
             
             pastLabel = [[UILabel alloc] initWithFrame:CGRectMake(280.0, 5.0, 40.0, 15.0)];
@@ -245,7 +260,7 @@
 //    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
-    NSLog(@"section: %@",sectionString);
+//    NSLog(@"section: %@, content: %@",sectionString, content);
     
     if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
@@ -268,6 +283,17 @@
     
     cell.textLabel.text = [content objectForKey:@"text"];
     cell.detailTextLabel.text = [content objectForKey:@"detail"];
+    
+    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
+
+    if ([content objectForKey:@"image"]) {
+        NSLog(@"image was found at %@",[content objectForKey:@"image"]);
+        
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]]];
+    }
+    
+    NSLog(@"");
+    
     return cell;
 }
 
@@ -282,7 +308,7 @@
 
 
 - (NSURL *) crunchyURLFromString:(NSString *) url{
-    NSString *cleanURL = [NSString stringWithFormat:@"%@api_key=vb4f9vwfty979hbyp7ry3wwk",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *cleanURL = [NSString stringWithFormat:@"%@user_key=%@",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [Cruncher userKey]];
     NSLog(@"Browsing %@",cleanURL);
     return [NSURL URLWithString:cleanURL];
 }
