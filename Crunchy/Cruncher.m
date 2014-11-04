@@ -238,8 +238,8 @@ NSMutableArray *infoSections;
             [returnObject setObject:itemData[@"name"] forKey:@"text"];
             [returnObject setObject:@"" forKey:@"detail"];
             
-            if ([section isEqualToString:@"products"]) {
-                NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/organization/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
+            if ([section isEqualToString:@"products"] || [section isEqualToString:@"competitors"] || [section isEqualToString:@"customers"] || [section isEqualToString:@"founders"] || [section isEqualToString:@"members"]) {
+                NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
                 [returnObject setObject:image forKey:@"image"];
             }
             
