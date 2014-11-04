@@ -234,20 +234,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        BOOL isPast = [[content objectForKey:@"past"] boolValue];
         
-        imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
+        imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45, 45)];
         imgView.tag = 10;
-        
-        
         imgView.contentMode = UIViewContentModeScaleAspectFit;
-        
         [cell.contentView addSubview:imgView];
         
         
-        
+        BOOL isPast = [[content objectForKey:@"past"] boolValue];
         if (isPast) {
-            
             pastLabel = [[UILabel alloc] initWithFrame:CGRectMake(280.0, 5.0, 40.0, 15.0)];
             pastLabel.tag = PASTLABEL_TAG;
             pastLabel.font = [UIFont boldSystemFontOfSize:13.0];
@@ -262,10 +257,8 @@
         pastLabel = (UILabel *)[cell.contentView viewWithTag:PASTLABEL_TAG];
         imgView = (UIImageView *)[cell.contentView viewWithTag:10];
     }
-//    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
-//    NSLog(@"section: %@, content: %@",sectionString, content);
     
     if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
@@ -289,14 +282,10 @@
     cell.textLabel.text = [content objectForKey:@"text"];
     cell.detailTextLabel.text = [content objectForKey:@"detail"];
     
-//    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
-
-    imgView.image = [UIImage imageNamed:@"image"];
-    
-    if ([content objectForKey:@"image"]) {
+    cell.imageView.image = nil;
+    if (indexPath.section > 0 && [content objectForKey:@"image"]) {
         NSLog(@"image was found at %@",[content objectForKey:@"image"]);
-//        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]]];
-        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:nil];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:nil];
     }
     
     return cell;

@@ -71,7 +71,7 @@
         
         UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
         imgView.tag = 10;
-
+        imgView.image = nil;
         
         imgView.contentMode = UIViewContentModeScaleAspectFit;
 
