@@ -225,14 +225,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
-    UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:@"MyIdentifier"];
+    
+    static NSString *CellIdentifier = @"MyIdentifier";
     UILabel *pastLabel;
+    UIImageView *imgView;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MyIdentifier"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         BOOL isPast = [[content objectForKey:@"past"] boolValue];
         
-        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
+        imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 0, self.tableView.rowHeight, self.tableView.rowHeight)];
         imgView.tag = 10;
         
         
@@ -256,6 +260,7 @@
         }
     } else {
         pastLabel = (UILabel *)[cell.contentView viewWithTag:PASTLABEL_TAG];
+        imgView = (UIImageView *)[cell.contentView viewWithTag:10];
     }
 //    NSLog(@"title: %@",[crunch getSectionAtIndex:indexPath.section]);
     
@@ -284,15 +289,15 @@
     cell.textLabel.text = [content objectForKey:@"text"];
     cell.detailTextLabel.text = [content objectForKey:@"detail"];
     
-    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
+//    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
 
+    imgView.image = [UIImage imageNamed:@"image"];
+    
     if ([content objectForKey:@"image"]) {
         NSLog(@"image was found at %@",[content objectForKey:@"image"]);
-        
-        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]]];
+//        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]]];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:nil];
     }
-    
-    NSLog(@"");
     
     return cell;
 }

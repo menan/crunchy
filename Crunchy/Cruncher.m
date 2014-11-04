@@ -210,7 +210,7 @@ NSMutableArray *infoSections;
             NSString *name = [NSString stringWithFormat:@"%@ %@", itemData[@"first_name"], itemData[@"last_name"]];
             [returnObject setObject:name forKey:@"text"];
             [returnObject setObject:itemData[@"title"] forKey:@"detail"];
-            NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/organization/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
+            NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
             
             [returnObject setObject:image forKey:@"image"];
         }
