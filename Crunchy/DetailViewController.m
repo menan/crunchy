@@ -175,7 +175,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"title: %@",[crunch getSectionAtIndex:(int)indexPath.section]);
+//    NSLog(@"title: %@",[crunch getSectionAtIndex:(int)indexPath.section]);
     NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     
     if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"General Info"]) {
@@ -194,18 +194,15 @@
         [self performSegueWithIdentifier:@"map" sender:self];
         
     }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"milestones"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"news"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"external links"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"websites"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"web presences"]){
-        [self performSegueWithIdentifier:@"web" sender:self];
-    }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funding rounds"]){
-        [self performSegueWithIdentifier:@"fundingview" sender:self];
-    }
+//    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funding rounds"]){
+//        [self performSegueWithIdentifier:@"fundingview" sender:self];
+//    }
     else{
         DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
@@ -260,7 +257,7 @@
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
     
-    if (indexPath.section > 0 && ![sectionString isEqualToString:@"degrees"]&& ![sectionString isEqualToString:@"funds"]){
+    if (indexPath.section > 0 && ![sectionString isEqualToString:@"categories"]&& ![sectionString isEqualToString:@"products"]){
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"twitter"] || [[content objectForKey:@"detail"] isEqualToString:@"url"])){
@@ -284,7 +281,6 @@
     
     cell.imageView.image = nil;
     if (indexPath.section > 0 && [content objectForKey:@"image"]) {
-        NSLog(@"image was found at %@",[content objectForKey:@"image"]);
         [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:nil];
     }
     
