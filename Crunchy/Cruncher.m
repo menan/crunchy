@@ -35,7 +35,7 @@ NSMutableArray *infoSections;
     sections = [[NSMutableArray alloc] init];
     infoSections = [[NSMutableArray alloc] init];
     
-    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code"];
+    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid"];
     
     for (NSString *property in item[@"properties"]) {
         if (![self isNull:property] && ![propertyBlacklisted containsObject:property]){
@@ -54,45 +54,6 @@ NSMutableArray *infoSections;
             }
         }
     }
-    
-    
-//    if (![self isNull:@"homepage_url"]){
-//        
-//        [gi setValue:item[@"properties"][@"homepage_url"] forKey:@"url"];
-//        [infoSections addObject:@"url"];
-//    }
-//    
-//    if (![self isNull:@"founded_on"]){
-//        
-//        [gi setValue:item[@"properties"][@"founded_on"] forKey:@"founded on"];
-//        [infoSections addObject:@"founded on"];
-//    }
-//    
-//    if (![self isNull:@"closed_on_year"]){
-//        
-//        [gi setValue:item[@"properties"][@"closed_on_year"] forKey:@"closed on"];
-//        [infoSections addObject:@"closed on"];
-//    }
-//    
-//    if (![self isNull:@"number_of_employees"]){
-//        
-//        [gi setValue:item[@"properties"][@"number_of_employees"] forKey:@"number of employees"];
-//        [infoSections addObject:@"number of employees"];
-//    }
-//    
-//    if (![self isNull:@"total_funding_usd"]){
-//        [gi setValue:[self prettifyAmount:item[@"properties"][@"total_funding_usd"]] forKey:@"total raised"];
-//        [infoSections addObject:@"total raised"];
-//    }
-//    if (![self isNull:@"number_of_investments"]){
-//        int investments = [item[@"properties"][@"number_of_investments"] intValue];
-//        if (investments > 0) {
-//            [gi setValue:item[@"properties"][@"number_of_investments"] forKey:@"number of investments"];
-//            [infoSections addObject:@"number of investments"];
-//        }
-//    }
-    
-    
     
     
     
@@ -271,7 +232,7 @@ NSMutableArray *infoSections;
             
             
         }
-        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"]){
+        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"] || [section isEqualToString:@"experience"]){
             [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
             [returnObject setObject:itemData[@"title"] forKey:@"detail"];
         }
@@ -294,10 +255,11 @@ NSMutableArray *infoSections;
 
 - (NSString *) flattenLocationFromObject:(NSDictionary *) object{
     NSMutableString *location = [[NSMutableString alloc] init];
-    NSArray *locationKeys = @[@"street_1",@"street_2",@"city",@"region",@"country_code"];
+    NSArray *locationKeys = @[@"street_1",@"street_2",@"city",@"region",@"country"];
     
     for (NSString *key in locationKeys) {
-        if (object[key] != (id)[NSNull null] && ![object[key] isEqualToString:@"<null>"] && ![object[key] isEqualToString:@""]){
+        NSString *value = object[key];
+        if (object[key] != (id)[NSNull null] && ![value isEqualToString:@""]){
             [location appendString: [NSString stringWithFormat:@"%@ ", object[key]]];
         }
     }
