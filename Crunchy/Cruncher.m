@@ -35,7 +35,7 @@ NSMutableArray *infoSections;
     sections = [[NSMutableArray alloc] init];
     infoSections = [[NSMutableArray alloc] init];
     
-    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code"];
+    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"bio"];
     
     for (NSString *property in item[@"properties"]) {
         if (![self isNull:property] && ![propertyBlacklisted containsObject:property]){
@@ -193,7 +193,12 @@ NSMutableArray *infoSections;
 }
 
 - (NSString *) getOverview{
-    return [item[@"properties"][@"description"] stringByConvertingHTMLToPlainText];
+    if ([item[@"type"] isEqualToString: @"Person"]) {
+        return [item[@"properties"][@"bio"] stringByConvertingHTMLToPlainText];
+    }
+    else{
+        return [item[@"properties"][@"description"] stringByConvertingHTMLToPlainText];
+    }
 }
 
 
@@ -271,9 +276,13 @@ NSMutableArray *infoSections;
             
             
         }
-        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"]){
+        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"]|| [section isEqualToString:@"experience"]){
             [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
             [returnObject setObject:itemData[@"title"] forKey:@"detail"];
+        }
+        else if ([section isEqualToString:@"degrees"]){
+            [returnObject setObject:itemData[@"degree_subject"] forKey:@"text"];
+            [returnObject setObject:itemData[@"organization_name"] forKey:@"detail"];
         }
         else{
             [returnObject setObject:itemData[@"name"] forKey:@"text"];
