@@ -266,6 +266,9 @@
 	[searchBar setShowsCancelButton:NO animated:YES];
     self.tableView.allowsSelection = NO;
     
+    [_objects removeAllObjects];
+    [self.tableView reloadData];
+    
     
 }
 - (IBAction)aboutTapped:(id)sender {

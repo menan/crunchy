@@ -67,7 +67,7 @@
 - (void) readObject{
     crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
     
-    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+//    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
     tableView.scrollEnabled = YES;
@@ -99,10 +99,8 @@
     
     if ([item count] > 0) {
         crunch = [crunch initWithDictionary:item[@"data"]];
-        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
         [tableView reloadData];
     }
-    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,11 +111,9 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"segue id: %@",[segue identifier]);
     if ([[segue identifier] isEqualToString:@"overview"]) {
         OverviewViewController *overview = segue.destinationViewController;
         NSString *overviewTxt = [crunch getOverview];
-//        NSLog(@"overview = %@",overviewTxt);
         [overview sendOverviewText:overviewTxt];
     }
     else if ([[segue identifier] isEqualToString:@"imageview"]){
@@ -175,7 +171,6 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-//    NSLog(@"title: %@",[crunch getSectionAtIndex:(int)indexPath.section]);
     NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     
     if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"General Info"]) {
@@ -183,14 +178,14 @@
             NSLog(@"twitter tapped tho %@",[content objectForKey:@"text"]);
             [self openTwitter:[content objectForKey:@"text"]];
         }
-        else if ([[content objectForKey:@"detail"] isEqualToString:@"url"]){
+        else if ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]){
             [self performSegueWithIdentifier:@"web" sender:self];
         }
     }
     else if([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"degrees"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funds"]){
         
     }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"offices"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"offices"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"headquarters"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"primary location"]){
         [self performSegueWithIdentifier:@"map" sender:self];
         
     }
@@ -200,17 +195,13 @@
     else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"websites"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-//    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funding rounds"]){
-//        [self performSegueWithIdentifier:@"fundingview" sender:self];
-//    }
-    else{
+    else if([[crunch permalinkatIndexPath:indexPath] length] > 0){
         DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
         [self.navigationController pushViewController:detail animated:YES];
         
         [object setObject:[crunch permalinkatIndexPath:indexPath] forKey:@"permalink"];
-        [object setObject:[crunch getTypeAtIndexPath:indexPath] forKey:@"type"];
         
         [detail setDetailItem:object];
     }
@@ -257,12 +248,12 @@
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
     
-    if (indexPath.section > 0 && ![sectionString isEqualToString:@"categories"]&& ![sectionString isEqualToString:@"products"]){
+    if (indexPath.section > 0 && [[crunch permalinkatIndexPath:indexPath] length] > 0)
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-    }
-    else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"twitter"] || [[content objectForKey:@"detail"] isEqualToString:@"url"])){
+    else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]))
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-    }
+    else if ([sectionString isEqualToString:@"websites"] ||[sectionString isEqualToString:@"headquarters"] ||[sectionString isEqualToString:@"offices"])
+        cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     else
         cell.accessoryType =  UITableViewCellAccessoryNone;
     
@@ -316,4 +307,5 @@
     NSURL *ourURL = [NSURL URLWithString:ourPath];
     [ourApplication openURL:ourURL];
 }
+
 @end
