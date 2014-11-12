@@ -94,7 +94,7 @@
     
 	int storyIndex = (int) [indexPath indexAtPosition: [indexPath length] - 1];
     NSString * urlString = [[_objects objectAtIndex: storyIndex] objectForKey: @"image"];
-    NSLog(@"url string: %@",urlString);
+//    NSLog(@"url string: %@",urlString);
     
     NSURL *url = [NSURL URLWithString:urlString];
 
@@ -258,9 +258,6 @@
                                                                                         }];
     [operation start];
     
-//    Connection *con = [[Connection alloc] init];
-//    [con readJSON:url withSender:self];
-    
     [searchBar resignFirstResponder];
     [loading startAnimating];
 	[searchBar setShowsCancelButton:NO animated:YES];
@@ -285,7 +282,6 @@
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         NSDate *object = _objects[indexPath.row];
-        NSLog(@"selected index path:%ld",(long)indexPath.row);
         [[segue destinationViewController] setDetailItem:object];
     }
 }

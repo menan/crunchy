@@ -11,7 +11,6 @@
 
 @implementation Cruncher
 
-ItemType type = Company;
 #define MAX_DATA 50
 
 NSMutableDictionary *item;
@@ -35,12 +34,30 @@ NSMutableArray *infoSections;
     sections = [[NSMutableArray alloc] init];
     infoSections = [[NSMutableArray alloc] init];
     
-    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid",@"bio",@"died_on_trust_code",@"role_investor",@"born_on_year",@"born_on_month",@"born_on_day",@"born_on_trust_code",@"post_money_valuation_currency_code",@"announced_on_trust_code",@"name",@"price_currency_code",@"owner_path",@"launched_on_trust_code",@"launched_on_month",@"launched_on_year",@"launched_on_day"];
+    NSArray *blacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid",@"bio",@"died_on_trust_code",@"role_investor",@"born_on_year",@"born_on_month",@"born_on_day",@"born_on_trust_code",@"post_money_valuation_currency_code",@"announced_on_trust_code",@"name",@"price_currency_code",@"owner_path",@"launched_on_trust_code",@"launched_on_month",@"launched_on_year",@"launched_on_day",@"videos",@"opening_share_price_currency_code",@"went_public_on_trust_code",@"went_public_on_day",@"went_public_on_month",@"went_public_on_year",@"opening_valuation_currency_code",@"target_money_raised_currency_code",@"closed_on_month",@"closed_on_year",@"closed_on_day",@"secondary_role_early_stage_vendor",@"secondary_role_seed",@"secondary_role_venture_capital",@"secondary_role_debt_financing",@"secondary_role_private_equity",@"secondary_role_large_stage_venture",@"sectors"];
     
+    NSMutableArray *propertyBlacklisted = [blacklisted copy];
+    
+    if ([item[@"type"] isEqualToString:@"Product"]) {
+        [propertyBlacklisted addObject:@"short_description"];
+    }
+    
+//    int investments = [item[@"properties"][@"number_of_investments"] intValue];
+//    
+//    if (investments == 0) {
+//        NSLog(@"number oof investments %d",investments);
+//        [propertyBlacklisted addObject:@"number_of_investments"];
+//    }
+//    
     for (NSString *property in item[@"properties"]) {
         if (![self isNull:property] && ![propertyBlacklisted containsObject:property]){            
-            if ([property isEqualToString:@"total_funding_usd"] || [property isEqualToString:@"price"]|| [property isEqualToString:@"money_raised"]|| [property isEqualToString:@"opening_valuation"]|| [property isEqualToString:@"opening_share_price"]){
-                [gi setValue:[self prettifyAmount:item[@"properties"][property]] forKey:[property stringByReplacingOccurrencesOfString:@"_" withString:@" "]];
+            if ([property isEqualToString:@"total_funding_usd"] || [property isEqualToString:@"price"]|| [property isEqualToString:@"money_raised"]|| [property isEqualToString:@"opening_valuation"]|| [property isEqualToString:@"opening_share_price"] ||  [property isEqualToString:@"post_money_valuation"]){
+                [gi setValue:[self prettifyAmount:item[@"properties"][property] withPrefix:@"$"] forKey:[property stringByReplacingOccurrencesOfString:@"_" withString:@" "]];
+                [infoSections addObject:[property stringByReplacingOccurrencesOfString:@"_" withString:@" "]];
+            }
+            else if ([property isEqualToString:@"shares_outstanding"] || [property isEqualToString:@"shares_sold"]){
+                
+                [gi setValue:[self prettifyAmount:item[@"properties"][property] withPrefix:@""] forKey:[property stringByReplacingOccurrencesOfString:@"_" withString:@" "]];
                 [infoSections addObject:[property stringByReplacingOccurrencesOfString:@"_" withString:@" "]];
             }
             else{
@@ -162,8 +179,8 @@ NSMutableArray *infoSections;
 
 - (NSString *) getTitle{
     NSString *title = @"";
-    if (type == Person){
-        title = [NSString stringWithFormat:@"%@ %@", item[@"first_name"], item[@"last_name"]];
+    if ([item[@"type"] isEqualToString:@"Person"]){
+        title = [NSString stringWithFormat:@"%@ %@", item[@"properties"][@"first_name"], item[@"properties"][@"last_name"]];
     }
     else{
         title = item[@"properties"][@"name"];
@@ -177,7 +194,7 @@ NSMutableArray *infoSections;
 - (NSMutableDictionary *)getContentAtIndexPath:(NSIndexPath *)index{
     //    NSLog(@"all keys: %@",);
     
-    NSMutableDictionary *returnObject = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"1",@"text", @"2", @"detail", nil];
+    NSMutableDictionary *returnObject = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"",@"text", @"", @"detail", nil];
     
     if (index.section == 0) {
         id value = item[sections[index.section]][infoSections[index.row]];
@@ -187,7 +204,7 @@ NSMutableArray *infoSections;
     else{
         NSDictionary *itemData = relationships[sections[index.section]][@"items"][index.row];
         NSString *section = sections[index.section];
-//        NSLog(@"section : %@",section);
+        NSLog(@"section : %@",section);
         if ([section isEqualToString:@"current_team"] || [section isEqualToString:@"past_team"]|| [section isEqualToString:@"board_members_and_advisors"]){
             NSString *name = [NSString stringWithFormat:@"%@ %@", itemData[@"first_name"], itemData[@"last_name"]];
             [returnObject setObject:name forKey:@"text"];
@@ -197,14 +214,17 @@ NSMutableArray *infoSections;
             [returnObject setObject:image forKey:@"image"];
         }
         else if ([section isEqualToString:@"websites"] || [section isEqualToString:@"news"]){
+            if (itemData[@"title"] != [NSNull null])
+                [returnObject setObject:itemData[@"title"] forKey:@"text"];
             
-            [returnObject setObject:itemData[@"title"] forKey:@"text"];
-            [returnObject setObject:itemData[@"url"] forKey:@"detail"];
+            if (itemData[@"url"] != [NSNull null])
+                [returnObject setObject:itemData[@"url"] forKey:@"detail"];
         }
         else if ([section isEqualToString:@"offices"] || [section isEqualToString:@"headquarters"]){
             
             [returnObject setObject:[self flattenLocationFromObject:itemData]  forKey:@"text"];
-            [returnObject setObject:itemData[@"name"] forKey:@"detail"];
+            if (itemData[@"name"] != [NSNull null])
+                [returnObject setObject:itemData[@"name"] forKey:@"detail"];
         }
         else if ([section isEqualToString:@"funding_rounds"]){
             [returnObject setObject:[self fundingAmountFromObject:itemData[@"name"]] forKey:@"text"];
@@ -217,39 +237,39 @@ NSMutableArray *infoSections;
                 if([itemData[@"investor"][@"type"] isEqualToString:@"Person"]){
                     
                     [returnObject setObject:[NSString stringWithFormat:@"%@ %@",itemData[@"investor"][@"first_name"],itemData[@"investor"][@"last_name"]] forKey:@"text"];
-                    [returnObject setObject:@"" forKey:@"detail"];
                 }
                 else{
                     
-                    [returnObject setObject:itemData[@"investor"][@"name"] forKey:@"text"];
-                    [returnObject setObject:@"" forKey:@"detail"];
+                    if (itemData[@"investor"][@"name"] != [NSNull null])
+                        [returnObject setObject:itemData[@"investor"][@"name"] forKey:@"text"];
                 }
             }
             else{
                 
-                [returnObject setObject:itemData[@"invested_in"][@"name"] forKey:@"text"];
-                [returnObject setObject:@"" forKey:@"detail"];
+                if (itemData[@"invested_in"][@"name"] != [NSNull null])
+                    [returnObject setObject:itemData[@"invested_in"][@"name"] forKey:@"text"];
             }
             
             
         }
         else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"] || [section isEqualToString:@"experience"]){
             
-            if (itemData[@"organization_name"] == (id)[NSNull null])
-                [returnObject setObject:@"" forKey:@"text"];
-            else
-                [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
+            if (itemData[@"organization_name"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"organization_name"] forKey:@"detail"];
             
-            [returnObject setObject:itemData[@"title"] forKey:@"detail"];
+            if (itemData[@"title"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"title"] forKey:@"text"];
         }
         else if ([section isEqualToString:@"degrees"]){
             
-            [returnObject setObject:itemData[@"degree_subject"] forKey:@"text"];
-            [returnObject setObject:itemData[@"organization_name"] forKey:@"detail"];
+            if (itemData[@"degree_subject"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"degree_subject"] forKey:@"detail"];
+            if (itemData[@"organization_name"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
         }
         else{
-            [returnObject setObject:itemData[@"name"] forKey:@"text"];
-            [returnObject setObject:@"" forKey:@"detail"];
+            if (itemData[@"name"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"name"] forKey:@"text"];
             
             if ([section isEqualToString:@"products"] || [section isEqualToString:@"competitors"] || [section isEqualToString:@"customers"] || [section isEqualToString:@"founders"] || [section isEqualToString:@"members"]|| [section isEqualToString:@"acquiree"]|| [section isEqualToString:@"acquirer"]) {
                 NSString* image = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",itemData[@"path"]];
@@ -287,7 +307,7 @@ NSMutableArray *infoSections;
     int start = 15;
     if (index < [roundText length]) {
         NSDecimalNumber *funds = [NSDecimalNumber decimalNumberWithString:[roundText substringWithRange:NSMakeRange(start, index - start)]];
-        return [self prettifyAmount:funds];
+        return [self prettifyAmount:funds withPrefix:@"$"];
     }
     else{
         return roundText;
@@ -323,64 +343,23 @@ NSMutableArray *infoSections;
 }
 
 
-- (NSString *)permalinkFromDictionary:(NSMutableDictionary *)dict atIndexPath:(NSIndexPath *)index{
-    if ([dict count] > 0){
-        int i = 0;
-        NSString* matched_key = [[NSString alloc] init];
-        NSMutableDictionary *object = [[NSMutableDictionary alloc] init];
-        for (id key in dict) {
-//            NSLog(@"permalinkForDictionary: each key is: %@",key);
-            if (i == index.section-1 ){
-                object = [[dict valueForKey:key] objectAtIndex:index.row];
-            }
-            i++;
-        }
-        
-        NSString *url = [Cruncher crunchBaseURL];
-        
-        
-        if ([matched_key isEqualToString:@"competitions"]){
-            return [NSString stringWithFormat:@"%@/company/%@.json", url, [[object valueForKey:@"competitor"] valueForKey:@"permalink"]];
-        }
-        else if ([matched_key isEqualToString:@"relationships"]){
-            if ([[self getValue:@"type"] isEqualToString:@"person"])
-                return [NSString stringWithFormat:@"%@/company/%@.json",url, [[object valueForKey:@"firm"] valueForKey:@"permalink"]];
-            else{
-                return [NSString stringWithFormat:@"%@/person/%@.json",url, [[object valueForKey:@"person"] valueForKey:@"permalink"]];
-            }
-        }
-        else if ([matched_key isEqualToString:@"products"]){
-            return [NSString stringWithFormat:@"%@/product/%@.json",url, [object valueForKey:@"permalink"]];
-        }
-        else if ([matched_key isEqualToString:@"acquisitions"]){
-            return [NSString stringWithFormat:@"%@/company/%@.json", url, [[object valueForKey:@"company"] valueForKey:@"permalink"]];
-        }
-        else if ([matched_key isEqualToString:@"providerships"]){
-            return [NSString stringWithFormat:@"%@/company/%@.json",url,  [[object valueForKey:@"provider"] valueForKey:@"permalink"]];
-        }
-        else if ([matched_key isEqualToString:@"investments"]){
-            return [NSString stringWithFormat:@"%@/company/%@.json",url, [[[object valueForKey:@"funding_round"] valueForKey:@"company"] valueForKey:@"permalink"]];
-        }
-        else if ([matched_key isEqualToString:@"company"]){
-            return [NSString stringWithFormat:@"%@/company/%@.json",url, [[object valueForKey:@"company"] valueForKey:@"permalink"]];
-        }
-        else
-            return @"";
-    }
-    else{
-        return @"";
-    }
-}
-
-
 - (NSString *)permalinkatIndexPath:(NSIndexPath *)index{
     
     NSString *key = [self getSectionNameAtIndex:index.section];
     NSString *url = [Cruncher crunchBaseURL];
     
     NSString *fullpath = @"";
-    
-    if (![key isEqualToString:@"categories"]) {
+    if ([key isEqualToString:@"investments"]) {
+        if ([item[@"type"] isEqualToString:@"FundingRound"]) {
+            if (item[@"relationships"][key][@"items"][index.row][@"investor"][@"path"] && item[@"relationships"][key][@"items"][index.row][@"investor"][@"path"] != [NSNull null])
+                fullpath = [NSString stringWithFormat:@"%@/%@?",url,item[@"relationships"][key][@"items"][index.row][@"investor"][@"path"]];
+        }
+        else{
+            if (item[@"relationships"][key][@"items"][index.row][@"funding_round"][@"path"] && item[@"relationships"][key][@"items"][index.row][@"funding_round"][@"path"] != [NSNull null])
+                fullpath = [NSString stringWithFormat:@"%@/%@?",url,item[@"relationships"][key][@"items"][index.row][@"funding_round"][@"path"]];
+        }
+    }
+    else if (![key isEqualToString:@"categories"]) {
         if (item[@"relationships"][key][@"items"][index.row][@"path"] && item[@"relationships"][key][@"items"][index.row][@"path"] != [NSNull null])
             fullpath = [NSString stringWithFormat:@"%@/%@?",url,item[@"relationships"][key][@"items"][index.row][@"path"]];
         else if (item[@"relationships"][key][@"items"][index.row][@"organization_path"] && item[@"relationships"][key][@"items"][index.row][@"organization_path"] != [NSNull null])
@@ -458,26 +437,6 @@ NSMutableArray *infoSections;
         return @"";
 }
 
-- (void) setItemType: (NSString *) aType{
-    NSLog(@"type is %@",aType);
-    
-    if ([aType isEqualToString:@"Organization"]) {
-        type = Company;
-    }
-    else if ([aType isEqualToString:@"Person"]){
-        type = Person;
-    }
-    else if ([aType isEqualToString:@"Product"]){
-        type = Product;
-    }
-    else if ([aType isEqualToString:@"service-provider"]){
-        type = Provider;
-    }
-    else{
-        type = None;
-    }
-}
-
 
 - (NSString *) prettifyFundingRound: (NSString *) round{
     if ([round isEqualToString:@"angel"] || [round isEqualToString:@"seed"] || [round isEqualToString:@"unattributed"] || [round isEqualToString:@"debt_round"])
@@ -494,7 +453,7 @@ NSMutableArray *infoSections;
 //    NSLog(@"%hhd",[self isNull:@"acquisition"]);
     return ![self isNull:@"acquisition"];
 }
-- (NSString *) prettifyAmount: (id) amt{
+- (NSString *) prettifyAmount: (id) amt withPrefix:(NSString *) prefix{
     if ([amt isKindOfClass:[NSNull class]]) {
         return @"Unspecified Amount";
     }
@@ -502,16 +461,16 @@ NSMutableArray *infoSections;
         float amount = [amt floatValue];
 
         if (amount/1000000000 >= 1) {
-            return [NSString stringWithFormat:@"$%.1fB", amount/1000000000.0];
+            return [NSString stringWithFormat:@"%@%.1fB", prefix, amount/1000000000.0];
         }
         else if (amount/1000000 >= 1) {
-            return [NSString stringWithFormat:@"$%.1fM", amount/1000000.0];
+            return [NSString stringWithFormat:@"%@%.1fM", prefix, amount/1000000.0];
         }
         else if (amount/1000 >= 1) {
-            return [NSString stringWithFormat:@"$%.1fK", amount/1000.0];
+            return [NSString stringWithFormat:@"%@%.1fK", prefix, amount/1000.0];
         }
         else{
-            return [NSString stringWithFormat:@"$%.1f", amount];
+            return [NSString stringWithFormat:@"%@%.1f", prefix, amount];
         }
     }
 }
@@ -529,7 +488,7 @@ NSMutableArray *infoSections;
         if (![self isNull:@"acquiring_company"]){
             companyOfAcq = [[[item objectForKey: @"acquisition"] objectForKey:@"acquiring_company"] valueForKey:@"name"];
             permCompanyOfAcq = [[[item objectForKey: @"acquisition"] objectForKey:@"acquiring_company"] valueForKey:@"permalink"];
-            amountOfPurchase = [self prettifyAmount:[[item objectForKey: @"acquisition"] valueForKey:@"price_amount"]];
+            amountOfPurchase = [self prettifyAmount:[[item objectForKey: @"acquisition"] valueForKey:@"price_amount"] withPrefix:@"$"];
             purchase_currency = [[item objectForKey: @"acquisition"] valueForKey:@"price_currency_code"];
             
             if ([dateOfAcq isEqualToString:@""]){

@@ -68,7 +68,7 @@
     crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
     
 //    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
+//    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
@@ -76,7 +76,7 @@
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
-    NSLog(@"image url :%@",image_url);
+//    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
     [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
@@ -100,6 +100,11 @@
     if ([item count] > 0) {
         crunch = [crunch initWithDictionary:item[@"data"]];
         [tableView reloadData];
+        
+        if ([[crunch getOverview] length] == 0) {
+            self.navigationController.navigationItem.rightBarButtonItem = nil;
+        }
+            
     }
 }
 
@@ -127,13 +132,11 @@
     else if ([[segue identifier] isEqualToString:@"web"]){
         
         WebViewController* view = segue.destinationViewController;
-        
         NSIndexPath *index = [tableView indexPathForSelectedRow];
-        
         NSMutableDictionary *content = [crunch getContentAtIndexPath:index];
         
         NSString *fullURL = [content objectForKey:@"detail"];
-        if ([[content objectForKey:@"detail"] isEqualToString:@"url"]) {
+        if ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]) {
             fullURL = [content objectForKey:@"text"];
         }
         view.url  = fullURL;
@@ -248,11 +251,11 @@
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
     
-    if (indexPath.section > 0 && [[crunch permalinkatIndexPath:indexPath] length] > 0)
+    if (indexPath.section > 0 && [[crunch permalinkatIndexPath:indexPath] length] > 0 && ![sectionString isEqualToString:@"degrees"])
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]))
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-    else if ([sectionString isEqualToString:@"websites"] ||[sectionString isEqualToString:@"headquarters"] ||[sectionString isEqualToString:@"offices"])
+    else if ([sectionString isEqualToString:@"websites"] ||[sectionString isEqualToString:@"headquarters"] ||[sectionString isEqualToString:@"offices"]||[sectionString isEqualToString:@"news"])
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     else
         cell.accessoryType =  UITableViewCellAccessoryNone;
@@ -263,6 +266,7 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14.0];
         cell.textLabel.numberOfLines = 2;
     }
+    
     cell.textLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.textColor = [UIColor grayColor];
 
@@ -308,4 +312,7 @@
     [ourApplication openURL:ourURL];
 }
 
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error{
+    NSLog(@"iAd failed to load: %@",[error description]);
+}
 @end
