@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Cruncher.h"
+#import <iAd/iAd.h>
 
-@interface DetailViewController : UIViewController <UITableViewDataSource>{
+@interface DetailViewController : UIViewController <UITableViewDataSource,ADBannerViewDelegate>{
 	NSMutableDictionary * item;
 }
 

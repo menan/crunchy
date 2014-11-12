@@ -9,6 +9,7 @@
 #import "WebViewController.h"
 
 @interface WebViewController ()
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingBar;
 
 @end
 
@@ -39,6 +40,19 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"Error : %@",error);
+    
+    
+    [self.loadingBar stopAnimating];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
+                                                    message:@"Unable to connect to the server."
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+
+
+
 }
 
 - (IBAction)showSheet:(id)sender{
@@ -70,6 +84,13 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     NSLog(@"starting to load");
+    [self.loadingBar startAnimating];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    NSLog(@"finished loading");
+    [self.loadingBar stopAnimating];
+    
 }
 - (void)didReceiveMemoryWarning
 {

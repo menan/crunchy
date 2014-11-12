@@ -131,6 +131,9 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QQ0-20-8kH">
+                                <rect key="frame" x="292" y="536" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -151,6 +154,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="loadingBar" destination="QQ0-20-8kH" id="N08-eh-czn"/>
                         <outlet property="webview" destination="aNZ-2m-cFs" id="KJp-Rz-yLY"/>
                     </connections>
                 </viewController>

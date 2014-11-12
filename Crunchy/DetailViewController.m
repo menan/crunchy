@@ -67,8 +67,8 @@
 - (void) readObject{
     crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
     
-    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
-    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
+//    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
+//    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [tableView reloadData];
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
@@ -76,7 +76,7 @@
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
-    NSLog(@"image url :%@",image_url);
+//    NSLog(@"image url :%@",image_url);
     UIImage *img = [UIImage imageNamed:@"aimage.png"];
     [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
@@ -99,10 +99,13 @@
     
     if ([item count] > 0) {
         crunch = [crunch initWithDictionary:item[@"data"]];
-        [crunch setItemType: [self.detailItem objectForKey:@"type"]];
         [tableView reloadData];
+        
+        if ([[crunch getOverview] length] == 0) {
+            self.navigationController.navigationItem.rightBarButtonItem = nil;
+        }
+            
     }
-    NSLog(@"-- viewDidAppear items %@, %@",self.title, [crunch getTitle]);
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,11 +116,9 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"segue id: %@",[segue identifier]);
     if ([[segue identifier] isEqualToString:@"overview"]) {
         OverviewViewController *overview = segue.destinationViewController;
         NSString *overviewTxt = [crunch getOverview];
-//        NSLog(@"overview = %@",overviewTxt);
         [overview sendOverviewText:overviewTxt];
     }
     else if ([[segue identifier] isEqualToString:@"imageview"]){
@@ -131,13 +132,11 @@
     else if ([[segue identifier] isEqualToString:@"web"]){
         
         WebViewController* view = segue.destinationViewController;
-        
         NSIndexPath *index = [tableView indexPathForSelectedRow];
-        
         NSMutableDictionary *content = [crunch getContentAtIndexPath:index];
         
         NSString *fullURL = [content objectForKey:@"detail"];
-        if ([[content objectForKey:@"detail"] isEqualToString:@"url"]) {
+        if ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]) {
             fullURL = [content objectForKey:@"text"];
         }
         view.url  = fullURL;
@@ -175,7 +174,6 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-//    NSLog(@"title: %@",[crunch getSectionAtIndex:(int)indexPath.section]);
     NSMutableDictionary *content = [crunch getContentAtIndexPath:indexPath];
     
     if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"General Info"]) {
@@ -183,14 +181,14 @@
             NSLog(@"twitter tapped tho %@",[content objectForKey:@"text"]);
             [self openTwitter:[content objectForKey:@"text"]];
         }
-        else if ([[content objectForKey:@"detail"] isEqualToString:@"url"]){
+        else if ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]){
             [self performSegueWithIdentifier:@"web" sender:self];
         }
     }
     else if([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"degrees"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funds"]){
         
     }
-    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"offices"]){
+    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"offices"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"headquarters"] || [[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"primary location"]){
         [self performSegueWithIdentifier:@"map" sender:self];
         
     }
@@ -200,17 +198,13 @@
     else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"websites"]){
         [self performSegueWithIdentifier:@"web" sender:self];
     }
-//    else if ([[crunch getSectionAtIndex:(int)indexPath.section] isEqualToString:@"funding rounds"]){
-//        [self performSegueWithIdentifier:@"fundingview" sender:self];
-//    }
-    else{
+    else if([[crunch permalinkatIndexPath:indexPath] length] > 0){
         DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
         NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
         
         [self.navigationController pushViewController:detail animated:YES];
         
         [object setObject:[crunch permalinkatIndexPath:indexPath] forKey:@"permalink"];
-        [object setObject:[crunch getTypeAtIndexPath:indexPath] forKey:@"type"];
         
         [detail setDetailItem:object];
     }
@@ -257,12 +251,12 @@
     
     NSString * sectionString = [crunch getSectionAtIndex:(int)indexPath.section];
     
-    if (indexPath.section > 0 && ![sectionString isEqualToString:@"categories"]&& ![sectionString isEqualToString:@"products"]){
+    if (indexPath.section > 0 && [[crunch permalinkatIndexPath:indexPath] length] > 0 && ![sectionString isEqualToString:@"degrees"])
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-    }
-    else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"twitter"] || [[content objectForKey:@"detail"] isEqualToString:@"url"])){
+    else if (indexPath.section == 0 && ([[content objectForKey:@"detail"] isEqualToString:@"homepage url"]))
         cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-    }
+    else if ([sectionString isEqualToString:@"websites"] ||[sectionString isEqualToString:@"headquarters"] ||[sectionString isEqualToString:@"offices"]||[sectionString isEqualToString:@"news"])
+        cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
     else
         cell.accessoryType =  UITableViewCellAccessoryNone;
     
@@ -272,6 +266,7 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14.0];
         cell.textLabel.numberOfLines = 2;
     }
+    
     cell.textLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.textColor = [UIColor grayColor];
 
@@ -315,5 +310,9 @@
     NSString *ourPath = [NSString stringWithFormat:@"twitter://user?screen_name=%@",screen];
     NSURL *ourURL = [NSURL URLWithString:ourPath];
     [ourApplication openURL:ourURL];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error{
+    NSLog(@"iAd failed to load: %@",[error description]);
 }
 @end
