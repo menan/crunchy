@@ -34,21 +34,21 @@ NSMutableArray *infoSections;
     sections = [[NSMutableArray alloc] init];
     infoSections = [[NSMutableArray alloc] init];
     
-    NSArray *propertyBlacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"bio"];
+    NSArray *blacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid",@"bio",@"died_on_trust_code",@"role_investor",@"born_on_year",@"born_on_month",@"born_on_day",@"born_on_trust_code",@"post_money_valuation_currency_code",@"announced_on_trust_code",@"name",@"price_currency_code",@"owner_path",@"launched_on_trust_code",@"launched_on_month",@"launched_on_year",@"launched_on_day",@"videos",@"opening_share_price_currency_code",@"went_public_on_trust_code",@"went_public_on_day",@"went_public_on_month",@"went_public_on_year",@"opening_valuation_currency_code",@"target_money_raised_currency_code",@"closed_on_month",@"closed_on_year",@"closed_on_day",@"secondary_role_early_stage_vendor",@"secondary_role_seed",@"secondary_role_venture_capital",@"secondary_role_debt_financing",@"secondary_role_private_equity",@"secondary_role_large_stage_venture",@"sectors",@"secondary_role_early_staage_venture",@"secondary_role_incubator",@"short_description",@"also_known_as",@"price_usd",@"completed_on_day",@"completed_on_month",@"completed_on_year",@"completed_on_trust_code"];
     
-    NSMutableArray *propertyBlacklisted = [blacklisted copy];
+    NSMutableArray *propertyBlacklisted = [[NSMutableArray alloc] initWithArray:blacklisted];
     
     if ([item[@"type"] isEqualToString:@"Product"]) {
         [propertyBlacklisted addObject:@"short_description"];
     }
     
-//    int investments = [item[@"properties"][@"number_of_investments"] intValue];
-//    
-//    if (investments == 0) {
-//        NSLog(@"number oof investments %d",investments);
-//        [propertyBlacklisted addObject:@"number_of_investments"];
-//    }
-//    
+    int investments = [item[@"properties"][@"number_of_investments"] intValue];
+    
+    if (investments == 0) {
+        NSLog(@"number oof investments %d",investments);
+        [propertyBlacklisted addObject:@"number_of_investments"];
+    }
+
     for (NSString *property in item[@"properties"]) {
         if (![self isNull:property] && ![propertyBlacklisted containsObject:property]){            
             if ([property isEqualToString:@"total_funding_usd"] || [property isEqualToString:@"price"]|| [property isEqualToString:@"money_raised"]|| [property isEqualToString:@"opening_valuation"]|| [property isEqualToString:@"opening_share_price"] ||  [property isEqualToString:@"post_money_valuation"]){
@@ -167,12 +167,12 @@ NSMutableArray *infoSections;
 }
 
 - (NSString *) getOverview{
-    if ([item[@"type"] isEqualToString: @"Person"]) {
+    if ([item[@"type"] isEqualToString:@"Person"])
         return [item[@"properties"][@"bio"] stringByConvertingHTMLToPlainText];
-    }
-    else{
+    else if ([item[@"type"] isEqualToString:@"Product"])
+        return [item[@"properties"][@"short_description"] stringByConvertingHTMLToPlainText];
+    else
         return [item[@"properties"][@"description"] stringByConvertingHTMLToPlainText];
-    }
 }
 
 
@@ -252,13 +252,20 @@ NSMutableArray *infoSections;
             
             
         }
-        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"]|| [section isEqualToString:@"experience"]){
-            [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
-            [returnObject setObject:itemData[@"title"] forKey:@"detail"];
+        else if ([section isEqualToString:@"primary_affiliation"] || [section isEqualToString:@"advisor_at"] || [section isEqualToString:@"experience"]){
+            
+            if (itemData[@"organization_name"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"organization_name"] forKey:@"detail"];
+            
+            if (itemData[@"title"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"title"] forKey:@"text"];
         }
         else if ([section isEqualToString:@"degrees"]){
-            [returnObject setObject:itemData[@"degree_subject"] forKey:@"text"];
-            [returnObject setObject:itemData[@"organization_name"] forKey:@"detail"];
+            
+            if (itemData[@"degree_subject"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"degree_subject"] forKey:@"detail"];
+            if (itemData[@"organization_name"] != (id)[NSNull null])
+                [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
         }
         else{
             if (itemData[@"name"] != (id)[NSNull null])

@@ -73,6 +73,10 @@
     tableView.scrollEnabled = YES;
     [loading stopAnimating];
     
+    if ([[crunch getOverview] length] == 0) {
+        self.navigationItem.rightBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
@@ -101,9 +105,6 @@
         crunch = [crunch initWithDictionary:item[@"data"]];
         [tableView reloadData];
         
-        if ([[crunch getOverview] length] == 0) {
-            self.navigationController.navigationItem.rightBarButtonItem = nil;
-        }
             
     }
 }
@@ -266,7 +267,12 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14.0];
         cell.textLabel.numberOfLines = 2;
     }
-    
+//    
+//    if ([[content objectForKey:@"detail"] isEqualToString:@"short description"]) {
+//        cell.textLabel.font = [UIFont systemFontOfSize:14.0];
+//        cell.textLabel.numberOfLines = 2;
+//    }
+//    
     cell.textLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.textColor = [UIColor grayColor];
 

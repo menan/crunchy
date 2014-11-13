@@ -93,7 +93,7 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
 	int storyIndex = (int) [indexPath indexAtPosition: [indexPath length] - 1];
-    NSString * urlString = [[_objects objectAtIndex: storyIndex] objectForKey: @"image"];
+    NSString * urlString = [[_objects objectAtIndex: storyIndex] objectForKey: @"image_large"];
 //    NSLog(@"url string: %@",urlString);
     
     NSURL *url = [NSURL URLWithString:urlString];
@@ -121,67 +121,6 @@
 {
     [searchBar resignFirstResponder];
 }
-- (void) readObject: (NSDictionary *) object{
-    
-    [loading stopAnimating];
-    self.tableView.allowsSelection = YES;
-    item = [[NSMutableDictionary alloc] init];
-    _objects = [[NSMutableArray alloc] init];
-    
-	NSArray *results = [object valueForKey:@"results"];
-    int numberOfResults = [[object valueForKey:@"total"] intValue];
-    
-    
-    //NSLog(@"returned %d results",numberOfResults);
-    
-    if (numberOfResults == 0){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zero Results"
-                                                        message:@"There are matches found. Please double check your keyword."
-                                                       delegate:self
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-
-        NSLog(@"Zero results returned");
-    }
-    else{
-        // Loop through each entry in the dictionary...
-        for (NSDictionary *result in results)
-        {
-            NSDictionary *images = [result valueForKey:@"image"];
-            
-            if ([images valueForKey:@"available_sizes"] != (id)[NSNull null]){
-                NSString* images_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:0] objectAtIndex:1];
-                NSString* images_large_url = [[[images valueForKey:@"available_sizes"] objectAtIndex:2] objectAtIndex:1];
-                
-                [item setObject:images_url forKey:@"image"];
-                [item setObject:images_large_url forKey:@"image_large"];
-                
-                
-            }
-            
-            if ([[result valueForKey:@"namespace"] isEqual:@"person"]){
-                [item setObject:[NSString stringWithFormat:@"%@ %@", [result valueForKey:@"first_name"], [result valueForKey:@"last_name"]] forKey:@"name"];
-            }
-            else{
-                [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"name"]] forKey:@"name"];
-                
-            }
-            //NSLog(@"images_url:%@",images_url);
-            [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"overview"]] forKey:@"overview"];
-            [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"namespace"]] forKey:@"namespace"];
-            [item setObject:[NSString stringWithFormat:@"%@", [result valueForKey:@"namespace"]] forKey:@"type"];
-            [item setObject:[NSString stringWithFormat:@"%@/%@/%@.json?",[Cruncher crunchBaseURL], [result valueForKey:@"namespace"], [result valueForKey:@"permalink"]] forKey:@"permalink"];
-            [_objects addObject:[item copy]];
-            
-        }
-    }
-    
-    [self.tableView reloadData];
-    NSLog(@"returned object: %lu",(unsigned long)_objects.count);
-}
-
-
 - (void) parseData: (NSDictionary *) data{
     
     [loading stopAnimating];
