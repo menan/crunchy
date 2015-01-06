@@ -38,6 +38,8 @@
 
     
     [super viewDidLoad];
+    
+    [self getRecentlyUpdated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -207,6 +209,45 @@
     
     
 }
+
+
+- (void) getRecentlyUpdated{
+    
+    // You'll probably want to do this on another thread
+    // SomeService is just a dummy class representing some
+    // api that you are using to do the search
+    NSString* url = [[NSString stringWithFormat:@"%@/organizations?order=updated_at desc&user_key=%@", [Cruncher crunchBaseURL], [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        //        NSLog(@"Read JSON: %@", JSON);
+        [self parseData:JSON];
+        
+    }
+        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+            NSLog(@"error: %@", [error userInfo]);
+            [loading stopAnimating];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
+                                                            message:@"Unable to connect to the server."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }];
+    [operation start];
+    
+    [searchBar resignFirstResponder];
+    [loading startAnimating];
+    [searchBar setShowsCancelButton:NO animated:YES];
+    self.tableView.allowsSelection = NO;
+    
+    [_objects removeAllObjects];
+    [self.tableView reloadData];
+    
+}
+
+
 - (IBAction)aboutTapped:(id)sender {
     
     UIApplication *ourApplication = [UIApplication sharedApplication];
