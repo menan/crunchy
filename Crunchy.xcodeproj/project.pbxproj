@@ -72,6 +72,8 @@
 		E89397F618B2B09100474141 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89397F518B2B09100474141 /* WebViewController.m */; };
 		E89397F918B2C33C00474141 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89397F818B2C33C00474141 /* MapViewController.m */; };
 		E89397FB18B2C3D800474141 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E89397FA18B2C3D800474141 /* CoreLocation.framework */; };
+		E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E894E35B1A65CB7D00647C6C /* iCarousel.m */; };
+		E894E35E1A65CDBE00647C6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E894E35D1A65CDBE00647C6C /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -189,6 +191,9 @@
 		E89397F718B2C33C00474141 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		E89397F818B2C33C00474141 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		E89397FA18B2C3D800474141 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E894E35A1A65CB7D00647C6C /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
+		E894E35B1A65CB7D00647C6C /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		E894E35D1A65CDBE00647C6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E894E35E1A65CDBE00647C6C /* QuartzCore.framework in Frameworks */,
 				68B7882218B98288001CAAB4 /* iAd.framework in Frameworks */,
 				E89397FB18B2C3D800474141 /* CoreLocation.framework in Frameworks */,
 				68E669BC16C58CD7007529AD /* MapKit.framework in Frameworks */,
@@ -234,6 +240,7 @@
 		685FEC0A16BA08E7007083CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E894E35D1A65CDBE00647C6C /* QuartzCore.framework */,
 				68B7882118B98288001CAAB4 /* iAd.framework */,
 				68B7881C18B5EA76001CAAB4 /* Crashlytics.framework */,
 				E89397FA18B2C3D800474141 /* CoreLocation.framework */,
@@ -255,6 +262,7 @@
 		685FEC1116BA08E7007083CF /* Crunchy */ = {
 			isa = PBXGroup;
 			children = (
+				E894E3591A65CB7D00647C6C /* iCarousel */,
 				68BE432819FAEEBB00C76DFC /* Launch Screen.xib */,
 				68BE42F619FAE9D800C76DFC /* SDWebImage */,
 				6894C77F1841B79100A3CD85 /* AFNetworking */,
@@ -406,6 +414,15 @@
 			name = fonts;
 			sourceTree = "<group>";
 		};
+		E894E3591A65CB7D00647C6C /* iCarousel */ = {
+			isa = PBXGroup;
+			children = (
+				E894E35A1A65CB7D00647C6C /* iCarousel.h */,
+				E894E35B1A65CB7D00647C6C /* iCarousel.m */,
+			);
+			path = iCarousel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -545,6 +562,7 @@
 				68BE432119FAE9D800C76DFC /* UIButton+WebCache.m in Sources */,
 				68E669C916C6E972007529AD /* OverviewViewController.m in Sources */,
 				68BE431919FAE9D800C76DFC /* NSData+ImageContentType.m in Sources */,
+				E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */,
 				6894C7971841B79100A3CD85 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				68E669CF16C76754007529AD /* GTMNSString+HTML.m in Sources */,
 				68BE431A19FAE9D800C76DFC /* SDImageCache.m in Sources */,

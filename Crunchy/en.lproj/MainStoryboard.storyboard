@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2cH-UG-fO5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2cH-UG-fO5">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -9,6 +9,9 @@
         <mutableArray key="Hero Light.otf">
             <string>Hero-Light</string>
             <string>Hero-Light</string>
+        </mutableArray>
+        <mutableArray key="Hero.otf">
+            <string>Hero</string>
         </mutableArray>
         <mutableArray key="Lineal Simples St.ttf">
             <string>LinealSimplesSt</string>
@@ -278,18 +281,40 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <searchBar contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" backgroundImage="search-bg" translatesAutoresizingMaskIntoConstraints="NO" id="Kwa-oA-C91">
+                            <searchBar clipsSubviews="YES" contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="Kwa-oA-C91">
                                 <rect key="frame" x="0.0" y="284" width="320" height="44"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="2cH-UG-fO5" id="QGK-t9-W3x"/>
                                 </connections>
                             </searchBar>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAH-8O-kHw" customClass="iCarousel">
+                                <rect key="frame" x="0.0" y="405" width="320" height="163"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="2cH-UG-fO5" id="T75-al-57A"/>
+                                    <outlet property="delegate" destination="2cH-UG-fO5" id="DPx-ey-JHU"/>
+                                </connections>
+                            </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDz-Dn-jCo">
+                                <rect key="frame" x="143" y="183" width="42" height="21"/>
+                                <fontDescription key="fontDescription" name="Hero" family="Hero" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="carousel" destination="LAH-8O-kHw" id="VUN-TF-7S2"/>
+                        <outlet property="crunchy" destination="fp5-Pg-BtA" id="bJ8-rr-TUm"/>
+                        <outlet property="fontLabel" destination="mDz-Dn-jCo" id="k3V-ET-4yu"/>
+                        <outlet property="searchBar" destination="Kwa-oA-C91" id="UVv-bR-KJE"/>
                         <outlet property="searchDisplayController" destination="zas-ZU-zj0" id="sBv-nS-FgK"/>
+                        <outlet property="searchLabel" destination="X3K-Is-0As" id="ULk-4D-Uec"/>
+                        <outlet property="tinritLabs" destination="1Xp-R4-WZM" id="dxp-8q-ohB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WiO-3e-66l" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -302,7 +327,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="89" y="780"/>
+            <point key="canvasLocation" x="89" y="886"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="mdR-rp-whp">
@@ -532,7 +557,6 @@
     <resources>
         <image name="crunchbase.png" width="57" height="57"/>
         <image name="crunchy-bg" width="679" height="1732"/>
-        <image name="search-bg" width="320" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iCarousel.h"
 
-@interface MainViewController : UIViewController<UISearchBarDelegate>
+@interface MainViewController : UIViewController<UISearchBarDelegate,iCarouselDataSource, iCarouselDelegate>
 
 @end
