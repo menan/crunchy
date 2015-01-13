@@ -27,6 +27,8 @@
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleBlackTranslucent;
 }
+
+
 /*
 #pragma mark - Navigation
 
@@ -36,5 +38,24 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+
+#pragma UISearchBar Delegate Methods
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    NSLog(@"just started editing");
+    //do stuff
+    return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    NSLog(@"just finished editing");
+    //do stuff
+    return YES;
+}
+
+
+
 
 @end

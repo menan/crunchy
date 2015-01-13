@@ -281,6 +281,9 @@
                             <searchBar contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" backgroundImage="search-bg" translatesAutoresizingMaskIntoConstraints="NO" id="Kwa-oA-C91">
                                 <rect key="frame" x="0.0" y="284" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="2cH-UG-fO5" id="QGK-t9-W3x"/>
+                                </connections>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -529,7 +532,7 @@
     <resources>
         <image name="crunchbase.png" width="57" height="57"/>
         <image name="crunchy-bg" width="679" height="1732"/>
-        <image name="search-bg" width="160" height="22"/>
+        <image name="search-bg" width="320" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
