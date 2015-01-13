@@ -12,7 +12,6 @@
 	NSMutableDictionary * item;
 }
 
-//- (void) readObject: (NSDictionary *) object;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
 
