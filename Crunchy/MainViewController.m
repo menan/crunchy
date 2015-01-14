@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet iCarousel *carousel;
 @property (weak, nonatomic) IBOutlet UILabel *fontLabel;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
 
 @property (nonatomic, strong) NSMutableArray *items;
 @end
@@ -94,15 +95,16 @@
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)thisSearchBar {
     NSLog(@"just started editing");
     
-    [UIView animateWithDuration:0.30
+    [UIView animateWithDuration:0.2
                           delay:0.0f
                         options: UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.crunchy.alpha = 0.0f;
                          self.tinritLabs.alpha = 0.0f;
-                         
-                         self.searchLabel.transform = CGAffineTransformMakeTranslation( 0, -235.0f);
-                         self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -235.0f);
+                         self.carousel.alpha = 0.0f;
+//                         self.searchLabel.font = [self.searchLabel.font fontWithSize:13];
+                         self.searchLabel.transform = CGAffineTransformMakeTranslation( 0, -230.0f);
+                         self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -230.0f);
                          NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
                      }
                      completion:nil];
@@ -115,13 +117,14 @@
     NSLog(@"just finished editing");
     
     
-    [UIView animateWithDuration:0.30
+    [UIView animateWithDuration:0.2
                           delay:0.0f
                         options: UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          self.crunchy.alpha = 1.0f;
                          self.tinritLabs.alpha = 1.0f;
-                         
+                         self.carousel.alpha = 1.0f;
+//                         self.searchLabel.font = [self.searchLabel.font fontWithSize:17];
                          self.searchLabel.transform = CGAffineTransformMakeTranslation( 0, 0);
                          self.searchBar.transform = CGAffineTransformMakeTranslation( 0, 0);
                          NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
@@ -149,13 +152,14 @@
         self.items = data[@"data"][@"items"];
         
         [self.carousel reloadData];
+        [self.loading stopAnimating];
         
         
         
     }
                                                                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                                                             NSLog(@"error: %@", [error userInfo]);
-//                                                                                            [loading stopAnimating];
+                                                                                            [self.loading stopAnimating];
                                                                                             
                                                                                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
                                                                                                                                             message:@"Unable to connect to the server."
@@ -179,6 +183,8 @@
 {
     NSLog(@"carousel total count %lu", (unsigned long)self.items.count);
     //return the total number of items in the carousel
+    if (self.items.count > 20)
+        return 20;
     return self.items.count;
 }
 
@@ -199,12 +205,15 @@
         
         NSURL *image_url = [NSURL URLWithString:imageString];
         
+        
         view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 75.0f, 75.0f)];
         [(UIImageView *)view sd_setImageWithURL:image_url placeholderImage:nil];
-        
-        view.contentMode = UIViewContentModeScaleAspectFit;
-        
-        view.layer.cornerRadius = 45;
+        view.backgroundColor = [UIColor whiteColor];
+        view.contentMode = UIViewContentModeScaleAspectFill;
+//        view.layer.masksToBounds = YES;
+//        
+//
+//        view.layer.cornerRadius = 10;
         
         CGRect frame = view.bounds;
         
@@ -213,7 +222,7 @@
         label = [[UILabel alloc] initWithFrame:frame];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = [self.fontLabel.font fontWithSize:12];
+        label.font = [self.fontLabel.font fontWithSize:9];
         label.textColor = [UIColor whiteColor];
         label.tag = 1;
         [view addSubview:label];
@@ -230,7 +239,7 @@
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
-//    NSLog(@"carousel reading %@", self.items[index]);
+    NSLog(@"carousel reading %@", self.items[index]);
     return view;
 }
 
