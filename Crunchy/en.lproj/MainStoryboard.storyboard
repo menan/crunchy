@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2cH-UG-fO5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2cH-UG-fO5">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -8,9 +8,10 @@
     <customFonts key="customFonts">
         <mutableArray key="Hero Light.otf">
             <string>Hero-Light</string>
-            <string>Hero-Light</string>
         </mutableArray>
         <mutableArray key="Hero.otf">
+            <string>Hero</string>
+            <string>Hero</string>
             <string>Hero</string>
         </mutableArray>
         <mutableArray key="Lineal Simples St.ttf">
@@ -263,26 +264,26 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Crunchy" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fp5-Pg-BtA">
-                                <rect key="frame" x="63" y="118" width="202" height="62"/>
+                                <rect key="frame" x="63" y="93" width="202" height="62"/>
                                 <fontDescription key="fontDescription" name="LinealSimplesSt" family="Lineal Simples St" pointSize="45"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tinrit Labs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xp-R4-WZM">
-                                <rect key="frame" x="101" y="182" width="126" height="21"/>
+                                <rect key="frame" x="101" y="157" width="126" height="21"/>
                                 <fontDescription key="fontDescription" name="Hero-Light" family="Hero Light" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="search below" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3K-Is-0As">
-                                <rect key="frame" x="97" y="263" width="127" height="21"/>
-                                <fontDescription key="fontDescription" name="Hero-Light" family="Hero Light" pointSize="19"/>
+                                <rect key="frame" x="97" y="253" width="127" height="21"/>
+                                <fontDescription key="fontDescription" name="Hero" family="Hero" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <searchBar clipsSubviews="YES" contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="Kwa-oA-C91">
-                                <rect key="frame" x="0.0" y="284" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="274" width="320" height="44"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -292,6 +293,17 @@
                             </searchBar>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LAH-8O-kHw" customClass="iCarousel">
                                 <rect key="frame" x="0.0" y="405" width="320" height="163"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="YDH-D1-FOO">
+                                        <rect key="frame" x="150" y="72" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.49999999999999961" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="recently updated" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IzH-KS-J8C">
+                                        <rect key="frame" x="59" y="7" width="202" height="21"/>
+                                        <fontDescription key="fontDescription" name="Hero" family="Hero" pointSize="11"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="2cH-UG-fO5" id="T75-al-57A"/>
@@ -299,7 +311,7 @@
                                 </connections>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDz-Dn-jCo">
-                                <rect key="frame" x="143" y="183" width="42" height="21"/>
+                                <rect key="frame" x="143" y="158" width="42" height="21"/>
                                 <fontDescription key="fontDescription" name="Hero" family="Hero" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -311,6 +323,7 @@
                         <outlet property="carousel" destination="LAH-8O-kHw" id="VUN-TF-7S2"/>
                         <outlet property="crunchy" destination="fp5-Pg-BtA" id="bJ8-rr-TUm"/>
                         <outlet property="fontLabel" destination="mDz-Dn-jCo" id="k3V-ET-4yu"/>
+                        <outlet property="loading" destination="YDH-D1-FOO" id="gB4-Nl-ENg"/>
                         <outlet property="searchBar" destination="Kwa-oA-C91" id="UVv-bR-KJE"/>
                         <outlet property="searchDisplayController" destination="zas-ZU-zj0" id="sBv-nS-FgK"/>
                         <outlet property="searchLabel" destination="X3K-Is-0As" id="ULk-4D-Uec"/>
