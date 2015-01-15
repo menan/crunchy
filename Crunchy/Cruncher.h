@@ -41,5 +41,9 @@ typedef enum ItemType : NSUInteger {
 
 + (NSString *) userKey;
 + (NSString *) crunchBaseURL;
++ (NSURL *) crunchBaseURLForPath:(NSString *)path;
 
+- (NSString *) getShorDescription;
+
+- (NSArray *) getFounders;
 @end

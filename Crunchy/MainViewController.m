@@ -10,6 +10,8 @@
 #import "Cruncher.h"
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+WebCache.h"
+#import "EntityViewController.h"
+
 
 @interface MainViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *crunchy;
@@ -19,11 +21,20 @@
 @property (weak, nonatomic) IBOutlet iCarousel *carousel;
 @property (weak, nonatomic) IBOutlet UILabel *fontLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *buttonDone;
+@property (weak, nonatomic) IBOutlet UILabel *quoteLabel;
+@property (weak, nonatomic) IBOutlet UILabel *quoteAuthor;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 
 @property (nonatomic, strong) NSMutableArray *items;
+@property (nonatomic, strong) NSMutableArray *objects;
+@property (nonatomic, strong) NSDictionary *selectedObject;
 @end
 
 @implementation MainViewController
+
+BOOL searching = NO;
 
 - (void)viewDidLoad {
     
@@ -33,7 +44,7 @@
     
     self.carousel.type = iCarouselTypeLinear;
     
-    [self.carousel reloadData];
+    self.buttonDone.alpha = 0.0f;
     
     for (id object in [[[self.searchBar subviews] objectAtIndex:0] subviews])
     {
@@ -48,19 +59,14 @@
             break;
         }
     }
-
+    
+    self.tableView.rowHeight = 55;
+    self.tableView.separatorColor = [UIColor whiteColor];
     
     
-    // Create and initialize a tap gesture
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondToTapGesture:)];
-    // Specify that the gesture must be a single tap
-    tapRecognizer.numberOfTapsRequired = 1;
-    // Add the tap gesture recognizer to the view
-    [self.view addGestureRecognizer:tapRecognizer];
-    [self setNeedsStatusBarAppearanceUpdate];
-    
-    
-    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -69,9 +75,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleBlackTranslucent;
 }
 
 
@@ -93,46 +96,13 @@
 #pragma UISearchBar Delegate Methods
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)thisSearchBar {
-    NSLog(@"just started editing");
-    
-    [UIView animateWithDuration:0.2
-                          delay:0.0f
-                        options: UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-                         self.crunchy.alpha = 0.0f;
-                         self.tinritLabs.alpha = 0.0f;
-                         self.carousel.alpha = 0.0f;
-//                         self.searchLabel.font = [self.searchLabel.font fontWithSize:13];
-                         self.searchLabel.transform = CGAffineTransformMakeTranslation( 0, -230.0f);
-                         self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -230.0f);
-                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
-                     }
-                     completion:nil];
-    
-    //do stuff
+    [self showSearchView];
+    searching = YES;
     return YES;
 }
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)thisSearchBar {
-    NSLog(@"just finished editing");
-    
-    
-    [UIView animateWithDuration:0.2
-                          delay:0.0f
-                        options: UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         self.crunchy.alpha = 1.0f;
-                         self.tinritLabs.alpha = 1.0f;
-                         self.carousel.alpha = 1.0f;
-//                         self.searchLabel.font = [self.searchLabel.font fontWithSize:17];
-                         self.searchLabel.transform = CGAffineTransformMakeTranslation( 0, 0);
-                         self.searchBar.transform = CGAffineTransformMakeTranslation( 0, 0);
-                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
-                     }
-                     completion:nil];
-    
-    
-    //do stuff
+    [self hideSearchView];
     return YES;
 }
 
@@ -146,17 +116,12 @@
     NSString* url = [[NSString stringWithFormat:@"%@/organizations?order=updated_at desc&user_key=%@", [Cruncher crunchBaseURL], [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
-//                NSLog(@"recent data JSON: %@", data);
-        
-        self.items = data[@"data"][@"items"];
-        
-        [self.carousel reloadData];
-        [self.loading stopAnimating];
-        
-        
-        
-    }
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                                                                                            self.items = data[@"data"][@"items"];
+                                                                                            [self.carousel reloadData];
+                                                                                            [self.loading stopAnimating];
+                                                                                        }
                                                                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                                                             NSLog(@"error: %@", [error userInfo]);
                                                                                             [self.loading stopAnimating];
@@ -174,6 +139,266 @@
 }
 
 
+- (void) showSearchView{
+    
+    if (!searching) {
+        self.tableView.alpha = 0.0f;
+        self.tableView.hidden = NO;
+        
+        [UIView animateWithDuration:0.2
+                              delay:0.0f
+                            options: UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             self.tinritLabs.alpha = 0.0f;
+                             self.carousel.alpha = 0.0f;
+                             self.searchLabel.alpha = 0.0f;
+                             
+                             self.quoteAuthor.alpha = 0.0f;
+                             self.quoteLabel.alpha = 0.0f;
+                             
+                             self.buttonDone.alpha = 1.0f;
+                             
+                             self.tableView.alpha = 1.0f;
+                             self.tableView.transform = CGAffineTransformMakeTranslation( 0, 105.0f);
+                             
+                             
+                             self.crunchy.transform = CGAffineTransformMakeTranslation( 0, -45.0f);
+                             self.crunchy.font = [self.crunchy.font fontWithSize:26.0f];
+                             
+                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -170.0f);
+                             //                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
+                         }
+                         completion:^(BOOL finished) {
+                             
+                         }];
+    }
+}
+
+- (void) hideSearchView{
+    
+    if (!searching) {
+        
+        [UIView animateWithDuration:0.2
+                              delay:0.0f
+                            options: UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             self.crunchy.alpha = 1.0f;
+                             self.tinritLabs.alpha = 1.0f;
+                             self.carousel.alpha = 1.0f;
+                             
+                             
+                             self.quoteAuthor.alpha = 0.5f;
+                             self.quoteLabel.alpha = 0.8f;
+                             
+                             self.buttonDone.alpha = 0.0f;
+                             
+                             self.tableView.transform = CGAffineTransformMakeTranslation( 0, 0);
+                             self.tableView.alpha = 0.0f;
+                             
+                             self.searchLabel.alpha = 1.0f;
+                             
+                             self.crunchy.transform = CGAffineTransformMakeTranslation(0, 0);
+                             self.crunchy.font = [self.crunchy.font fontWithSize:52.0f];
+                             
+                             
+                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, 0);
+                             //                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
+                         }
+                         completion:^(BOOL finished) {
+                             self.tableView.hidden = YES;
+                         }];
+    }
+}
+
+
+
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.searchBar resignFirstResponder];
+}
+
+
+- (void) parseData: (NSDictionary *) data{
+    
+    [self.loading stopAnimating];
+    self.tableView.allowsSelection = YES;
+    NSMutableDictionary* item = [[NSMutableDictionary alloc] init];
+    self.objects = [[NSMutableArray alloc] init];
+    
+    NSArray *results = data[@"data"][@"items"];
+    int numberOfResults = [data[@"data"][@"paging"][@"total_items"] intValue];
+    
+    if (numberOfResults == 0){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zero Results"
+                                                        message:@"There are matches found, double check your keyword."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        NSLog(@"Zero results returned");
+    }
+    else{
+        // Loop through each entry in the dictionary...
+        for (NSDictionary *result in results)
+        {
+            
+            NSString *path = result[@"path"];
+            NSString *image_url = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
+            NSString *image_url_raw = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw",path];
+            NSString *name = result[@"name"];
+            NSString *type = result[@"type"];
+            
+            
+            [item setObject:image_url forKey:@"image"];
+            [item setObject:image_url_raw forKey:@"image_large"];
+            [item setObject:name forKey:@"name"];
+            [item setObject:type forKey:@"type"];
+            [item setObject:path forKey:@"path"];
+            [item setObject:[NSString stringWithFormat:@"%@/%@?",[Cruncher crunchBaseURL], path] forKey:@"permalink"];
+            
+            [self.objects addObject:[item copy]];
+        }
+    }
+    [self.tableView reloadData];
+    
+}
+
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)uiSearchBar {
+    // You'll probably want to do this on another thread
+    // SomeService is just a dummy class representing some
+    // api that you are using to do the search
+    NSString* url = [[NSString stringWithFormat:@"%@/organizations?query=%@&user_key=%@", [Cruncher crunchBaseURL], uiSearchBar.text, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [self.activityView startAnimating];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//                                                                                            NSLog(@"Read JSON: %@", JSON);
+                                                                                            [self parseData:JSON];
+                                                                                            [self.activityView stopAnimating];
+                                                                                            
+                                                                                        }
+                                                                                        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                            NSLog(@"error: %@", [error userInfo]);
+                                                                                            
+                                                                                            [self.activityView stopAnimating];
+                                                                                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
+                                                                                                                                            message:@"Unable to connect to the server."
+                                                                                                                                           delegate:self
+                                                                                                                                  cancelButtonTitle:@"OK"
+                                                                                                                                  otherButtonTitles:nil];
+                                                                                            [alert show];
+                                                                                        }];
+    [operation start];
+    
+    searching = YES;
+    
+    [self.searchBar resignFirstResponder];
+    [self.searchBar setShowsCancelButton:NO animated:YES];
+    self.tableView.allowsSelection = NO;
+    
+    [self.objects removeAllObjects];
+    [self.tableView reloadData];
+    
+    
+}
+
+
+- (IBAction)doneButtonTapped:(id)sender {
+    searching = NO;
+    [self.searchBar resignFirstResponder];
+    [self hideSearchView];
+}
+
+
+#pragma mark - Table View
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return _objects.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"MyIdentifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 45, 45)];
+        imgView.tag = 10;
+        imgView.image = nil;
+        imgView.backgroundColor = [UIColor whiteColor];
+        imgView.contentMode = UIViewContentModeScaleAspectFit;
+        imgView.layer.masksToBounds = YES;
+        imgView.clipsToBounds = YES;
+        imgView.layer.cornerRadius = imgView.frame.size.height /2;
+        
+        [cell.contentView addSubview:imgView];
+        
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.tableView.rowHeight + 25, 10, cell.bounds.size.width - 100, 30)];
+        label.textColor = [UIColor whiteColor];
+        label.font = [self.fontLabel.font fontWithSize:15];
+        
+        label.numberOfLines = 2;
+        label.tag = 11;
+        label.backgroundColor = nil;
+        label.opaque = NO;
+        [cell.contentView addSubview:label];
+        
+        // set selection color
+        UIView *myBackView = [[UIView alloc] initWithFrame:cell.frame];
+        myBackView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+        cell.selectedBackgroundView = myBackView;
+    }
+    
+    int storyIndex = (int) [indexPath indexAtPosition: [indexPath length] - 1];
+    NSString * urlString = _objects[storyIndex][@"image_large"];
+
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
+    [imgView sd_setImageWithURL:url placeholderImage:nil];
+    
+    UILabel *labelTitle = (UILabel *)[cell.contentView viewWithTag:11];
+    labelTitle.text = _objects[storyIndex][@"name"];
+    
+    
+    cell.backgroundColor = [UIColor clearColor];
+    
+    // Configure the cell.
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //    NSLog(@"whats up bro");
+    self.selectedObject = _objects[indexPath.row];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self performSegueWithIdentifier:@"detailView" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"detailView"] && self.selectedObject) {
+        [[segue destinationViewController] setDetailItem:self.selectedObject];
+    }
+    
+}
 
 
 #pragma mark -
@@ -181,7 +406,7 @@
 
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    NSLog(@"carousel total count %lu", (unsigned long)self.items.count);
+//    NSLog(@"carousel total count %lu", (unsigned long)self.items.count);
     //return the total number of items in the carousel
     if (self.items.count > 20)
         return 20;
@@ -191,6 +416,12 @@
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
+    UIImageView *imageView = nil;
+    
+    NSString *path = self.items[index][@"path"];
+    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
+    
+    NSURL *image_url = [NSURL URLWithString:imageString];
     
     //create new view if no view is available for recycling
     if (view == nil)
@@ -200,29 +431,27 @@
         //recycled and used with other index values later
         
         
-        NSString *path = self.items[index][@"path"];
-        NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
         
-        NSURL *image_url = [NSURL URLWithString:imageString];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 75.0f, 75.0f)];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 75.0f, 75.0f)];
+        imageView.backgroundColor = [UIColor whiteColor];
+        imageView.tag = 2;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.layer.masksToBounds = YES;
+        imageView.clipsToBounds = YES;
+        imageView.layer.cornerRadius = imageView.frame.size.height /2;
         
         
-        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 75.0f, 75.0f)];
-        [(UIImageView *)view sd_setImageWithURL:image_url placeholderImage:nil];
-        view.backgroundColor = [UIColor whiteColor];
-        view.contentMode = UIViewContentModeScaleAspectFill;
-//        view.layer.masksToBounds = YES;
-//        
-//
-//        view.layer.cornerRadius = 10;
+        [view addSubview:imageView];
         
-        CGRect frame = view.bounds;
+        CGRect frame = imageView.bounds;
         
         frame.origin.y += 50;
         
         label = [[UILabel alloc] initWithFrame:frame];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = [self.fontLabel.font fontWithSize:9];
+        label.font = [self.fontLabel.font fontWithSize:11];
         label.textColor = [UIColor whiteColor];
         label.tag = 1;
         [view addSubview:label];
@@ -231,6 +460,7 @@
     {
         //get a reference to the label in the recycled view
         label = (UILabel *)[view viewWithTag:1];
+        imageView = (UIImageView *)[view viewWithTag:2];
     }
     
     //set item label
@@ -239,7 +469,8 @@
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
-    NSLog(@"carousel reading %@", self.items[index]);
+    [imageView sd_setImageWithURL:image_url placeholderImage:nil];
+    //    NSLog(@"carousel reading %@", self.items[index]);
     return view;
 }
 
@@ -252,6 +483,10 @@
     return value;
 }
 
+- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index{
+    self.selectedObject = self.items[index];
+    [self performSegueWithIdentifier:@"detailView" sender:self];
+}
 
 
 @end

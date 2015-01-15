@@ -26,6 +26,12 @@ NSMutableArray *infoSections;
     return @"http://api.crunchbase.com/v/2";
 }
 
++ (NSURL *) crunchBaseURLForPath:(NSString *)path{
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@?user_key=%@",[Cruncher crunchBaseURL],path, [Cruncher userKey]];
+    return [NSURL URLWithString:urlString];
+}
+
+
 - (id) initWithDictionary: (NSMutableDictionary *) dict{
     item = [[NSMutableDictionary alloc] initWithDictionary:dict];
     relationships = [[NSMutableDictionary alloc] initWithDictionary:dict[@"relationships"]];
@@ -512,5 +518,15 @@ NSMutableArray *infoSections;
     }
 }
 
+- (NSString *) getShorDescription{
+    return item[@"properties"][@"short_description"];
+}
+
+- (NSArray *) getFounders{
+    NSArray* founders = item[@"relationships"][@"founders"][@"items"];
+    NSLog(@"founders %@",founders);
+    
+    return founders;
+}
 
 @end

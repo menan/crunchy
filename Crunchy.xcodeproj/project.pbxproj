@@ -74,6 +74,7 @@
 		E89397FB18B2C3D800474141 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E89397FA18B2C3D800474141 /* CoreLocation.framework */; };
 		E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E894E35B1A65CB7D00647C6C /* iCarousel.m */; };
 		E894E35E1A65CDBE00647C6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E894E35D1A65CDBE00647C6C /* QuartzCore.framework */; };
+		E89DF7481A682CD3007E9D5E /* EntityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89DF7471A682CD3007E9D5E /* EntityViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -194,6 +195,8 @@
 		E894E35A1A65CB7D00647C6C /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		E894E35B1A65CB7D00647C6C /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		E894E35D1A65CDBE00647C6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E89DF7461A682CD3007E9D5E /* EntityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityViewController.h; sourceTree = "<group>"; };
+		E89DF7471A682CD3007E9D5E /* EntityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +298,8 @@
 				68B7882418B98E07001CAAB4 /* FundingsViewController.m */,
 				68F3FE901A610E3100096362 /* MainViewController.h */,
 				68F3FE911A610E3100096362 /* MainViewController.m */,
+				E89DF7461A682CD3007E9D5E /* EntityViewController.h */,
+				E89DF7471A682CD3007E9D5E /* EntityViewController.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -556,6 +561,7 @@
 				68B7882018B5ED14001CAAB4 /* OfficeAnnotation.m in Sources */,
 				6894C79A1841B79100A3CD85 /* AFXMLRequestOperation.m in Sources */,
 				68E669BF16C64764007529AD /* AboutViewController.m in Sources */,
+				E89DF7481A682CD3007E9D5E /* EntityViewController.m in Sources */,
 				68BE431819FAE9D800C76DFC /* MKAnnotationView+WebCache.m in Sources */,
 				68E669C216C65AF0007529AD /* ImageViewController.m in Sources */,
 				68BE431D19FAE9D800C76DFC /* SDWebImageDownloader.m in Sources */,
