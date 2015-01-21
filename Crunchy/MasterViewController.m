@@ -35,7 +35,7 @@
     self.tableView.separatorInset = UIEdgeInsetsZero;
     //rgb(104, 177, 195);
 //    [self.navigationController.navigationBar setTintColor: [UIColor colorWithRed:.282 green:0.486 blue:0.506 alpha:1]];
-
+    
     
     [super viewDidLoad];
     

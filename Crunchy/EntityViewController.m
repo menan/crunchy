@@ -15,6 +15,7 @@
 @interface EntityViewController ()
 
 //@property (weak, nonatomic) IBOutlet MKMapView *locations;
+@property (weak, nonatomic) IBOutlet UIView *tableHeaderView;
 @property (weak, nonatomic) IBOutlet UILabel *shortDescription;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *updatedLabel;
@@ -71,9 +72,12 @@
     //    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
     [self.tableView reloadData];
     [self.founders reloadData];
+    
     self.shortDescription.text = [crunch getShorDescription];
     
     self.tableView.scrollEnabled = YES;
+    
+
 //    [loading stopAnimating];
     
     if ([[crunch getOverview] length] == 0) {
@@ -433,6 +437,25 @@
 //    [self performSegueWithIdentifier:@"detailView" sender:self];
 //}
 
+-(void)scrollViewDidScroll:(UIScrollView*)scrollView {
+    CGRect initialFrame = CGRectMake(0, -60, 320, 300);
+    
+    float yVal = scrollView.contentOffset.y + 0;//64;
+    CGRect labelFrame = self.shortDescription.frame;
+    
+    
+    if (yVal < 0) {
+        
+        initialFrame.size.height -= yVal;
+        initialFrame.origin.y = -100;
+        
+        
+        self.tableHeaderView.frame = initialFrame;
+        self.shortDescription.frame = labelFrame;
+        
+//        NSLog(@"scrolling at %@",self.tableHeaderView.superview);
+    }
+}
 
 
 

@@ -497,14 +497,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WiO-3e-66l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-434" y="1399"/>
+            <point key="canvasLocation" x="-585" y="1399"/>
         </scene>
         <!--Tinrit-->
         <scene sceneID="syi-MZ-y5k">
             <objects>
                 <tableViewController id="43q-mU-c0F" customClass="EntityViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="22" sectionFooterHeight="22" id="1iD-3T-6fV" customClass="E">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="22" sectionFooterHeight="22" id="1iD-3T-6fV" customClass="E">
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="9l2-eA-pGR">
@@ -538,6 +538,9 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDO-1V-5QR" customClass="iCarousel">
                                     <rect key="frame" x="0.0" y="180" width="320" height="62"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="62" id="nOS-26-1Pr"/>
+                                    </constraints>
                                     <connections>
                                         <outlet property="dataSource" destination="43q-mU-c0F" id="ukr-Oh-00X"/>
                                         <outlet property="delegate" destination="43q-mU-c0F" id="wHQ-rf-Pd1"/>
@@ -548,15 +551,14 @@
                             <constraints>
                                 <constraint firstItem="wZp-Jv-fs8" firstAttribute="trailing" secondItem="UDO-1V-5QR" secondAttribute="trailing" id="5o7-jL-l8E"/>
                                 <constraint firstItem="UDO-1V-5QR" firstAttribute="leading" secondItem="9l2-eA-pGR" secondAttribute="leading" id="Bdi-Dh-jCX"/>
-                                <constraint firstItem="UDO-1V-5QR" firstAttribute="top" secondItem="9l2-eA-pGR" secondAttribute="top" constant="180" id="GL0-gr-3Uk"/>
+                                <constraint firstItem="g09-UM-zXL" firstAttribute="top" secondItem="9l2-eA-pGR" secondAttribute="top" constant="8" id="JF9-s7-eCM"/>
                                 <constraint firstAttribute="trailing" secondItem="UDO-1V-5QR" secondAttribute="trailing" id="M1v-7p-Gx1"/>
                                 <constraint firstItem="wZp-Jv-fs8" firstAttribute="top" secondItem="g09-UM-zXL" secondAttribute="bottom" priority="250" constant="8" symbolic="YES" id="N6Z-Pf-rDz"/>
                                 <constraint firstItem="wZp-Jv-fs8" firstAttribute="centerX" secondItem="g09-UM-zXL" secondAttribute="centerX" id="RAC-iw-q8r"/>
                                 <constraint firstAttribute="bottom" secondItem="eoX-ut-r3n" secondAttribute="bottom" constant="8" id="Tf3-3T-VFa"/>
-                                <constraint firstItem="g09-UM-zXL" firstAttribute="top" secondItem="9l2-eA-pGR" secondAttribute="topMargin" id="aH2-Z7-A0u"/>
+                                <constraint firstItem="eoX-ut-r3n" firstAttribute="top" secondItem="wZp-Jv-fs8" secondAttribute="bottom" constant="80" id="WV7-Lh-Muj"/>
                                 <constraint firstItem="wZp-Jv-fs8" firstAttribute="leading" secondItem="UDO-1V-5QR" secondAttribute="leading" id="fJP-E5-MW6"/>
                                 <constraint firstItem="g09-UM-zXL" firstAttribute="leading" secondItem="9l2-eA-pGR" secondAttribute="leadingMargin" id="gMv-OF-F3G"/>
-                                <constraint firstItem="eoX-ut-r3n" firstAttribute="top" secondItem="wZp-Jv-fs8" secondAttribute="bottom" constant="80" id="ozd-ef-UI8"/>
                                 <constraint firstItem="eoX-ut-r3n" firstAttribute="centerX" secondItem="UDO-1V-5QR" secondAttribute="centerX" id="vIe-GR-b1K"/>
                                 <constraint firstItem="eoX-ut-r3n" firstAttribute="top" secondItem="UDO-1V-5QR" secondAttribute="bottom" constant="20" id="yF4-PG-zpn"/>
                             </constraints>
@@ -601,12 +603,13 @@
                         <outlet property="founders" destination="UDO-1V-5QR" id="PPV-Qo-yV8"/>
                         <outlet property="imageView" destination="VEz-e8-mtt" id="ERd-w0-TTZ"/>
                         <outlet property="shortDescription" destination="g09-UM-zXL" id="R9H-k8-5Iw"/>
+                        <outlet property="tableHeaderView" destination="9l2-eA-pGR" id="KzO-L7-2bL"/>
                         <outlet property="updatedLabel" destination="EHc-yB-CcQ" id="NFy-tI-4ZA"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wvx-hs-ArR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="18" y="1492"/>
+            <point key="canvasLocation" x="46" y="1365"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="mdR-rp-whp">

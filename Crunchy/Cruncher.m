@@ -274,7 +274,7 @@ NSMutableArray *infoSections;
                 [returnObject setObject:itemData[@"organization_name"] forKey:@"text"];
         }
         else{
-            if (itemData[@"name"] != (id)[NSNull null])
+            if (itemData[@"name"] != (id)[NSNull null] && itemData[@"name"] != nil)
                 [returnObject setObject:itemData[@"name"] forKey:@"text"];
             
             if ([section isEqualToString:@"products"] || [section isEqualToString:@"competitors"] || [section isEqualToString:@"customers"] || [section isEqualToString:@"founders"] || [section isEqualToString:@"members"]|| [section isEqualToString:@"acquiree"]|| [section isEqualToString:@"acquirer"]) {
