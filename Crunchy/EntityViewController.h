@@ -18,5 +18,6 @@
 
 
 @property (strong, nonatomic) id detailItem;
+- (IBAction) swipedDown:(UISwipeGestureRecognizer*)swipeGesture;
 - (void)configureView;
 @end

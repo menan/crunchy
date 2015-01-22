@@ -9,6 +9,7 @@
 #import "EntityViewController.h"
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+WebCache.h"
+#import "CSStickyHeaderFlowLayout.h"
 
 
 
@@ -31,6 +32,7 @@
 #define MAX_DATA 100
 #define PASTLABEL_TAG 1
 
+CGRect initialFrame, labelFrame;
 
 - (void)setDetailItem:(id)newDetailItem
 {
@@ -80,10 +82,7 @@
 
 //    [loading stopAnimating];
     
-    if ([[crunch getOverview] length] == 0) {
-        self.navigationItem.rightBarButtonItem = nil;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-    }
+    
     NSString* image_url = [crunch getImage:NO];
     
     NSURL *url = [NSURL URLWithString:image_url];
@@ -92,6 +91,20 @@
     [self.imageView sd_setImageWithURL:url placeholderImage:img];
     
     self.title = [crunch getTitle];
+    
+    
+    // Locate your layout
+    CSStickyHeaderFlowLayout *layout = (id)self.tableView;
+    if ([layout isKindOfClass:[CSStickyHeaderFlowLayout class]]) {
+        layout.parallaxHeaderReferenceSize = CGSizeMake(320, 200);
+    }
+    
+    // Locate the nib and register it to your collection view
+    UINib *headerNib = [UINib nibWithNibName:@"InfoView" bundle:nil];
+//    [self.collectionView registerNib:headerNib
+//          forSupplementaryViewOfKind:CSStickyHeaderParallaxHeader
+//                 withReuseIdentifier:@"header"];
+    [self.tableView registerNib:headerNib forHeaderFooterViewReuseIdentifier:@"header"];
     
     //    NSLog(@"Sections: %d",[crunch getSectionsCount]);
 }
@@ -104,6 +117,7 @@
     [self.tableView setBackgroundView:
      [[UIImageView alloc] initWithImage:
       [UIImage imageNamed:@"crunchy-bg"]]];
+    
     
     
     self.imageView.backgroundColor = [UIColor whiteColor];
@@ -120,6 +134,8 @@
     
     self.founders.centerItemWhenSelected = YES;
     self.founders.contentOffset = CGSizeMake(0, 0);
+    
+       
     
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -324,6 +340,36 @@
 }
 
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    
+    // Check the kind if it's CSStickyHeaderParallaxHeader
+    if ([kind isEqualToString:CSStickyHeaderParallaxHeader]) {
+        
+        UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                                            withReuseIdentifier:@"header"
+                                                                                   forIndexPath:indexPath];
+        
+        return cell;
+        
+    } else if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        // Your code to configure your section header...
+    } else {
+        // other custom supplementary views
+    }
+    return nil;
+}
+
+- (UITableViewHeaderFooterView *)headerViewForSection:(NSInteger)section{
+    // Check the kind if it's CSStickyHeaderParallaxHeader
+    if (section == 0) {
+        
+        UITableViewHeaderFooterView *cell = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier:@"header"];
+        return cell;
+        
+    }
+    return nil;
+}
+
 - (NSURL *) crunchyURLFromString:(NSString *) url{
     NSString *cleanURL = [NSString stringWithFormat:@"%@user_key=%@",[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [Cruncher userKey]];
     NSLog(@"Browsing %@",cleanURL);
@@ -438,23 +484,25 @@
 //}
 
 -(void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    CGRect initialFrame = CGRectMake(0, -60, 320, 300);
     
-    float yVal = scrollView.contentOffset.y + 0;//64;
-    CGRect labelFrame = self.shortDescription.frame;
+    initialFrame = CGRectMake(0, 0, 320, 300);
+    labelFrame = CGRectMake(0, 0, 50, 300);
     
+    float yVal = scrollView.contentOffset.y + 64;
     
     if (yVal < 0) {
         
         initialFrame.size.height -= yVal;
-        initialFrame.origin.y = -100;
-        
         
         self.tableHeaderView.frame = initialFrame;
-        self.shortDescription.frame = labelFrame;
         
-//        NSLog(@"scrolling at %@",self.tableHeaderView.superview);
+        NSLog(@"y center at %f",self.tableHeaderView.center.y);
     }
+}
+
+- (void) swipedDown:(UISwipeGestureRecognizer*)swipeGesture {
+            NSLog(@"swiping down %@",swipeGesture);
+    // action
 }
 
 

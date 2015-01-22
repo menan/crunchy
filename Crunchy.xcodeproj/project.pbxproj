@@ -75,6 +75,11 @@
 		E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E894E35B1A65CB7D00647C6C /* iCarousel.m */; };
 		E894E35E1A65CDBE00647C6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E894E35D1A65CDBE00647C6C /* QuartzCore.framework */; };
 		E89DF7481A682CD3007E9D5E /* EntityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89DF7471A682CD3007E9D5E /* EntityViewController.m */; };
+		E8E502001A705D7C0033E19B /* InfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8E501FF1A705D7C0033E19B /* InfoView.xib */; };
+		E8E502051A705E590033E19B /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502021A705E590033E19B /* CSStickyHeaderFlowLayout.m */; };
+		E8E502061A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502031A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m */; };
+		E8E5020A1A7064AD0033E19B /* EntityViewCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */; };
+		E8E5020D1A7064FD0033E19B /* CSCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E5020C1A7064FD0033E19B /* CSCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -197,6 +202,15 @@
 		E894E35D1A65CDBE00647C6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E89DF7461A682CD3007E9D5E /* EntityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityViewController.h; sourceTree = "<group>"; };
 		E89DF7471A682CD3007E9D5E /* EntityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityViewController.m; sourceTree = "<group>"; };
+		E8E501FF1A705D7C0033E19B /* InfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoView.xib; sourceTree = "<group>"; };
+		E8E502011A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
+		E8E502021A705E590033E19B /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
+		E8E502031A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSStickyHeaderFlowLayoutAttributes.m; sourceTree = "<group>"; };
+		E8E502041A705E590033E19B /* CSStickyHeaderFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSStickyHeaderFlowLayout.h; sourceTree = "<group>"; };
+		E8E502081A7064AD0033E19B /* EntityViewCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityViewCollectionController.h; sourceTree = "<group>"; };
+		E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityViewCollectionController.m; sourceTree = "<group>"; };
+		E8E5020B1A7064FD0033E19B /* CSCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSCell.h; sourceTree = "<group>"; };
+		E8E5020C1A7064FD0033E19B /* CSCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,6 +279,7 @@
 		685FEC1116BA08E7007083CF /* Crunchy */ = {
 			isa = PBXGroup;
 			children = (
+				E8E502071A705E5F0033E19B /* ParallaxViewHeader */,
 				E894E3591A65CB7D00647C6C /* iCarousel */,
 				68BE432819FAEEBB00C76DFC /* Launch Screen.xib */,
 				68BE42F619FAE9D800C76DFC /* SDWebImage */,
@@ -300,6 +315,11 @@
 				68F3FE911A610E3100096362 /* MainViewController.m */,
 				E89DF7461A682CD3007E9D5E /* EntityViewController.h */,
 				E89DF7471A682CD3007E9D5E /* EntityViewController.m */,
+				E8E501FF1A705D7C0033E19B /* InfoView.xib */,
+				E8E502081A7064AD0033E19B /* EntityViewCollectionController.h */,
+				E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */,
+				E8E5020B1A7064FD0033E19B /* CSCell.h */,
+				E8E5020C1A7064FD0033E19B /* CSCell.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -428,6 +448,17 @@
 			path = iCarousel;
 			sourceTree = "<group>";
 		};
+		E8E502071A705E5F0033E19B /* ParallaxViewHeader */ = {
+			isa = PBXGroup;
+			children = (
+				E8E502011A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.h */,
+				E8E502021A705E590033E19B /* CSStickyHeaderFlowLayout.m */,
+				E8E502031A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m */,
+				E8E502041A705E590033E19B /* CSStickyHeaderFlowLayout.h */,
+			);
+			name = ParallaxViewHeader;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -503,6 +534,7 @@
 				68C9A01C183D86F400BA2885 /* Images.xcassets in Resources */,
 				68F3FE8B1A6107ED00096362 /* Hero Light.otf in Resources */,
 				685FEC3F16BA0F63007083CF /* crunchbase.png in Resources */,
+				E8E502001A705D7C0033E19B /* InfoView.xib in Resources */,
 				685FEC4016BA0F63007083CF /* crunchbase@2x.png in Resources */,
 				68F3FE8E1A61082600096362 /* Lineal Simples St.ttf in Resources */,
 				68BE432919FAEEBB00C76DFC /* Launch Screen.xib in Resources */,
@@ -534,6 +566,7 @@
 			files = (
 				68BE431C19FAE9D800C76DFC /* SDWebImageDecoder.m in Sources */,
 				68BE432719FAE9D800C76DFC /* UIView+WebCacheOperation.m in Sources */,
+				E8E502051A705E590033E19B /* CSStickyHeaderFlowLayout.m in Sources */,
 				68B7882518B98E07001CAAB4 /* FundingsViewController.m in Sources */,
 				68F3FE921A610E3100096362 /* MainViewController.m in Sources */,
 				68BE431F19FAE9D800C76DFC /* SDWebImageManager.m in Sources */,
@@ -558,9 +591,11 @@
 				68BE432419FAE9D800C76DFC /* UIImage+WebP.m in Sources */,
 				68BE432019FAE9D800C76DFC /* SDWebImagePrefetcher.m in Sources */,
 				E89397F918B2C33C00474141 /* MapViewController.m in Sources */,
+				E8E5020D1A7064FD0033E19B /* CSCell.m in Sources */,
 				68B7882018B5ED14001CAAB4 /* OfficeAnnotation.m in Sources */,
 				6894C79A1841B79100A3CD85 /* AFXMLRequestOperation.m in Sources */,
 				68E669BF16C64764007529AD /* AboutViewController.m in Sources */,
+				E8E502061A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m in Sources */,
 				E89DF7481A682CD3007E9D5E /* EntityViewController.m in Sources */,
 				68BE431819FAE9D800C76DFC /* MKAnnotationView+WebCache.m in Sources */,
 				68E669C216C65AF0007529AD /* ImageViewController.m in Sources */,
@@ -571,6 +606,7 @@
 				E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */,
 				6894C7971841B79100A3CD85 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				68E669CF16C76754007529AD /* GTMNSString+HTML.m in Sources */,
+				E8E5020A1A7064AD0033E19B /* EntityViewCollectionController.m in Sources */,
 				68BE431A19FAE9D800C76DFC /* SDImageCache.m in Sources */,
 				68E669D016C76754007529AD /* NSString+HTML.m in Sources */,
 				E810235C17B410C400C80FBE /* Cruncher.m in Sources */,
