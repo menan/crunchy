@@ -46,4 +46,9 @@ typedef enum ItemType : NSUInteger {
 - (NSString *) getShorDescription;
 
 - (NSArray *) getFounders;
+- (NSArray *) getRelationships;
+- (NSString *) getTitleAtIndex:(NSInteger)index;
+- (NSInteger) getContentCountAtIndex:(NSInteger)index;
+- (NSArray *) dataAtIndex:(NSInteger) index;
+
 @end

@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iCarousel.h"
+#import "Cruncher.h"
 
-@interface CSCell : UICollectionViewCell
+@interface CSCell : UICollectionViewCell<iCarouselDataSource, iCarouselDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *totalItemsCount;
+@property (weak, nonatomic) IBOutlet iCarousel *carousel;
+@property (weak, nonatomic) IBOutlet UIButton *viewAllButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (weak, nonatomic) IBOutlet UILabel *textLabel;
+@property (strong, nonatomic) Cruncher *crunchy;
 @end

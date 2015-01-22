@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Crunchy/Cruncher.m"
-            timestampString = "443045182.717504"
+            timestampString = "443657447.216704"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
             landmarkName = "+crunchBaseURLForPath:"
             landmarkType = "5">
          </BreakpointContent>
