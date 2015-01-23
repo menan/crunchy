@@ -80,6 +80,7 @@
 		E8E502061A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502031A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m */; };
 		E8E5020A1A7064AD0033E19B /* EntityViewCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */; };
 		E8E5020D1A7064FD0033E19B /* CSCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E5020C1A7064FD0033E19B /* CSCell.m */; };
+		E8E502101A7176F70033E19B /* CSInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E5020F1A7176F70033E19B /* CSInfoCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -211,6 +212,8 @@
 		E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityViewCollectionController.m; sourceTree = "<group>"; };
 		E8E5020B1A7064FD0033E19B /* CSCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSCell.h; sourceTree = "<group>"; };
 		E8E5020C1A7064FD0033E19B /* CSCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSCell.m; sourceTree = "<group>"; };
+		E8E5020E1A7176F70033E19B /* CSInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSInfoCell.h; sourceTree = "<group>"; };
+		E8E5020F1A7176F70033E19B /* CSInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSInfoCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +323,8 @@
 				E8E502091A7064AD0033E19B /* EntityViewCollectionController.m */,
 				E8E5020B1A7064FD0033E19B /* CSCell.h */,
 				E8E5020C1A7064FD0033E19B /* CSCell.m */,
+				E8E5020E1A7176F70033E19B /* CSInfoCell.h */,
+				E8E5020F1A7176F70033E19B /* CSInfoCell.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -575,6 +580,7 @@
 				685FEC1816BA08E7007083CF /* main.m in Sources */,
 				68BE431B19FAE9D800C76DFC /* SDWebImageCompat.m in Sources */,
 				68BE431E19FAE9D800C76DFC /* SDWebImageDownloaderOperation.m in Sources */,
+				E8E502101A7176F70033E19B /* CSInfoCell.m in Sources */,
 				6894C7951841B79100A3CD85 /* AFImageRequestOperation.m in Sources */,
 				685FEC1C16BA08E7007083CF /* AppDelegate.m in Sources */,
 				68BE432619FAE9D800C76DFC /* UIImageView+WebCache.m in Sources */,

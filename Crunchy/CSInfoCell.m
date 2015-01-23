@@ -1,15 +1,16 @@
 //
-//  CSCell.m
+//  CSInfoCell.m
 //  Crunchy
 //
-//  Created by Mac5 on 2015-01-21.
+//  Created by Mac5 on 2015-01-22.
 //  Copyright (c) 2015 Menan Vadivel. All rights reserved.
 //
 
-#import "CSCell.h"
+#import "CSInfoCell.h"
 #import "UIImageView+WebCache.h"
 
-@implementation CSCell
+@implementation CSInfoCell
+
 
 
 #pragma mark -
@@ -17,20 +18,19 @@
 
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    NSInteger contentSize = [self.crunchy getContentCountAtIndex:carousel.tag];
-    NSLog(@"carousel size %ld at %ld",contentSize,carousel.tag);
-    return contentSize;
+    //    NSLog(@"carousel total count %lu", (unsigned long)self.items.count);
+    //return the total number of items in the carousel
+    
+    return [self.foundersData count];
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
     UIImageView *imageFounder = nil;
-    NSDictionary *data = [self.crunchy dataAtIndex:carousel.tag][index];
+    NSDictionary *founder = self.foundersData[index];
     
-    NSLog(@"showing data at :%@",data);
-    
-    NSString *path = data[@"path"];
+    NSString *path = founder[@"path"];
     NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
     
     NSURL *imageUrl = [NSURL URLWithString:imageString];
@@ -44,8 +44,8 @@
         
         
         
-        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 95.0f, 95.0f)];
-        imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 80.0f, 80.0f)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 45.0f, 45.0f)];
+        imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45.0f, 45.0f)];
         imageFounder.backgroundColor = [UIColor whiteColor];
         imageFounder.tag = 2;
         imageFounder.contentMode = UIViewContentModeScaleAspectFit;
@@ -58,12 +58,12 @@
         
         CGRect frame = imageFounder.bounds;
         
-        frame.origin.y += 55;
+        frame.origin.y += 35;
         
         label = [[UILabel alloc] initWithFrame:frame];
         label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont fontWithName:@"Hero" size:15.0f];
         label.textAlignment = NSTextAlignmentCenter;
+        label.font = [self.shortDescription.font fontWithSize:11];
         label.textColor = [UIColor whiteColor];
         label.tag = 1;
         [view addSubview:label];
@@ -76,31 +76,23 @@
     }
     
     
-    label.text = [self getName:data];
-    
+    label.text = founder[@"name"];
     
     [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
     
     return view;
 }
 
-- (NSString *) getName:(NSDictionary *) data{
-    if (data[@"first_name"] && data[@"last_name"])
-        return [NSString stringWithFormat:@"%@ %@.",data[@"first_name"],[data[@"last_name"] substringWithRange:NSMakeRange(0, 1)]];
-    else if (data[@"name"])
-        return data[@"name"];
-    else
-        return @"N/A";
-}
-
 - (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
 {
     if (option == iCarouselOptionSpacing)
     {
-        return value * 1;
+        return value * 1.1;
     }
     return value;
 }
+
+
 
 
 @end

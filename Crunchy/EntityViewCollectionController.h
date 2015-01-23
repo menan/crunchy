@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EntityViewCollectionController : UICollectionViewController
+@interface EntityViewCollectionController : UICollectionViewController{
+    NSMutableDictionary * item;
+}
+
 
 @property (strong, nonatomic) id detailItem;
 @end

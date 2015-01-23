@@ -10,7 +10,7 @@
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+WebCache.h"
 #import "CSStickyHeaderFlowLayout.h"
-
+#import "Cruncher.h"
 
 
 @interface EntityViewController ()
