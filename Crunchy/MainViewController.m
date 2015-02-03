@@ -64,9 +64,9 @@ BOOL searching = NO;
     self.tableView.separatorColor = [UIColor whiteColor];
     
     
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.navigationController.navigationBar.translucent = YES;
+//    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+//    self.navigationController.navigationBar.shadowImage = [UIImage new];
+//    self.navigationController.navigationBar.translucent = YES;
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -162,10 +162,13 @@ BOOL searching = NO;
                              self.tableView.transform = CGAffineTransformMakeTranslation( 0, 105.0f);
                              
                              
-                             self.crunchy.transform = CGAffineTransformMakeTranslation( 0, -45.0f);
-                             self.crunchy.font = [self.crunchy.font fontWithSize:26.0f];
+                             CGAffineTransform transform = CGAffineTransformMakeScale(.5, .5);
+                             transform = CGAffineTransformTranslate(transform, 0, -190.0f);
+                             self.crunchy.transform = transform;
+//                             self.crunchy.textColor = [UIColor blackColor];
                              
-                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -170.0f);
+                             
+                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -165.0f);
                              //                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
                          }
                          completion:^(BOOL finished) {
@@ -197,8 +200,10 @@ BOOL searching = NO;
                              
                              self.searchLabel.alpha = 1.0f;
                              
-                             self.crunchy.transform = CGAffineTransformMakeTranslation(0, 0);
-                             self.crunchy.font = [self.crunchy.font fontWithSize:52.0f];
+                             CGAffineTransform transform = CGAffineTransformMakeScale(1, 1);
+                             transform = CGAffineTransformTranslate(transform, 0, 0);
+                             self.crunchy.transform = transform;
+                             self.crunchy.textColor = [UIColor whiteColor];
                              
                              
                              self.searchBar.transform = CGAffineTransformMakeTranslation( 0, 0);

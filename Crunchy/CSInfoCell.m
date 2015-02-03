@@ -8,9 +8,69 @@
 
 #import "CSInfoCell.h"
 #import "UIImageView+WebCache.h"
+#import "OfficeAnnotation.h"
 
 @implementation CSInfoCell
 
+
+- (void) updateLocation:(NSArray *) addresses{
+    
+    [self.mapView setDelegate:self];
+    
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    
+    for (NSDictionary *addressData in addresses) {
+        
+        NSLog(@"address: %@ on %@",addressData[@"location"], addressData[@"title"]);
+        [geocoder geocodeAddressString:addressData[@"location"] // You can pass aLocation here instead
+                 completionHandler:^(NSArray *placemarks, NSError *error) {
+                     
+//                     dispatch_async(dispatch_get_main_queue(),^ {
+                         // do stuff with placemarks on the main thread
+                         
+//                         if (placemarks.count == 1) {
+                     
+                             CLPlacemark *place = [placemarks objectAtIndex:0];
+                             float spanX = 0.01725;
+                             float spanY = 0.01725;
+                             MKCoordinateRegion region;
+                             region.center.latitude = place.location.coordinate.latitude;
+                             region.center.longitude = place.location.coordinate.longitude;
+                             region.span = MKCoordinateSpanMake(spanX, spanY);
+                             
+                             OfficeAnnotation *aView = [[OfficeAnnotation alloc] init];
+                             aView.coordinate = place.location.coordinate;
+                             aView.title = addressData[@"name"];
+                             aView.subtitle = addressData[@"subtitle"];
+                             [self.mapView setRegion:region animated:YES];
+                             [self.mapView addAnnotation:aView];
+                             
+//                         }
+                     
+//                     });
+                     
+                 }];
+    }
+}
+
+
+#pragma mark -
+#pragma mark MKAnnotationView methods
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapViewThis
+            viewForAnnotation:(id  <MKAnnotation>)annotation
+{
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapViewThis dequeueReusableAnnotationViewWithIdentifier:@","];
+    pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@""];
+    
+    
+    // if it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    pinView.canShowCallout=YES;
+    
+    return pinView;
+}
 
 
 #pragma mark -
@@ -76,7 +136,7 @@
     }
     
     
-    label.text = founder[@"name"];
+    label.text = [founder[@"name"] componentsSeparatedByString:@" "][0];
     
     [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
     

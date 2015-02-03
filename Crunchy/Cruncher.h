@@ -50,5 +50,5 @@ typedef enum ItemType : NSUInteger {
 - (NSString *) getTitleAtIndex:(NSInteger)index;
 - (NSInteger) getContentCountAtIndex:(NSInteger)index;
 - (NSArray *) dataAtIndex:(NSInteger) index;
-
+- (NSArray *) getAddressData;
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -35,7 +35,7 @@
                             </mask>
                         </variation>
                     </label>
-                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y6s-6I-NfS">
+                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="y6s-6I-NfS">
                         <rect key="frame" x="0.0" y="55" width="320" height="175"/>
                         <constraints>
                             <constraint firstAttribute="height" priority="250" constant="163" id="Clj-RF-URY"/>
@@ -49,6 +49,9 @@
                                 <exclude reference="wPQ-qk-miO"/>
                             </mask>
                         </variation>
+                        <connections>
+                            <outlet property="delegate" destination="Zvo-6d-gsU" id="hwV-cR-8Z6"/>
+                        </connections>
                     </mapView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bur-kh-9VB" customClass="iCarousel">
                         <rect key="frame" x="0.0" y="229" width="320" height="66"/>

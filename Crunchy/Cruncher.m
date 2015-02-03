@@ -557,4 +557,17 @@ NSMutableArray *relationshipsNew;
 - (NSArray *) dataAtIndex:(NSInteger) index{
     return item[@"relationships"][sectionTitles[index]][@"items"];
 }
+
+- (NSArray *) getAddressData{
+    NSMutableArray *addressData = [NSMutableArray new];
+    
+    for (NSDictionary* office in item[@"relationships"][@"offices"][@"items"]) {
+        NSString *addressString = [self flattenLocationFromObject:office];
+        [addressData addObject:@{@"title":@"Office", @"subtitle":[self getTitle], @"location":addressString}];
+    }
+    
+//    NSLog(@"Address data: %@ ", addressData);
+    return addressData;
+    
+}
 @end

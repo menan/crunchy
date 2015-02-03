@@ -18,7 +18,7 @@
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
     NSInteger contentSize = [self.crunchy getContentCountAtIndex:carousel.tag];
-    NSLog(@"carousel size %ld at %ld",contentSize,carousel.tag);
+//    NSLog(@"carousel size %ld at %ld",contentSize,carousel.tag);
     return contentSize;
 }
 
@@ -28,7 +28,7 @@
     UIImageView *imageFounder = nil;
     NSDictionary *data = [self.crunchy dataAtIndex:carousel.tag][index];
     
-    NSLog(@"showing data at :%@",data);
+//    NSLog(@"showing data at :%@",data);
     
     NSString *path = data[@"path"];
     NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
@@ -37,17 +37,12 @@
     
     //create new view if no view is available for recycling
     if (view == nil)
-    {
-        //don't do anything specific to the index within
-        //this `if (view == nil) {...}` statement because the view will be
-        //recycled and used with other index values later
-        
-        
-        
-        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 95.0f, 95.0f)];
-        imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 80.0f, 80.0f)];
+    {        
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0,75.0f, 75.0f)];
+        imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70.0f, 70.0f)];
         imageFounder.backgroundColor = [UIColor whiteColor];
         imageFounder.tag = 2;
+//        imageFounder.alpha = 0.0f;
         imageFounder.contentMode = UIViewContentModeScaleAspectFit;
         imageFounder.layer.masksToBounds = YES;
         imageFounder.clipsToBounds = YES;
@@ -62,7 +57,7 @@
         
         label = [[UILabel alloc] initWithFrame:frame];
         label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont fontWithName:@"Hero" size:15.0f];
+        label.font = [UIFont fontWithName:@"Hero" size:13.0f];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor whiteColor];
         label.tag = 1;
@@ -79,7 +74,16 @@
     label.text = [self getName:data];
     
     
-    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
+//    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
+    
+    [imageFounder sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        if (image != nil) {
+            imageFounder.image = image;
+            [UIView animateWithDuration:0.5 animations:^(void) {
+                imageFounder.alpha = 1.0f;
+            }];
+        }
+    }];
     
     return view;
 }

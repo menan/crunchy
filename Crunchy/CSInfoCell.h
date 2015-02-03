@@ -11,11 +11,12 @@
 #import "iCarousel.h"
 
 
-@interface CSInfoCell : UICollectionViewCell<iCarouselDataSource, iCarouselDelegate>
+@interface CSInfoCell : UICollectionViewCell<iCarouselDataSource, iCarouselDelegate, MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *shortDescription;
 @property (weak, nonatomic) IBOutlet iCarousel *founders;
 @property (weak, nonatomic) IBOutlet UIButton *viewAllButton;
-
 @property (strong, nonatomic) NSArray *foundersData;
+
+- (void) updateLocation:(NSArray *) addresses;
 @end

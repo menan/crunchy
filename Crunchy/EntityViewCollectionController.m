@@ -64,6 +64,11 @@ static NSString * const reuseIdentifier = @"Cell";
       [UIFont fontWithName:@"Hero" size:18.0f],
       NSFontAttributeName, nil]];
     
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+     @{UITextAttributeFont:[UIFont fontWithName:@"Hero" size:20.0f]
+       } forState:UIControlStateNormal];
+    
+    
     relationships = [NSArray new];
     
     
@@ -75,7 +80,7 @@ static NSString * const reuseIdentifier = @"Cell";
         layout.itemSize = CGSizeMake(self.view.frame.size.width, layout.itemSize.height);
     }
     
-    
+
     
     self.imageView.backgroundColor = [UIColor whiteColor];
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -177,7 +182,11 @@ static NSString * const reuseIdentifier = @"Cell";
     if (cell.crunchy == nil) {
         cell.carousel.tag = indexPath.section;
         cell.carousel.centerItemWhenSelected = NO;
-        cell.carousel.center = CGPointMake(0, 0);
+//        cell.carousel.contentOffset = CGSizeMake(-100, 10);
+//        cell.carousel.decelerationRate = 1;
+//        cell.carousel.bounceDistance = 0.1f;
+//        cell.carousel.pagingEnabled = YES;
+
         cell.crunchy = self.crunch;
         [cell.carousel reloadData];
     }
@@ -196,6 +205,15 @@ static NSString * const reuseIdentifier = @"Cell";
         
         
         cell.foundersData = [self.crunch getFounders];
+        
+        cell.founders.viewpointOffset = CGSizeMake(130, 0);
+        
+        [cell updateLocation:[self.crunch getAddressData]];
+        
+        
+        
+        
+        
         [cell.founders reloadData];
         cell.shortDescription.text = [self.crunch getShorDescription];
         return cell;
@@ -214,6 +232,10 @@ static NSString * const reuseIdentifier = @"Cell";
         cell.crunchy = self.crunch;
         [cell.carousel reloadData];
         
+        
+        cell.layer.borderWidth=0.5f;
+        cell.layer.borderColor=[UIColor whiteColor].CGColor;
+        
         return cell;
         
     }  else if ([kind isEqualToString:UICollectionElementKindSectionFooter]) {
@@ -223,6 +245,9 @@ static NSString * const reuseIdentifier = @"Cell";
                                                           withReuseIdentifier:@"sectionFooter"
                                                                  forIndexPath:indexPath];
         
+        cell.layer.borderWidth=0.5f;
+        cell.layer.borderColor=[UIColor whiteColor].CGColor;
+
         cell.carousel.tag = indexPath.section;
         return cell;
         

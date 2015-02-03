@@ -37,7 +37,7 @@
     [geocoder geocodeAddressString:address // You can pass aLocation here instead
                    completionHandler:^(NSArray *placemarks, NSError *error) {
                        
-                       dispatch_async(dispatch_get_main_queue(),^ {
+//                       dispatch_async(dispatch_get_main_queue(),^ {
                            // do stuff with placemarks on the main thread
                            
                            if (placemarks.count == 1) {
@@ -62,7 +62,7 @@
                                
                            }
                            
-                       });
+//                       });
                        
                    }];
     [super viewDidLoad];
