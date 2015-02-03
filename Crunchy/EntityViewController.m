@@ -322,7 +322,7 @@ CGRect initialFrame, labelFrame;
     
     cell.imageView.image = nil;
     if (indexPath.section > 0 && [content objectForKey:@"image"]) {
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:nil];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[content objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"profile-image"]];
     }
     
     cell.backgroundColor = [UIColor clearColor];

@@ -42,7 +42,7 @@
         imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70.0f, 70.0f)];
         imageFounder.backgroundColor = [UIColor whiteColor];
         imageFounder.tag = 2;
-//        imageFounder.alpha = 0.0f;
+        imageFounder.alpha = 0.0f;
         imageFounder.contentMode = UIViewContentModeScaleAspectFit;
         imageFounder.layer.masksToBounds = YES;
         imageFounder.clipsToBounds = YES;
@@ -75,15 +75,24 @@
     
     
 //    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
-    
+    NSLog(@"gonna load image from %@",imageString);
     [imageFounder sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        NSLog(@"image loaded");
         if (image != nil) {
             imageFounder.image = image;
-            [UIView animateWithDuration:0.5 animations:^(void) {
+            [UIView animateWithDuration:0.2 animations:^(void) {
                 imageFounder.alpha = 1.0f;
             }];
         }
+        else{
+            imageFounder.image = [UIImage imageNamed:@"profile-image"];
+            [UIView animateWithDuration:0.2 animations:^(void) {
+                imageFounder.alpha = 1.0f;
+            }];
+            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
+        }
     }];
+    
     
     return view;
 }

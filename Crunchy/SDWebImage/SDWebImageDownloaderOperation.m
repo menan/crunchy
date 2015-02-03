@@ -16,7 +16,7 @@
 
 @property (copy, nonatomic) SDWebImageDownloaderProgressBlock progressBlock;
 @property (copy, nonatomic) SDWebImageDownloaderCompletedBlock completedBlock;
-@property (copy, nonatomic) void (^cancelBlock)();
+@property (copy, nonatomic) SDWebImageNoParamsBlock cancelBlock;
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
 @property (assign, nonatomic, getter = isFinished) BOOL finished;
@@ -40,7 +40,11 @@
 @synthesize executing = _executing;
 @synthesize finished = _finished;
 
-- (id)initWithRequest:(NSURLRequest *)request options:(SDWebImageDownloaderOptions)options progress:(void (^)(NSInteger, NSInteger))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock cancelled:(void (^)())cancelBlock {
+- (id)initWithRequest:(NSURLRequest *)request
+              options:(SDWebImageDownloaderOptions)options
+             progress:(SDWebImageDownloaderProgressBlock)progressBlock
+            completed:(SDWebImageDownloaderCompletedBlock)completedBlock
+            cancelled:(SDWebImageNoParamsBlock)cancelBlock {
     if ((self = [super init])) {
         _request = request;
         _shouldUseCredentialStorage = YES;
@@ -91,7 +95,9 @@
         if (self.progressBlock) {
             self.progressBlock(0, NSURLResponseUnknownLength);
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
+        });
 
         if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_5_1) {
             // Make sure to run the runloop in our background thread so it can process downloaded data
@@ -146,7 +152,9 @@
 
     if (self.connection) {
         [self.connection cancel];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+        });
 
         // As we cancelled the connection, its callback won't be called and thus won't
         // maintain the isFinished and isExecuting flags.
@@ -191,7 +199,9 @@
 #pragma mark NSURLConnection (delegate)
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    if (![response respondsToSelector:@selector(statusCode)] || [((NSHTTPURLResponse *)response) statusCode] < 400) {
+    
+    //'304 Not Modified' is an exceptional one
+    if ((![response respondsToSelector:@selector(statusCode)] || [((NSHTTPURLResponse *)response) statusCode] < 400) && [((NSHTTPURLResponse *)response) statusCode] != 304) {
         NSInteger expected = response.expectedContentLength > 0 ? (NSInteger)response.expectedContentLength : 0;
         self.expectedSize = expected;
         if (self.progressBlock) {
@@ -201,9 +211,18 @@
         self.imageData = [[NSMutableData alloc] initWithCapacity:expected];
     }
     else {
-        [self.connection cancel];
-
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        NSUInteger code = [((NSHTTPURLResponse *)response) statusCode];
+        
+        //This is the case when server returns '304 Not Modified'. It means that remote image is not changed.
+        //In case of 304 we need just cancel the operation and return cached image from the cache.
+        if (code == 304) {
+            [self cancelInternal];
+        } else {
+            [self.connection cancel];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        });
 
         if (self.completedBlock) {
             self.completedBlock(nil, nil, [NSError errorWithDomain:NSURLErrorDomain code:[((NSHTTPURLResponse *)response) statusCode] userInfo:nil], YES);
@@ -224,8 +243,7 @@
         const NSInteger totalSize = self.imageData.length;
 
         // Update the data source, we must pass ALL the data, not just the new bytes
-        CGImageSourceRef imageSource = CGImageSourceCreateIncremental(NULL);
-        CGImageSourceUpdateData(imageSource, (__bridge CFDataRef)self.imageData, totalSize == self.expectedSize);
+        CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)self.imageData, NULL);
 
         if (width + height == 0) {
             CFDictionaryRef properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
@@ -327,15 +345,16 @@
         CFRunLoopStop(CFRunLoopGetCurrent());
         self.thread = nil;
         self.connection = nil;
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        });
     }
     
     if (![[NSURLCache sharedURLCache] cachedResponseForRequest:_request]) {
         responseFromCached = NO;
     }
     
-    if (completionBlock)
-    {
+    if (completionBlock) {
         if (self.options & SDWebImageDownloaderIgnoreCachedResponse && responseFromCached) {
             completionBlock(nil, nil, nil, YES);
         }
@@ -361,13 +380,19 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    CFRunLoopStop(CFRunLoopGetCurrent());
-    [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+    @synchronized(self) {
+        CFRunLoopStop(CFRunLoopGetCurrent());
+        self.thread = nil;
+        self.connection = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        });
+    }
 
     if (self.completedBlock) {
         self.completedBlock(nil, nil, error, YES);
     }
-
+    self.completionBlock = nil;
     [self done];
 }
 
@@ -392,8 +417,13 @@
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge{
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+        if (!(self.options & SDWebImageDownloaderAllowInvalidSSLCertificates) &&
+            [challenge.sender respondsToSelector:@selector(performDefaultHandlingForAuthenticationChallenge:)]) {
+            [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+        } else {
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+        }
     } else {
         if ([challenge previousFailureCount] == 0) {
             if (self.credential) {

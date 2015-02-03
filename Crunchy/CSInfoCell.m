@@ -138,7 +138,7 @@
     
     label.text = [founder[@"name"] componentsSeparatedByString:@" "][0];
     
-    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
+    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
     return view;
 }

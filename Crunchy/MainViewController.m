@@ -64,9 +64,9 @@ BOOL searching = NO;
     self.tableView.separatorColor = [UIColor whiteColor];
     
     
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-//    self.navigationController.navigationBar.shadowImage = [UIImage new];
-//    self.navigationController.navigationBar.translucent = YES;
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -163,12 +163,12 @@ BOOL searching = NO;
                              
                              
                              CGAffineTransform transform = CGAffineTransformMakeScale(.5, .5);
-                             transform = CGAffineTransformTranslate(transform, 0, -190.0f);
+                             transform = CGAffineTransformTranslate(transform, 0, -155.0f);
                              self.crunchy.transform = transform;
 //                             self.crunchy.textColor = [UIColor blackColor];
                              
                              
-                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -165.0f);
+                             self.searchBar.transform = CGAffineTransformMakeTranslation( 0, -175.0f);
                              //                         NSLog(@"new frame y: %f",self.searchBar.frame.origin.y);
                          }
                          completion:^(BOOL finished) {
@@ -377,7 +377,7 @@ BOOL searching = NO;
     NSURL *url = [NSURL URLWithString:urlString];
     
     UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:10];
-    [imgView sd_setImageWithURL:url placeholderImage:nil];
+    [imgView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
     UILabel *labelTitle = (UILabel *)[cell.contentView viewWithTag:11];
     labelTitle.text = _objects[storyIndex][@"name"];
@@ -474,7 +474,7 @@ BOOL searching = NO;
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
-    [imageView sd_setImageWithURL:image_url placeholderImage:nil];
+    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
     //    NSLog(@"carousel reading %@", self.items[index]);
     return view;
 }

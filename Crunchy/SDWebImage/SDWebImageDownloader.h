@@ -72,6 +72,8 @@ typedef void(^SDWebImageDownloaderProgressBlock)(NSInteger receivedSize, NSInteg
 
 typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, NSError *error, BOOL finished);
 
+typedef NSDictionary *(^SDWebImageDownloaderHeadersFilterBlock)(NSURL *url, NSDictionary *headers);
+
 /**
  * Asynchronous downloader dedicated and optimized for image loading.
  */
@@ -120,7 +122,7 @@ typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, 
  * This block will be invoked for each downloading image request, returned
  * NSDictionary will be used as headers in corresponding HTTP request.
  */
-@property (nonatomic, strong) NSDictionary *(^headersFilter)(NSURL *url, NSDictionary *headers);
+@property (nonatomic, copy) SDWebImageDownloaderHeadersFilterBlock headersFilter;
 
 /**
  * Set a value for a HTTP header to be appended to each download HTTP request.
@@ -136,6 +138,16 @@ typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, 
  * @return The value associated with the header field field, or `nil` if there is no corresponding header field.
  */
 - (NSString *)valueForHTTPHeaderField:(NSString *)field;
+
+/**
+ * Sets a subclass of `SDWebImageDownloaderOperation` as the default
+ * `NSOperation` to be used each time SDWebImage constructs a request
+ * operation to download an image.
+ *
+ * @param operationClass The subclass of `SDWebImageDownloaderOperation` to set 
+ *        as default. Passing `nil` will revert to `SDWebImageDownloaderOperation`.
+ */
+- (void)setOperationClass:(Class)operationClass;
 
 /**
  * Creates a SDWebImageDownloader async downloader instance with a given URL

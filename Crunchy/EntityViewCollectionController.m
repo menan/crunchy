@@ -156,8 +156,8 @@ static NSString * const reuseIdentifier = @"Cell";
     
     NSURL *url = [NSURL URLWithString:image_url];
     //    NSLog(@"image url :%@",image_url);
-    UIImage *img = [UIImage imageNamed:@"aimage.png"];
-    [self.imageView sd_setImageWithURL:url placeholderImage:img];
+
+    [self.imageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
     self.title = [self.crunch getTitle];
     
