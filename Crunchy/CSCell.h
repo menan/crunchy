@@ -17,4 +17,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
 @property (strong, nonatomic) Cruncher *crunchy;
+@property (strong, nonatomic) NSString *indexString;
 @end

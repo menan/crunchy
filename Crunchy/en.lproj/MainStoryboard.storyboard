@@ -513,18 +513,30 @@
                                     <rect key="frame" x="0.0" y="0.0" width="319" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qnh-bW-7Vy" customClass="iCarousel">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qnh-bW-7Vy" customClass="iCarousel">
                                             <rect key="frame" x="0.0" y="5" width="319" height="75"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <connections>
-                                                <outlet property="dataSource" destination="SiE-kO-kLF" id="IZA-jn-dNp"/>
-                                                <outlet property="delegate" destination="SiE-kO-kLF" id="9i6-W8-b7W"/>
+                                                <outlet property="dataSource" destination="VZN-Jt-3uH" id="VRg-tq-Nrr"/>
+                                                <outlet property="delegate" destination="VZN-Jt-3uH" id="Ca9-w7-uJO"/>
                                             </connections>
                                         </view>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bar" translatesAutoresizingMaskIntoConstraints="NO" id="l1D-Hh-Dww">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" red="0.9960784912109375" green="0.99215692281723022" blue="0.99215692281723022" alpha="0.10000000000000001" colorSpace="deviceRGB"/>
+                                <constraints>
+                                    <constraint firstItem="l1D-Hh-Dww" firstAttribute="top" secondItem="SiE-kO-kLF" secondAttribute="top" id="7es-xq-vR8"/>
+                                    <constraint firstItem="qnh-bW-7Vy" firstAttribute="leading" secondItem="l1D-Hh-Dww" secondAttribute="leading" id="92K-LW-JuA"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="l1D-Hh-Dww" secondAttribute="trailing" constant="-9" id="OvU-LX-RVt"/>
+                                    <constraint firstAttribute="trailing" secondItem="qnh-bW-7Vy" secondAttribute="trailing" id="SZh-as-CpE"/>
+                                    <constraint firstItem="qnh-bW-7Vy" firstAttribute="top" secondItem="l1D-Hh-Dww" secondAttribute="bottom" constant="4" id="VSZ-sb-W1h"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="qnh-bW-7Vy" secondAttribute="bottom" constant="32" id="afA-yF-CtK"/>
+                                    <constraint firstItem="qnh-bW-7Vy" firstAttribute="leading" secondItem="SiE-kO-kLF" secondAttribute="leading" id="gsp-gw-4lY"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="carousel" destination="qnh-bW-7Vy" id="ymb-wY-zWx"/>
                                 </connections>
@@ -549,14 +561,20 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bar" translatesAutoresizingMaskIntoConstraints="NO" id="BWY-Y1-HTJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                </imageView>
                             </subviews>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="BWY-Y1-HTJ" secondAttribute="trailing" id="F6P-v3-vAk"/>
                                 <constraint firstItem="LF7-Gy-YJw" firstAttribute="top" secondItem="ikQ-b2-J5l" secondAttribute="topMargin" constant="3" id="Qe9-xY-Pss"/>
                                 <constraint firstItem="LF7-Gy-YJw" firstAttribute="baseline" secondItem="i5N-aF-AVe" secondAttribute="baseline" id="blG-KW-LDD"/>
                                 <constraint firstItem="LF7-Gy-YJw" firstAttribute="firstBaseline" secondItem="i5N-aF-AVe" secondAttribute="firstBaseline" id="dSX-HZ-YaO"/>
                                 <constraint firstItem="LF7-Gy-YJw" firstAttribute="centerY" secondItem="ikQ-b2-J5l" secondAttribute="centerY" id="lAG-N4-rjv"/>
+                                <constraint firstItem="BWY-Y1-HTJ" firstAttribute="leading" secondItem="ikQ-b2-J5l" secondAttribute="leading" id="lx6-iW-mHu"/>
                                 <constraint firstItem="LF7-Gy-YJw" firstAttribute="leading" secondItem="ikQ-b2-J5l" secondAttribute="leadingMargin" constant="3" id="onZ-dh-mWI"/>
+                                <constraint firstItem="BWY-Y1-HTJ" firstAttribute="top" secondItem="ikQ-b2-J5l" secondAttribute="top" id="tet-A0-ies"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="i5N-aF-AVe" secondAttribute="trailing" constant="5" id="xkM-bh-A6H"/>
                                 <constraint firstItem="i5N-aF-AVe" firstAttribute="leading" secondItem="LF7-Gy-YJw" secondAttribute="trailing" constant="16" id="zeY-1H-V1A"/>
                             </constraints>
@@ -577,13 +595,19 @@
                                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </state>
                                 </button>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bar" translatesAutoresizingMaskIntoConstraints="NO" id="y7c-1Z-bM1">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="ddz-Rz-Y1a" firstAttribute="leading" secondItem="5dS-ft-rg1" secondAttribute="leadingMargin" constant="88" id="2iP-xA-1eg"/>
                                 <constraint firstItem="ddz-Rz-Y1a" firstAttribute="centerY" secondItem="5dS-ft-rg1" secondAttribute="centerY" id="7bz-s7-EX3"/>
                                 <constraint firstItem="ddz-Rz-Y1a" firstAttribute="top" secondItem="5dS-ft-rg1" secondAttribute="topMargin" constant="2" id="D2v-85-fdQ"/>
+                                <constraint firstItem="y7c-1Z-bM1" firstAttribute="leading" secondItem="5dS-ft-rg1" secondAttribute="leading" id="ED3-6d-4gH"/>
                                 <constraint firstItem="ddz-Rz-Y1a" firstAttribute="centerX" secondItem="5dS-ft-rg1" secondAttribute="centerX" id="lHt-Gn-PE7"/>
+                                <constraint firstItem="y7c-1Z-bM1" firstAttribute="centerX" secondItem="ddz-Rz-Y1a" secondAttribute="centerX" id="o2o-Gc-qUZ"/>
+                                <constraint firstItem="y7c-1Z-bM1" firstAttribute="top" secondItem="5dS-ft-rg1" secondAttribute="top" id="wBr-ne-eah"/>
                             </constraints>
                             <connections>
                                 <outlet property="viewAllButton" destination="ddz-Rz-Y1a" id="nzH-HX-4fs"/>
@@ -842,6 +866,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bar" width="1" height="1"/>
         <image name="crunchbase.png" width="57" height="57"/>
         <image name="crunchy-bg" width="679" height="1732"/>
     </resources>
