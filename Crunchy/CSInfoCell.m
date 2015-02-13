@@ -21,7 +21,7 @@
     
     for (NSDictionary *addressData in addresses) {
         
-        NSLog(@"address: %@ on %@",addressData[@"location"], addressData[@"title"]);
+//        NSLog(@"address: %@ on %@",addressData[@"location"], addressData[@"title"]);
         [geocoder geocodeAddressString:addressData[@"location"] // You can pass aLocation here instead
                  completionHandler:^(NSArray *placemarks, NSError *error) {
                      
