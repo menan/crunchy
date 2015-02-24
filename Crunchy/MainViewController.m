@@ -29,6 +29,7 @@
 
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) NSMutableArray *objects;
+@property (strong, nonatomic) NSMutableDictionary *imagesPaths;
 @property (nonatomic, strong) NSDictionary *selectedObject;
 @end
 
@@ -39,6 +40,7 @@ BOOL searching = NO;
 - (void)viewDidLoad {
     
     self.items = [NSMutableArray array];
+    self.imagesPaths = [NSMutableDictionary new];
     
     [self getRecentlyUpdated];
     
@@ -405,6 +407,42 @@ BOOL searching = NO;
     
 }
 
+- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imageView{
+    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    if (!self.imagesPaths[path] && !imageView.image) {
+        NSLog(@"iMAGE: %@: %@",path,self.imagesPaths[path]);
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                
+                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
+//                NSLog(@"loading image at %@",stringURL);
+                NSURL *urlImage = [NSURL URLWithString:stringURL];
+                
+                [self.imagesPaths setObject:urlImage forKey:path];
+//                [imageView sd_setImageWithURL:urlImage placeholderImage:nil];
+                
+            }
+            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                NSLog(@"error: %@ : %@",path, [error localizedDescription]);
+                [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:path];
+//                [imageView setImage:[UIImage imageNamed:@"profile-image"]];
+                                                                                            }];
+        [operation start];
+        
+        [imageView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:nil];
+    }
+    else{
+        [imageView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:nil];
+    }
+    
+    
+    
+    
+    
+}
+
 
 #pragma mark -
 #pragma mark iCarousel methods
@@ -413,8 +451,9 @@ BOOL searching = NO;
 {
 //    NSLog(@"carousel total count %lu", (unsigned long)self.items.count);
     //return the total number of items in the carousel
-    if (self.items.count > 20)
-        return 20;
+    int max = 20;
+    if (self.items.count > max)
+        return max;
     return self.items.count;
 }
 
@@ -424,9 +463,11 @@ BOOL searching = NO;
     UIImageView *imageView = nil;
     
     NSString *path = self.items[index][@"path"];
-    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
     
-    NSURL *image_url = [NSURL URLWithString:imageString];
+    
+//    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150&user_key=%@",path,[Cruncher userKey]];
+    
+//    NSURL *image_url = [NSURL URLWithString:imageString];
     
     //create new view if no view is available for recycling
     if (view == nil)
@@ -444,7 +485,7 @@ BOOL searching = NO;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.layer.masksToBounds = YES;
         imageView.clipsToBounds = YES;
-        imageView.layer.cornerRadius = imageView.frame.size.height /2;
+        imageView.layer.cornerRadius = imageView.frame.size.height/2;
         
         
         [view addSubview:imageView];
@@ -468,13 +509,37 @@ BOOL searching = NO;
         imageView = (UIImageView *)[view viewWithTag:2];
     }
     
+    [self setImageFromPath:path forImageView:imageView];
+    
     //set item label
     //remember to always set any properties of your carousel item
     //views outside of the `if (view == nil) {...}` check otherwise
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
-    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
+//    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
+    
+//    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:image_url]];
+//    imageView.image = image;
+    
+//    NSURLRequest *request = [NSURLRequest requestWithURL:image_url];
+//    
+//    [NSURLConnection
+//     sendAsynchronousRequest:request
+//     queue:[NSOperationQueue mainQueue]
+//     completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+//    {
+//        NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//
+//        NSLog(@"data: %@", newStr);
+//    }];
+    
+    
+//    NSLog(@"loading image at %@ %@",image_url ,[NSData dataWithContentsOfURL:image_url]);
+//    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        NSLog(@"error at url: %@, %@",imageURL,error);
+//    }];
+    
     //    NSLog(@"carousel reading %@", self.items[index]);
     return view;
 }
