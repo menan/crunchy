@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet iCarousel *carousel;
 @property (weak, nonatomic) IBOutlet UILabel *fontLabel;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
+//@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *buttonDone;
 @property (weak, nonatomic) IBOutlet UILabel *quoteLabel;
@@ -120,11 +120,11 @@ BOOL searching = NO;
                                                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
                                                                                             self.items = data[@"data"][@"items"];
                                                                                             [self.carousel reloadData];
-                                                                                            [self.loading stopAnimating];
+                                                                                            [self.activityView stopAnimating];
                                                                                         }
                                                                                         failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                                                             NSLog(@"error: %@", [error userInfo]);
-                                                                                            [self.loading stopAnimating];
+                                                                                            [self.activityView stopAnimating];
                                                                                             
                                                                                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
                                                                                                                                             message:@"Unable to connect to the server."
@@ -226,7 +226,7 @@ BOOL searching = NO;
 
 - (void) parseData: (NSDictionary *) data{
     
-    [self.loading stopAnimating];
+    [self.activityView stopAnimating];
     self.tableView.allowsSelection = YES;
     NSMutableDictionary* item = [[NSMutableDictionary alloc] init];
     self.objects = [[NSMutableArray alloc] init];
@@ -474,7 +474,28 @@ BOOL searching = NO;
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
+    
     [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
+    
+    
+//    [imageView sd_setImageWithURL:image_url completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        //        NSLog(@"image loaded");
+//        if (image != nil) {
+//            imageView.image = image;
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageView.alpha = 1.0f;
+//            }];
+//        }
+//        else{
+//            imageView.image = [UIImage imageNamed:@"profile-image"];
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageView.alpha = 1.0f;
+//            }];
+//            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
+//        }
+//    }];
+    
+    
     //    NSLog(@"carousel reading %@", self.items[index]);
     return view;
 }

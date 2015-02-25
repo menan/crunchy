@@ -339,7 +339,7 @@ static NSString * const reuseIdentifier = @"Cell";
     label.text = [self getName:data];
     
     
-    //    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
+//        [imageData sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
     //    NSLog(@"gonna load image from %@",imageString);
     [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         //        NSLog(@"image loaded");
@@ -354,7 +354,7 @@ static NSString * const reuseIdentifier = @"Cell";
             [UIView animateWithDuration:0.2 animations:^(void) {
                 imageData.alpha = 1.0f;
             }];
-            //            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
+            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
         }
     }];
     
