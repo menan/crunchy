@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *updatedLabel;
 @property (strong, nonatomic) Cruncher *crunch;
+@property (strong, nonatomic) NSMutableArray *imagesPaths;
 @property (weak, nonatomic) IBOutlet iCarousel *founders;
 @end
 
@@ -69,6 +70,7 @@ CGRect initialFrame, labelFrame;
 
 - (void) readObject{
     crunch = [[Cruncher alloc] initWithDictionary:item[@"data"]];
+    self.imagesPaths = [[NSMutableArray alloc] init];
     
     //    [crunch setItemType: [self.detailItem objectForKey:@"type"]];
     //    NSLog(@"data reloaded to detail length is : %d",(int)[item count]);
@@ -395,6 +397,37 @@ CGRect initialFrame, labelFrame;
 }
 
 
+- (void) getImageFromPath: (NSString *)path atIndex:(NSInteger) index{
+    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?&user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                        success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                                                                                            NSLog(@"data: %@",data);
+                                                                                            
+//                                                                                            [self loadedImageAtIndex:index andPath:];
+                                                                                        }
+                                                                                        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                            NSLog(@"error: %@", [error userInfo]);
+                                                                                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network Error"
+                                                                                                                                            message:@"Unable to connect to the server."
+                                                                                                                                           delegate:self
+                                                                                                                                  cancelButtonTitle:@"OK"
+                                                                                                                                  otherButtonTitles:nil];
+                                                                                            [alert show];
+                                                                                        }];
+    [operation start];
+    
+    
+    
+}
+
+- (void) loadedImageAtIndex:(NSInteger) index andPath: (NSURL *) url{
+    
+}
+
+
 
 
 
@@ -418,6 +451,8 @@ CGRect initialFrame, labelFrame;
     
     NSString *path = founder[@"path"];
     NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
+    
+    [self getImageFromPath:path atIndex:index];
     
     NSURL *imageUrl = [NSURL URLWithString:imageString];
     

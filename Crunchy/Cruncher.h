@@ -35,6 +35,7 @@ typedef enum ItemType : NSUInteger {
 - (BOOL) isAcquired;
 - (NSString *) getAcquiredInfo;
 
+
 - (NSString *) getImage: (BOOL) small;
 - (NSString *) getOverview;
 - (NSString *) getTitle;
