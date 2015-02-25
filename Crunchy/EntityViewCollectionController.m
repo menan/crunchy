@@ -13,6 +13,7 @@
 #import "AFJSONRequestOperation.h"
 #import "Cruncher.h"
 #import "UIImageView+WebCache.h"
+#import "EntityURLRequest.h"
 
 @interface EntityViewCollectionController ()
 
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) UINib *headerNib;
 @property (strong, nonatomic) Cruncher *crunch;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (strong, nonatomic) NSMutableDictionary *imagesPaths;
 
 @end
 
@@ -53,6 +55,7 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.imagesPaths = [NSMutableDictionary new];
     
     [self.collectionView setBackgroundView:
      [[UIImageView alloc] initWithImage:
@@ -261,7 +264,48 @@ static NSString * const reuseIdentifier = @"Cell";
 
 
 
-
+- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
+    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    if (!self.imagesPaths[path]) {
+        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        request.imageView = imgView;
+        request.path = path;
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                                                                                                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
+                                                                                                
+                                                                                                NSURL *urlImage = [NSURL URLWithString:stringURL];
+                                                                                                
+                                                                                                if (thisRequest.path) {
+                                                                                                    [self.imagesPaths setObject:urlImage forKey:thisRequest.path];
+                                                                                                }
+                                                                                                
+                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
+                                                                                                
+                                                                                                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
+                                                                                                
+                                                                                            }
+                                                                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                                                                                                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
+                                                                                                if (thisRequest.path) {
+                                                                                                    [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
+                                                                                                }
+                                                                                                
+                                                                                                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
+                                                                                            }];
+        [operation start];
+        
+    }
+    else{
+        [imgView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
+        
+    }
+    
+}
 
 
 
@@ -272,9 +316,9 @@ static NSString * const reuseIdentifier = @"Cell";
 {
     NSInteger contentSize = [self.crunch getContentCountAtIndex:carousel.tag];
     
-    CSCell *cell = (CSCell *) carousel.superview.superview;
-    UICollectionView *collectionView = (UICollectionView *)  carousel.superview.superview.superview;
-    NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
+//    CSCell *cell = (CSCell *) carousel.superview.superview;
+//    UICollectionView *collectionView = (UICollectionView *)  carousel.superview.superview.superview;
+//    NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
     
     //    NSLog(@"carousel size %ld at %ld %@ %@",contentSize,carousel.tag, self.crunchy,indexPath);
     return contentSize;
@@ -286,16 +330,16 @@ static NSString * const reuseIdentifier = @"Cell";
     UIImageView *imageData = nil;
     NSDictionary *data = [self.crunch dataAtIndex:carousel.tag][index];
     
-    CSCell *cell = (CSCell *) carousel.superview.superview;
-    UICollectionView *collectionView = (UICollectionView *)  carousel.superview.superview.superview;
-    NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
+//    CSCell *cell = (CSCell *) carousel.superview.superview;
+//    UICollectionView *collectionView = (UICollectionView *)  carousel.superview.superview.superview;
+//    NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
     
-    NSLog(@"collection view is :%@ : %ld",self.crunch,carousel.tag);
+//    NSLog(@"collection view is :%@ : %ld",self.crunch,carousel.tag);
     
     NSString *path = data[@"path"];
-    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
+//    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
     
-    NSURL *imageUrl = [NSURL URLWithString:imageString];
+//    NSURL *imageUrl = [NSURL URLWithString:imageString];
     
     //create new view if no view is available for recycling
     if (view == nil)
@@ -304,11 +348,13 @@ static NSString * const reuseIdentifier = @"Cell";
         imageData = [[UIImageView alloc] initWithFrame:CGRectMake(0, 5.0f, 60.0f, 60.0f)];
         imageData.backgroundColor = [UIColor whiteColor];
         imageData.tag = 2;
-        imageData.alpha = 0.0f;
-        imageData.contentMode = UIViewContentModeScaleAspectFit;
+        imageData.alpha = 1.0f;
+        imageData.contentMode = UIViewContentModeScaleAspectFill;
         imageData.layer.masksToBounds = YES;
         imageData.clipsToBounds = YES;
         imageData.layer.cornerRadius = imageData.frame.size.height /2;
+        
+        
         
         
         [view addSubview:imageData];
@@ -338,25 +384,8 @@ static NSString * const reuseIdentifier = @"Cell";
     
     label.text = [self getName:data];
     
+    [self setImageFromPath:path forImageView:imageData];
     
-    //    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
-    //    NSLog(@"gonna load image from %@",imageString);
-    [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        //        NSLog(@"image loaded");
-        if (image != nil) {
-            imageData.image = image;
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-        }
-        else{
-            imageData.image = [UIImage imageNamed:@"profile-image"];
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-            //            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
-        }
-    }];
     
     
     return view;

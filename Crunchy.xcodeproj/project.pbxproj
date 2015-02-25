@@ -75,6 +75,7 @@
 		E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = E894E35B1A65CB7D00647C6C /* iCarousel.m */; };
 		E894E35E1A65CDBE00647C6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E894E35D1A65CDBE00647C6C /* QuartzCore.framework */; };
 		E89DF7481A682CD3007E9D5E /* EntityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E89DF7471A682CD3007E9D5E /* EntityViewController.m */; };
+		E8CA73F61A9E68050044C6D1 /* EntityURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E8CA73F51A9E68050044C6D1 /* EntityURLRequest.m */; };
 		E8E502001A705D7C0033E19B /* InfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8E501FF1A705D7C0033E19B /* InfoView.xib */; };
 		E8E502051A705E590033E19B /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502021A705E590033E19B /* CSStickyHeaderFlowLayout.m */; };
 		E8E502061A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E8E502031A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.m */; };
@@ -203,6 +204,8 @@
 		E894E35D1A65CDBE00647C6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E89DF7461A682CD3007E9D5E /* EntityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityViewController.h; sourceTree = "<group>"; };
 		E89DF7471A682CD3007E9D5E /* EntityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityViewController.m; sourceTree = "<group>"; };
+		E8CA73F41A9E68050044C6D1 /* EntityURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityURLRequest.h; sourceTree = "<group>"; };
+		E8CA73F51A9E68050044C6D1 /* EntityURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityURLRequest.m; sourceTree = "<group>"; };
 		E8E501FF1A705D7C0033E19B /* InfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoView.xib; sourceTree = "<group>"; };
 		E8E502011A705E590033E19B /* CSStickyHeaderFlowLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSStickyHeaderFlowLayoutAttributes.h; sourceTree = "<group>"; };
 		E8E502021A705E590033E19B /* CSStickyHeaderFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSStickyHeaderFlowLayout.m; sourceTree = "<group>"; };
@@ -325,6 +328,8 @@
 				E8E5020C1A7064FD0033E19B /* CSCell.m */,
 				E8E5020E1A7176F70033E19B /* CSInfoCell.h */,
 				E8E5020F1A7176F70033E19B /* CSInfoCell.m */,
+				E8CA73F41A9E68050044C6D1 /* EntityURLRequest.h */,
+				E8CA73F51A9E68050044C6D1 /* EntityURLRequest.m */,
 			);
 			path = Crunchy;
 			sourceTree = "<group>";
@@ -607,6 +612,7 @@
 				68E669C216C65AF0007529AD /* ImageViewController.m in Sources */,
 				68ABF1891A806B6B00C787BD /* UIButton+WebCache.m in Sources */,
 				68E669C916C6E972007529AD /* OverviewViewController.m in Sources */,
+				E8CA73F61A9E68050044C6D1 /* EntityURLRequest.m in Sources */,
 				E894E35C1A65CB7D00647C6C /* iCarousel.m in Sources */,
 				6894C7971841B79100A3CD85 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				68ABF1821A806B6B00C787BD /* SDImageCache.m in Sources */,
