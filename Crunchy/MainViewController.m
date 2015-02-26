@@ -11,6 +11,7 @@
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+WebCache.h"
 #import "EntityViewController.h"
+#import "EntityURLRequest.h"
 
 
 @interface MainViewController ()
@@ -38,6 +39,7 @@
 BOOL searching = NO;
 
 - (void)viewDidLoad {
+
     
     self.items = [NSMutableArray array];
     self.imagesPaths = [NSMutableDictionary new];
@@ -69,7 +71,7 @@ BOOL searching = NO;
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
-    
+//
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
@@ -79,6 +81,9 @@ BOOL searching = NO;
     // Dispose of any resources that can be recreated.
 }
 
+- (UIStatusBarStyle) preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 
 /*
 #pragma mark - Navigation
@@ -117,9 +122,10 @@ BOOL searching = NO;
     // api that you are using to do the search
     NSString* url = [[NSString stringWithFormat:@"%@/organizations?order=updated_at desc&user_key=%@", [Cruncher crunchBaseURL], [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    EntityURLRequest *request = [EntityURLRequest requestWithURL:[NSURL URLWithString:url]];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
                                                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+//                                                                                            NSLog(@"request : %@",request);
                                                                                             self.items = data[@"data"][@"items"];
                                                                                             [self.carousel reloadData];
                                                                                             [self.activityView stopAnimating];
@@ -407,39 +413,42 @@ BOOL searching = NO;
     
 }
 
-- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imageView{
+- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
     NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    if (!self.imagesPaths[path] && !imageView.image) {
-        NSLog(@"iMAGE: %@: %@",path,self.imagesPaths[path]);
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    if (!self.imagesPaths[path]) {
+        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        request.imageView = imgView;
+        request.path = path;
+        
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
             success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
-                
+                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
                 NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
-//                NSLog(@"loading image at %@",stringURL);
+                
                 NSURL *urlImage = [NSURL URLWithString:stringURL];
                 
-                [self.imagesPaths setObject:urlImage forKey:path];
-//                [imageView sd_setImageWithURL:urlImage placeholderImage:nil];
+                [self.imagesPaths setObject:urlImage forKey:thisRequest.path];
+                
+                
+                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
                 
             }
             failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-//                NSLog(@"error: %@ : %@",path, [error localizedDescription]);
-                [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:path];
-//                [imageView setImage:[UIImage imageNamed:@"profile-image"]];
-                                                                                            }];
+                NSLog(@"error: %@ : %@",path, [error localizedDescription]);
+                
+                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
+                
+                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
+           }];
         [operation start];
         
-        [imageView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:nil];
     }
     else{
-        [imageView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:nil];
+        
+        [imgView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
     }
-    
-    
-    
-    
     
 }
 

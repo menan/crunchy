@@ -10,6 +10,7 @@
 #import "NSString+HTML.h"
 #import "AFJSONRequestOperation.h"
 #import "UIImageView+WebCache.h"
+#import "EntityURLRequest.h"
 
 @implementation Cruncher
 
@@ -22,6 +23,8 @@ NSMutableArray *infoSections;
 NSMutableArray *sectionTitles;
 NSMutableArray *relationshipsNew;
 
+NSMutableArray *imagesData;
+NSMutableArray *imagesDispatched;
 NSMutableDictionary *imagesPaths;
 
 + (NSString *) userKey{
@@ -48,6 +51,8 @@ NSMutableDictionary *imagesPaths;
     sectionTitles = [NSMutableArray new];
     relationshipsNew = [NSMutableArray new];
     imagesPaths = [NSMutableDictionary new];
+    imagesData = [NSMutableArray new];
+    imagesDispatched = [NSMutableArray new];
     
     
     NSArray *blacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid",@"bio",@"died_on_trust_code",@"role_investor",@"born_on_year",@"born_on_month",@"born_on_day",@"born_on_trust_code",@"post_money_valuation_currency_code",@"announced_on_trust_code",@"name",@"price_currency_code",@"owner_path",@"launched_on_trust_code",@"launched_on_month",@"launched_on_year",@"launched_on_day",@"videos",@"opening_share_price_currency_code",@"went_public_on_trust_code",@"went_public_on_day",@"went_public_on_month",@"went_public_on_year",@"opening_valuation_currency_code",@"target_money_raised_currency_code",@"closed_on_month",@"closed_on_year",@"closed_on_day",@"secondary_role_early_stage_vendor",@"secondary_role_seed",@"secondary_role_venture_capital",@"secondary_role_debt_financing",@"secondary_role_private_equity",@"secondary_role_large_stage_venture",@"sectors",@"secondary_role_early_stage_venture",@"secondary_role_later_stage_venture",@"secondary_role_incubator",@"short_description",@"also_known_as",@"price_usd",@"completed_on_day",@"completed_on_month",@"completed_on_year",@"completed_on_trust_code",@"regions"];
@@ -554,12 +559,30 @@ NSMutableDictionary *imagesPaths;
     return [titlesAndKeys objectForKey:sectionTitles[index]];
 }
 
+
 - (NSInteger) getContentCountAtIndex:(NSInteger)index{
     return [item[@"relationships"][sectionTitles[index]][@"items"] count];
 }
 - (NSArray *) dataAtIndex:(NSInteger) index{
+//    [self updateImagesURL:index];
     return item[@"relationships"][sectionTitles[index]][@"items"];
 }
+
+- (BOOL) hasDispatched:(NSString *) path{
+    
+    for (NSDictionary* dict in imagesDispatched) {
+        if ([dict[@"path"] isEqualToString:path]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+- (NSString *) pathFromURL:(NSString *)url{
+    NSRange prefixRange = [url rangeOfString:@"api.crunchbase.com/v/2/"];
+    NSRange suffixRange = [url rangeOfString:@"/primary_image"];
+    return [url substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - 30)];
+}
+
 
 - (NSArray *) getAddressData{
     NSMutableArray *addressData = [NSMutableArray new];
