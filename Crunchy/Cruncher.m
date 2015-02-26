@@ -27,6 +27,9 @@ NSMutableArray *imagesData;
 NSMutableArray *imagesDispatched;
 NSMutableDictionary *imagesPaths;
 
+#define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
+
+
 + (NSString *) userKey{
     return @"00aba8c514f4e90b191bafe88ce9fceb";
 }
@@ -601,41 +604,46 @@ NSMutableDictionary *imagesPaths;
 
 - (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
     NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    if (!imagesPaths[path]) {
+    NSLog(@"loading image for %@",path);
+    if (!imagesPaths[path] && (contains(path,@"person") || contains(path,@"organization"))) {
         EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
         request.imageView = imgView;
         request.path = path;
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
-                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
-                                                                                                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
-                                                                                                
-                                                                                                NSURL *urlImage = [NSURL URLWithString:stringURL];
-                                                                                                
-                                                                                                if (thisRequest.path) {
-                                                                                                    [imagesPaths setObject:urlImage forKey:thisRequest.path];
-                                                                                                }
-                                                                                                
-                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
-                                                                                                
-                                                                                                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
-                                                                                                
-                                                                                            }
-                                                                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
-                                                                                                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
-                                                                                                if (thisRequest.path) {
-                                                                                                    [imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
-                                                                                                }
-                                                                                                
-                                                                                                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
-                                                                                            }];
+            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
+                
+                NSURL *urlImage = [NSURL URLWithString:stringURL];
+                
+                if (thisRequest.path) {
+                    [imagesPaths setObject:urlImage forKey:thisRequest.path];
+                }
+                
+    //                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
+                
+                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
+                
+            }
+            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
+                if (thisRequest.path) {
+                    [imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
+                }
+                
+                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
+            }];
         
         [operation start];
         
     }
+//    else if (contains(path,@"funding-round")){
+//        url = [[NSString stringWithFormat:@"%@/%@/acquiree?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        
+//        
+//    }
     else{
         [imgView sd_setImageWithURL:imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
         
