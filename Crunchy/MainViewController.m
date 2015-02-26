@@ -517,25 +517,27 @@ BOOL searching = NO;
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     label.text = self.items[index][@"name"];
+//    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
-    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"]];
+//    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:image_url]];
+//    imageView.image = image;
+    
+//    NSURLRequest *request = [NSURLRequest requestWithURL:image_url];
+//    
+//    [NSURLConnection
+//     sendAsynchronousRequest:request
+//     queue:[NSOperationQueue mainQueue]
+//     completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+//    {
+//        NSString* newStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//
+//        NSLog(@"data: %@", newStr);
+//    }];
     
     
-//    [imageView sd_setImageWithURL:image_url completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-//        //        NSLog(@"image loaded");
-//        if (image != nil) {
-//            imageView.image = image;
-//            [UIView animateWithDuration:0.2 animations:^(void) {
-//                imageView.alpha = 1.0f;
-//            }];
-//        }
-//        else{
-//            imageView.image = [UIImage imageNamed:@"profile-image"];
-//            [UIView animateWithDuration:0.2 animations:^(void) {
-//                imageView.alpha = 1.0f;
-//            }];
-//            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
-//        }
+//    NSLog(@"loading image at %@ %@",image_url ,[NSData dataWithContentsOfURL:image_url]);
+//    [imageView sd_setImageWithURL:image_url placeholderImage:[UIImage imageNamed:@"profile-image"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        NSLog(@"error at url: %@, %@",imageURL,error);
 //    }];
     
     
