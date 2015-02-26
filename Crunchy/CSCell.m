@@ -88,23 +88,23 @@
     
 //    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:nil];
 //    NSLog(@"gonna load image from %@",imageString);
-    [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-//        NSLog(@"image loaded");
-        if (image != nil) {
-            imageData.image = image;
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-        }
-        else{
-            imageData.image = [UIImage imageNamed:@"profile-image"];
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-//            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
-        }
-    }];
-    
+//    [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+////        NSLog(@"image loaded");
+//        if (image != nil) {
+//            imageData.image = image;
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageData.alpha = 1.0f;
+//            }];
+//        }
+//        else{
+//            imageData.image = [UIImage imageNamed:@"profile-image"];
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageData.alpha = 1.0f;
+//            }];
+////            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
+//        }
+//    }];
+//    
     
     return view;
 }

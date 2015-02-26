@@ -22,7 +22,7 @@
 @property (strong, nonatomic) Cruncher *crunch;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) NSMutableDictionary *imagesPaths;
-
+@property (weak, nonatomic) UIImage *bgImage;
 @end
 
 @implementation EntityViewCollectionController
@@ -41,6 +41,9 @@ static NSString * const reuseIdentifier = @"Cell";
     }
 }
 
+- (void) setBarImage:(UIImage *) image{
+    self.bgImage = image;
+}
 
 
 
@@ -51,6 +54,18 @@ static NSString * const reuseIdentifier = @"Cell";
     [self loadData];
 }
 
+
+- (void) viewWillAppear:(BOOL)animated{
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = self.bgImage;
+    self.navigationController.navigationBar.translucent = NO;
+    
+}
+- (void) viewWillDisappear:(BOOL)animated{
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -263,49 +278,50 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 
-
-- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
-    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    if (!self.imagesPaths[path]) {
-        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-        request.imageView = imgView;
-        request.path = path;
-        
-        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
-                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
-                                                                                                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
-                                                                                                
-                                                                                                NSURL *urlImage = [NSURL URLWithString:stringURL];
-                                                                                                
-                                                                                                if (thisRequest.path) {
-                                                                                                    [self.imagesPaths setObject:urlImage forKey:thisRequest.path];
-                                                                                                }
-                                                                                                
-                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
-                                                                                                
-                                                                                                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
-                                                                                                
-                                                                                            }
-                                                                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
-                                                                                                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
-                                                                                                if (thisRequest.path) {
-                                                                                                    [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
-                                                                                                }
-                                                                                                
-                                                                                                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
-                                                                                            }];
-        [operation start];
-        
-    }
-    else{
-        [imgView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
-        
-    }
-    
-}
+//
+//- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
+//    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    
+//    if (!self.imagesPaths[path]) {
+//        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+//        request.imageView = imgView;
+//        request.path = path;
+//        
+//        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+//                                                                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+//                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+//                                                                                                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
+//                                                                                                
+//                                                                                                NSURL *urlImage = [NSURL URLWithString:stringURL];
+//                                                                                                
+//                                                                                                if (thisRequest.path) {
+//                                                                                                    [self.imagesPaths setObject:urlImage forKey:thisRequest.path];
+//                                                                                                }
+//                                                                                                
+//                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
+//                                                                                                
+//                                                                                                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
+//                                                                                                
+//                                                                                            }
+//                                                                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+//                                                                                                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
+//                                                                                                if (thisRequest.path) {
+//                                                                                                    [self.imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
+//                                                                                                }
+//                                                                                                
+//                                                                                                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
+//                                                                                            }];
+//        
+//        [operation start];
+//        
+//    }
+//    else{
+//        [imgView sd_setImageWithURL:self.imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
+//        
+//    }
+//    
+//}
 
 
 
@@ -384,26 +400,26 @@ static NSString * const reuseIdentifier = @"Cell";
     
     label.text = [self getName:data];
     
-    [self setImageFromPath:path forImageView:imageData];
+    [self.crunch setImageFromPath:path forImageView:imageData];
     
 //        [imageData sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
     //    NSLog(@"gonna load image from %@",imageString);
-    [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        //        NSLog(@"image loaded");
-        if (image != nil) {
-            imageData.image = image;
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-        }
-        else{
-            imageData.image = [UIImage imageNamed:@"profile-image"];
-            [UIView animateWithDuration:0.2 animations:^(void) {
-                imageData.alpha = 1.0f;
-            }];
-            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
-        }
-    }];
+//    [imageData sd_setImageWithURL:imageUrl completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        //        NSLog(@"image loaded");
+//        if (image != nil) {
+//            imageData.image = image;
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageData.alpha = 1.0f;
+//            }];
+//        }
+//        else{
+//            imageData.image = [UIImage imageNamed:@"profile-image"];
+//            [UIView animateWithDuration:0.2 animations:^(void) {
+//                imageData.alpha = 1.0f;
+//            }];
+//            NSLog(@"error loading image from %@ => %@",imageURL, [error localizedDescription]);
+//        }
+//    }];
     
     
     return view;

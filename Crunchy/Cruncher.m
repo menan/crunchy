@@ -596,4 +596,51 @@ NSMutableDictionary *imagesPaths;
     return addressData;
     
 }
+
+
+
+- (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
+    NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    if (!imagesPaths[path]) {
+        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        request.imageView = imgView;
+        request.path = path;
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                                                                                                NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
+                                                                                                
+                                                                                                NSURL *urlImage = [NSURL URLWithString:stringURL];
+                                                                                                
+                                                                                                if (thisRequest.path) {
+                                                                                                    [imagesPaths setObject:urlImage forKey:thisRequest.path];
+                                                                                                }
+                                                                                                
+                                                                                                NSLog(@"image for at %@ : %@ ",path, urlImage);
+                                                                                                
+                                                                                                [thisRequest.imageView sd_setImageWithURL:urlImage placeholderImage:[UIImage imageNamed:@"profile-image"]];
+                                                                                                
+                                                                                            }
+                                                                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                                                                EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                                                                                                NSLog(@"error: %@ : %@",thisRequest.path, [error localizedDescription]);
+                                                                                                if (thisRequest.path) {
+                                                                                                    [imagesPaths setObject:[NSURL URLWithString:@""] forKey:thisRequest.path];
+                                                                                                }
+                                                                                                
+                                                                                                thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
+                                                                                            }];
+        
+        [operation start];
+        
+    }
+    else{
+        [imgView sd_setImageWithURL:imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
+        
+    }
+    
+}
+
 @end
