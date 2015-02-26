@@ -18,6 +18,7 @@
     [self.mapView setDelegate:self];
     
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    self.crunchy = [[Cruncher alloc] init];
     
     for (NSDictionary *addressData in addresses) {
         
@@ -108,7 +109,7 @@
         imageFounder = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 45.0f, 45.0f)];
         imageFounder.backgroundColor = [UIColor whiteColor];
         imageFounder.tag = 2;
-        imageFounder.contentMode = UIViewContentModeScaleAspectFit;
+        imageFounder.contentMode = UIViewContentModeScaleAspectFill;
         imageFounder.layer.masksToBounds = YES;
         imageFounder.clipsToBounds = YES;
         imageFounder.layer.cornerRadius = imageFounder.frame.size.height /2;
@@ -123,7 +124,7 @@
         label = [[UILabel alloc] initWithFrame:frame];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = [self.shortDescription.font fontWithSize:11];
+        label.font = [self.shortDescription.font fontWithSize:10];
         label.textColor = [UIColor whiteColor];
         label.tag = 1;
         [view addSubview:label];
@@ -138,7 +139,9 @@
     
     label.text = [founder[@"name"] componentsSeparatedByString:@" "][0];
     
-    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
+    [self.crunchy setImageFromPath:path forImageView:imageFounder];
+    
+//    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
     return view;
 }

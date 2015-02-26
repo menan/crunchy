@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "iCarousel.h"
+#import "Cruncher.h"
 
 
 @interface CSInfoCell : UICollectionViewCell<iCarouselDataSource, iCarouselDelegate, MKMapViewDelegate>
@@ -17,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet iCarousel *founders;
 @property (weak, nonatomic) IBOutlet UIButton *viewAllButton;
 @property (strong, nonatomic) NSArray *foundersData;
+@property (strong, nonatomic) Cruncher *crunchy;
 
 - (void) updateLocation:(NSArray *) addresses;
 @end

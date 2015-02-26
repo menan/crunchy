@@ -12,6 +12,8 @@
     NSMutableDictionary * item;
 }
 
+- (void) setBarImage:(UIImage *) image;
 
 @property (strong, nonatomic) id detailItem;
+
 @end

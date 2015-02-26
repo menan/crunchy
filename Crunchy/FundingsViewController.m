@@ -7,7 +7,7 @@
 //
 
 #import "FundingsViewController.h"
-#import "DetailViewController.h"
+//#import "DetailViewController.h"
 
 @interface FundingsViewController ()
 
@@ -101,17 +101,17 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
-    NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
-    
-    [self.navigationController pushViewController:detail animated:YES];
-    
-    NSString *perm = [NSString stringWithFormat:@"%@/%@/%@.json?",[Cruncher crunchBaseURL],[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"],[[self getValuesAtIndex:indexPath.row] objectForKey:@"permalink"]];
-    
-    [object setObject:perm forKey:@"permalink"];
-    [object setObject:[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"] forKey:@"type"];
-    
-    [detail setDetailItem:object];
+//    DetailViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"detail"];
+//    NSMutableDictionary* object = [[NSMutableDictionary alloc] init];
+//    
+//    [self.navigationController pushViewController:detail animated:YES];
+//    
+//    NSString *perm = [NSString stringWithFormat:@"%@/%@/%@.json?",[Cruncher crunchBaseURL],[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"],[[self getValuesAtIndex:indexPath.row] objectForKey:@"permalink"]];
+//    
+//    [object setObject:perm forKey:@"permalink"];
+//    [object setObject:[[self getValuesAtIndex:indexPath.row] objectForKey:@"type"] forKey:@"type"];
+//    
+//    [detail setDetailItem:object];
     
     
     
