@@ -53,4 +53,5 @@ typedef enum ItemType : NSUInteger {
 - (NSArray *) dataAtIndex:(NSInteger) index;
 - (NSArray *) getAddressData;
 - (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView;
+- (void) setDataFromPath:(NSString *)path forView:(UIView *) view;
 @end

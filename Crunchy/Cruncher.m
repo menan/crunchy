@@ -26,6 +26,7 @@ NSMutableArray *relationshipsNew;
 NSMutableArray *imagesData;
 NSMutableArray *imagesDispatched;
 NSMutableDictionary *imagesPaths;
+NSMutableDictionary *fetchedData;
 
 #define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
 
@@ -43,6 +44,14 @@ NSMutableDictionary *imagesPaths;
     return [NSURL URLWithString:urlString];
 }
 
+- (id) init{
+    
+    imagesPaths = [NSMutableDictionary new];
+    imagesData = [[NSMutableArray alloc] init];
+    fetchedData = [[NSMutableDictionary alloc] init];
+    
+    return self;
+}
 
 - (id) initWithDictionary: (NSMutableDictionary *) dict{
     item = [[NSMutableDictionary alloc] initWithDictionary:dict];
@@ -54,8 +63,9 @@ NSMutableDictionary *imagesPaths;
     sectionTitles = [NSMutableArray new];
     relationshipsNew = [NSMutableArray new];
     imagesPaths = [NSMutableDictionary new];
-    imagesData = [NSMutableArray new];
+    imagesData = [[NSMutableArray alloc] init];
     imagesDispatched = [NSMutableArray new];
+    fetchedData = [[NSMutableDictionary alloc] init];
     
     
     NSArray *blacklisted = @[@"created_at", @"closed_on_trust_code", @"role_company", @"updated_at", @"permalink", @"num_employees_max", @"num_employees_min", @"primary_role", @"founded_on_month", @"founded_on_year", @"founded_on_day",@"announced_on_month", @"announced_on_year", @"announced_on_day", @"founded_on_trust_code", @"description", @"is_closed", @"secondary_role_for_profit", @"money_raised_usd", @"opening_valuation_usd", @"opening_share_price_usd", @"post_moeny_valuation_currency_code", @"canonical_currency_code", @"money_raised_currency_code", @"location_uuid",@"bio",@"died_on_trust_code",@"role_investor",@"born_on_year",@"born_on_month",@"born_on_day",@"born_on_trust_code",@"post_money_valuation_currency_code",@"announced_on_trust_code",@"name",@"price_currency_code",@"owner_path",@"launched_on_trust_code",@"launched_on_month",@"launched_on_year",@"launched_on_day",@"videos",@"opening_share_price_currency_code",@"went_public_on_trust_code",@"went_public_on_day",@"went_public_on_month",@"went_public_on_year",@"opening_valuation_currency_code",@"target_money_raised_currency_code",@"closed_on_month",@"closed_on_year",@"closed_on_day",@"secondary_role_early_stage_vendor",@"secondary_role_seed",@"secondary_role_venture_capital",@"secondary_role_debt_financing",@"secondary_role_private_equity",@"secondary_role_large_stage_venture",@"sectors",@"secondary_role_early_stage_venture",@"secondary_role_later_stage_venture",@"secondary_role_incubator",@"short_description",@"also_known_as",@"price_usd",@"completed_on_day",@"completed_on_month",@"completed_on_year",@"completed_on_trust_code",@"regions"];
@@ -600,17 +610,122 @@ NSMutableDictionary *imagesPaths;
     
 }
 
+- (void) setDataFromPath:(NSString *)path forView:(UIView *) view{
+    NSString* url;
+    
+    if (contains(path,@"person") || contains(path,@"organization")) {
+        UIImageView* imageView = (UIImageView*) [view viewWithTag:2];
+        [self setImageFromPath:path forImageView:imageView];
+    }
+    else if (contains(path,@"acquisition")){
+        url = [[NSString stringWithFormat:@"%@/%@/acquiree?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        if (!fetchedData[@"path"]) {
+            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+            request.view = view;
+            request.path = path;
+            NSLog(@"downloading info %@",path);
+            [[AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                     EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                     if (thisRequest.path && data) {
+                         [fetchedData setObject:data[@"data"] forKey:thisRequest.path];
+                         
+                         UIImageView* imageView = (UIImageView*) [view viewWithTag:2];
+                         UILabel* label = (UILabel*) [view viewWithTag:1];
+                         //    UILabel* subLabel = (UILabel*) [view viewWithTag:3];
+                         
+                         if ([data[@"items"] count] > 0) {
+                             NSString *entityName = data[@"items"][0][@"name"];
+                             NSString *entityPath = data[@"items"][0][@"path"];
+                             label.text = entityName;
+                             [self setImageFromPath:entityPath forImageView:imageView];
+                         }
+                         
+                     }
+                     else{
+                         [fetchedData setObject:@"" forKey:thisRequest.path];
+                     }
+                 }
+                 failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                     EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                     [fetchedData setObject:@"" forKey:thisRequest.path];
+                 }] start];
+        }
+        else{
+            
+        }
+    }
+    else if (contains(path,@"funding-round")){
+        url = [[NSString stringWithFormat:@"%@/%@?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        if (!fetchedData[@"path"]) {
+            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+            request.view = view;
+            request.path = path;
+            NSLog(@"downloading info %@",path);
+            [[AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
+                     EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                     if (thisRequest.path && data) {
+                         [fetchedData setObject:data[@"data"] forKey:thisRequest.path];
+                         
+                         UIImageView* imageView = (UIImageView*) [view viewWithTag:2];
+                         UILabel* label = (UILabel*) [view viewWithTag:1];
+                         //    UILabel* subLabel = (UILabel*) [view viewWithTag:3];
+                         
+//                         if ([data[@"items"] count] > 0) {
+//                             NSString *entityName = data[@"items"][0][@"name"];
+//                             NSString *entityPath = data[@"items"][0][@"path"];
+//                             label.text = entityName;
+//                             [self setImageFromPath:entityPath forImageView:imageView];
+//                         }
+                         
+                     }
+                     else{
+                         [fetchedData setObject:@"" forKey:thisRequest.path];
+                     }
+                 }
+                 failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                     EntityURLRequest *thisRequest = (EntityURLRequest*) request;
+                     [fetchedData setObject:@"" forKey:thisRequest.path];
+                 }] start];
+        }
+        else{
+            
+        }
+        
+        
+    }
+}
+
+- (void) populateView:(UIView *) view withData: (NSDictionary *) data{
+    
+    UIImageView* imageView = (UIImageView*) [view viewWithTag:2];
+    UILabel* label = (UILabel*) [view viewWithTag:1];
+//    UILabel* subLabel = (UILabel*) [view viewWithTag:3];
+    
+    if ([data[@"items"] count] > 0) {
+        NSString *entityName = data[@"items"][0][@"name"];
+        NSString *entityPath = data[@"items"][0][@"path"];
+        label.text = entityName;
+        [self setImageFromPath:entityPath forImageView:imageView];
+    }
+    
+    
+}
 
 
 - (void) setImageFromPath: (NSString *)path forImageView:(UIImageView *) imgView{
     NSString* url = [[NSString stringWithFormat:@"%@/%@/primary_image?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"loading image for %@",path);
-    if (!imagesPaths[path] && (contains(path,@"person") || contains(path,@"organization"))) {
+
+    if (!imagesPaths[path]) {
+        NSLog(@"downloading image for %@",path);
         EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
         request.imageView = imgView;
         request.path = path;
         
-        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+        [[AFJSONRequestOperation JSONRequestOperationWithRequest:request
             success:^(NSURLRequest *request, NSHTTPURLResponse *response, id data) {
                 EntityURLRequest *thisRequest = (EntityURLRequest*) request;
                 NSString *stringURL = [NSString stringWithFormat:@"%@%@",data[@"metadata"][@"image_path_prefix"],data[@"data"][@"items"][0][@"path"]];
@@ -634,16 +749,9 @@ NSMutableDictionary *imagesPaths;
                 }
                 
                 thisRequest.imageView.image = [UIImage imageNamed:@"profile-image"];
-            }];
-        
-        [operation start];
+            }] start];
         
     }
-//    else if (contains(path,@"funding-round")){
-//        url = [[NSString stringWithFormat:@"%@/%@/acquiree?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//        
-//        
-//    }
     else{
         [imgView sd_setImageWithURL:imagesPaths[path] placeholderImage:[UIImage imageNamed:@"profile-image"]];
         

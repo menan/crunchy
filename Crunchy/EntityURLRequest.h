@@ -11,6 +11,7 @@
 @interface EntityURLRequest : NSURLRequest
 
 @property (weak, nonatomic) UIImageView *imageView;
+@property (weak, nonatomic) UIView *view;
 @property (weak, nonatomic) NSString *path;
 
 
