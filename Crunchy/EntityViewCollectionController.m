@@ -306,7 +306,7 @@ static NSString * const reuseIdentifier = @"Cell";
 //    UICollectionView *collectionView = (UICollectionView *)  carousel.superview.superview.superview;
 //    NSIndexPath *indexPath = [collectionView indexPathForCell:cell];
     
-//    NSLog(@"collection view is :%@ : %ld",self.crunch,carousel.tag);
+    NSLog(@"collection view is :%@ : %ld",self.crunch,carousel.tag);
     
     NSString *path = data[@"path"];
 //    NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];

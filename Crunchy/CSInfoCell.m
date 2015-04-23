@@ -94,7 +94,7 @@
     NSString *path = founder[@"path"];
     NSString *imageString = [NSString stringWithFormat:@"http://www.crunchbase.com/%@/primary-image/raw?w=150&h=150",path];
     
-//    NSURL *imageUrl = [NSURL URLWithString:imageString];
+    NSURL *imageUrl = [NSURL URLWithString:imageString];
     
     //create new view if no view is available for recycling
     if (view == nil)
@@ -139,9 +139,9 @@
     
     label.text = [founder[@"name"] componentsSeparatedByString:@" "][0];
     
-    [self.crunchy setImageFromPath:path forImageView:imageFounder];
+//    [self.crunchy setImageFromPath:path forImageView:imageFounder];
     
-//    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
+    [imageFounder sd_setImageWithURL:imageUrl placeholderImage:[UIImage imageNamed:@"profile-image"]];
     
     return view;
 }

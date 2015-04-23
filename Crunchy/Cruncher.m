@@ -621,7 +621,7 @@ NSMutableDictionary *fetchedData;
         url = [[NSString stringWithFormat:@"%@/%@/acquiree?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         if (!fetchedData[@"path"]) {
-            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
             request.view = view;
             request.path = path;
             NSLog(@"downloading info %@",path);
@@ -660,7 +660,7 @@ NSMutableDictionary *fetchedData;
         url = [[NSString stringWithFormat:@"%@/%@?user_key=%@", [Cruncher crunchBaseURL], path, [Cruncher userKey]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         if (!fetchedData[@"path"]) {
-            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+            EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
             request.view = view;
             request.path = path;
             NSLog(@"downloading info %@",path);
@@ -721,7 +721,7 @@ NSMutableDictionary *fetchedData;
 
     if (!imagesPaths[path]) {
         NSLog(@"downloading image for %@",path);
-        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        EntityURLRequest *request = [[EntityURLRequest alloc] initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         request.imageView = imgView;
         request.path = path;
         
